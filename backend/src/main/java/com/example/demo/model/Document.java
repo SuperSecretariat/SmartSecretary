@@ -9,7 +9,7 @@ public class Document {
     @Id
     @NotBlank
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotBlank
     private String type;
@@ -18,13 +18,13 @@ public class Document {
     public Document(){
     }
 
-    public Document(Long id, String type, String name) {
+    public Document(Integer id, String type, String name) {
         this.id = id;
         this.type = type;
         this.name = name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
     public String getType() {
@@ -34,10 +34,10 @@ public class Document {
         return name;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-    public void setTip(String type) {
+    public void setType(String type) {
         this.type = type;
     }
     public void setName(String name) {

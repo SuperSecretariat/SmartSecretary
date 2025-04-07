@@ -5,8 +5,19 @@
 </head>
 <body style="font-family: 'Courier 10 Pitch'">
 <h1 style="text-align: center">Document List</h1>
+<form action="/addDocument" method="post">
+    <label for="name">Document Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="type">Document Type:</label>
+    <input type="text" id="type" name="type" required><br><br>
+    <input type="submit" value="Submit">
+</form>
+<br>
+<br>
+
 <button onclick="fetchDocuments()">Get Documents</button>
 <ul id="documentList"></ul>
+
 
 <script>
     function fetchDocuments() {
