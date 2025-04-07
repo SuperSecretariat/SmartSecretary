@@ -4,32 +4,43 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "formulare")
+@Table(name = "documents")
 public class Document {
     @Id
     @NotBlank
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
     @NotBlank
     private String type;
+    @NotBlank
+    private String name;
     public Document(){
     }
 
-    public Document(int id, String type) {
+    public Document(Long id, String type, String name) {
         this.id = id;
         this.type = type;
+        this.name = name;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
-
     public String getType() {
         return type;
     }
+    public String getName() {
+        return name;
+    }
 
-    @Override
-    public String toString() {
-        return this.id + " " + this.type;
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public void setTip(String type) {
+        this.type = type;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }
