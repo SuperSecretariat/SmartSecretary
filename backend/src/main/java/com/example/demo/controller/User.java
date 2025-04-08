@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table( name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "idNumber"),
+                @UniqueConstraint(columnNames = "id_number"),
                 @UniqueConstraint(columnNames = "email")
         })
 public class User {
@@ -20,17 +20,17 @@ public class User {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "lastName")
+    @Column(name = "last_name")
     private String lastName;
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "firstName")
+    @Column(name = "first_name")
     private  String firstName;
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "idNumber")
+    @Column(name = "id_number")
     private String idNumber;
 
     @NotBlank
@@ -45,7 +45,7 @@ public class User {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "userRoles", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public User() {
