@@ -20,7 +20,7 @@
         @PostMapping("/register")
         public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest)
         {
-            User newUser = new User(registerRequest.getFirstName(), registerRequest.getLastName(),registerRequest.getEmail(), registerRequest.getIdNumber(), registerRequest.getPassword());
+            User newUser = new User(registerRequest.getLastName(), registerRequest.getFirstName(),registerRequest.getIdNumber(), registerRequest.getEmail(), registerRequest.getPassword());
             userRepository.save(newUser);
 
             return ResponseEntity.ok("Cont create cu succes!");
