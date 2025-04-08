@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public class RegisterRequest {
@@ -22,7 +23,13 @@ public class RegisterRequest {
     @NotBlank(message = "Confirma parola")
     private String confirmationPassword;
 
-    public RegisterRequest(String firstName, String lastName, String email, String idNumber, String password, String confirmationPassword)
+    public RegisterRequest(
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
+            @JsonProperty("email") String email,
+            @JsonProperty("idNumber") String idNumber,
+            @JsonProperty("password") String password,
+            @JsonProperty("confirmationPassword") String confirmationPassword)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,6 +38,7 @@ public class RegisterRequest {
         this.password = password;
         this.confirmationPassword = confirmationPassword;
     }
+
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
