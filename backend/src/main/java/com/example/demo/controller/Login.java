@@ -1,25 +1,28 @@
 package com.example.demo.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
 public class Login {
-    private Cryptography encryption = new Encryption();
-    private Cryptography decryption = new Decryption();
-    private String idNumber;
-    private String password;
 
-    public Login(String idNumber, String password)
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest)
     {
-        this.idNumber = idNumber;
-        this.password = password;
-        verifyLoginRequest();
-    }
-
-    private void verifyLoginRequest()
-    {
-        // cautam in baza de date daca exista un cont deja logat
+        String idNumber = loginRequest.getIdNumber();
+        String password = loginRequest.getPassword();
+        if(idNumber.equals("admin") && password.equals("123"))
+        {
+            return ResponseEntity.ok("Logarea s-a finalizat cu succes!");
+        }
+        else
+        {
+            return ResponseEntity.status(401).body("Date invalide");
+        }
     }
 }
