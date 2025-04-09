@@ -10,23 +10,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/v1/documents/")
 public class DocumentController {
 
-    @Autowired
-    private DocumentService documentService;
+    private final DocumentService documentService;
 
-    @GetMapping("/")
-    public String index(Model model) {
-        return "index"; // This will render the index.html page
+    public DocumentController(DocumentService documentService) {
+        this.documentService = documentService;
     }
 
-    @GetMapping("/documents")
+//    @GetMapping("/")
+//    public String index(Model model) {
+//        return "index"; // This will render the index.html page
+//    }
+
+    @GetMapping
     @ResponseBody
     public List<Document> getDocuments() {
         return documentService.findAll(); // Fetch and return all documents
     }
 
-    @PostMapping("/addDocument")
+    @PostMapping("addDocument")
     public String addDocument(@RequestParam("name") String name, @RequestParam("type") String type, Model model) {
         try {
             Document document = new Document();
