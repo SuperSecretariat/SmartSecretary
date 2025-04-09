@@ -1,0 +1,23 @@
+# Ignore IntelliJ project files
+.idea
+**/.idea/
+
+# Ignore VSCode settings anywhere
+.vscode/
+**/.vscode/
+
+# Ignore IntelliJ module files anywhere
+*.iml
+
+# macOS Finder metadata
+.DS_Store
+**/.DS_Store
+
+# Node.js modules (anywhere)
+node_modules/
+**/node_modules/
+
+# Java build directories (common for Maven/Gradle)
+**/target/
+**/build/
+**/out/
