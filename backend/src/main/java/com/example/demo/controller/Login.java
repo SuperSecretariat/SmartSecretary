@@ -1,29 +1,38 @@
 package com.example.demo.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class Login {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest)
     {
-        String idNumber = loginRequest.getIdNumber();
-        String password = loginRequest.getPassword();
-        if(idNumber.equals("admin") && password.equals("123"))
+        Optional<User> optionalUser = userRepository.findByIdNumber(loginRequest.getIdNumber());
+
+        if(optionalUser.isPresent())
         {
-            return ResponseEntity.ok("Logarea s-a finalizat cu succes!");
+            User user = optionalUser.get();
+            if(user.getPassword().equals(loginRequest.getPassword()))
+                return ResponseEntity.ok("Logarea s-a finalizat cu succes");
+            else
+                return ResponseEntity.status(401).body("Parola incorecta");
         }
         else
-        {
-            return ResponseEntity.status(401).body("Date invalide");
-        }
+            return ResponseEntity.status(404).body("Contul nu exista");
+
 
     }
 }
