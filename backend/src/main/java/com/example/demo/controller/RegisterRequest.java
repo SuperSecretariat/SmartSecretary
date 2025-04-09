@@ -5,16 +5,16 @@ import jakarta.validation.constraints.NotBlank;
 
 public class RegisterRequest {
 
-    @NotBlank(message = "Prenume")
+    @NotBlank(message = "Prenumele nu poate lipsi")
     private String firstName;
 
-    @NotBlank(message = "Nume de familie")
+    @NotBlank(message = "Nume de familie nu poate lipsi")
     private String lastName;
 
-    @NotBlank(message = "Numar matricol")
+    @NotBlank(message = "Numar matricol nu poate lipsi")
     private String idNumber;
 
-    @NotBlank(message = "Email")
+    @NotBlank(message = "Email nu poate lipsi")
     private String email;
 
     @NotBlank(message = "Introdu parola")
