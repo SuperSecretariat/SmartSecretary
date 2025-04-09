@@ -1,9 +1,12 @@
-package com.example.demo.controller;
+/*package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
@@ -27,3 +30,4 @@ public class SecurityConfig {
                 .build();
     }
 }
+ */
