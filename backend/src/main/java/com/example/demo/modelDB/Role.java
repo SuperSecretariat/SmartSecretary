@@ -1,5 +1,6 @@
-package com.example.demo.controller;
+package com.example.demo.modelDB;
 
+import com.example.demo.model.enums.ERole;
 import jakarta.persistence.*;
 @Entity
 @Table(name = "roles")
