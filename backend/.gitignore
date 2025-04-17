@@ -1,0 +1,45 @@
+# Java and Spring Boot
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+**/logs/
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# IDEs
+
+# Build tools
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# OS
+Thumbs.db
+ehthumbs.db
+*.class
+
+# Environment files
+.env
+.env.*
+
+# Node stuff (if using front-end inside)
+node_modules/
+dist/
+.angular/
+build/
+npm-debug.log*
+
+# Others
+*.war
+*.jar
+*.ear
