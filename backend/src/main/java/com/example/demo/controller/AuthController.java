@@ -59,7 +59,6 @@ public class AuthController {
                 registerRequest.getEmail(),
                 registerRequest.getPassword()
         );
-
         Optional<Role> studentRole = roleRepository.findByName(ERole.ROLE_STUDENT);
         Set<Role> roles = new HashSet<>();
         roles.add(studentRole.get());
