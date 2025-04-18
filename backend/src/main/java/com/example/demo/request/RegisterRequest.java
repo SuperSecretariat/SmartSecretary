@@ -1,26 +1,33 @@
 package com.example.demo.request;
 
+import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public class RegisterRequest {
 
-    @NotBlank(message = "Prenumele nu poate lipsi")
+    @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
     private String firstName;
 
-    @NotBlank(message = "Nume de familie nu poate lipsi")
+    @NotBlank(message = ErrorMessage.MISSING_LAST_NAME)
     private String lastName;
 
-    @NotBlank(message = "Numar matricol nu poate lipsi")
+    @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
     private String idNumber;
 
-    @NotBlank(message = "Email nu poate lipsi")
+    @NotBlank(message = ErrorMessage.MISSING_UNIVERSITY)
+    private String university;
+
+    @NotBlank(message = ErrorMessage.MISSING_FACULTY)
+    private String faculty;
+
+    @NotBlank(message = ErrorMessage.MISSING_EMAIL)
     private String email;
 
-    @NotBlank(message = "Introdu parola")
+    @NotBlank(message = ErrorMessage.MISSING_PASSWORD)
     private String password;
 
-    @NotBlank(message = "Confirma parola")
+    @NotBlank(message = ErrorMessage.MISSING_CONFIRMATION_PASSWORD)
     private String confirmationPassword;
 
     public RegisterRequest(
@@ -28,6 +35,8 @@ public class RegisterRequest {
             @JsonProperty("lastName") String lastName,
             @JsonProperty("email") String email,
             @JsonProperty("idNumber") String idNumber,
+            @JsonProperty("university") String university,
+            @JsonProperty("faculty") String faculty,
             @JsonProperty("password") String password,
             @JsonProperty("confirmationPassword") String confirmationPassword)
     {
@@ -35,6 +44,8 @@ public class RegisterRequest {
         this.lastName = lastName;
         this.email = email;
         this.idNumber = idNumber;
+        this.university = university;
+        this.faculty = faculty;
         this.password = password;
         this.confirmationPassword = confirmationPassword;
     }
@@ -48,6 +59,20 @@ public class RegisterRequest {
 
     public String getIdNumber() { return idNumber; }
     public void setIdNumber(String idNumber) { this.idNumber = idNumber; }
+
+    public String getFaculty() {
+        return faculty;
+    }
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+    public void setUniversity(String university) {
+        this.university = university;
+    }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

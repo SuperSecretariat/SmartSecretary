@@ -30,7 +30,7 @@ public class User {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "id_number")
+    @Column(name = "id_number", nullable = false)
     private String idNumber;
 
     @NotBlank
@@ -44,6 +44,16 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @NotBlank
+    @Size(max = 100)
+    @Column(name = "university")
+    private String university;
+
+    @NotBlank
+    @Size(max = 100)
+    @Column(name = "faculty")
+    private String faculty;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -51,14 +61,16 @@ public class User {
     public User() {
     }
 
-    public User(String lastName, String firstName, String idNumber, String email, String password) {
+    public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.idNumber = idNumber;
+        this.university = university;
+        this.faculty = faculty;
         this.email = email;
         this.password = password;
-
     }
+
     public Long getId() {
         return id;
     }
@@ -95,11 +107,22 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    public String getUniversity() {
+        return university;
+    }
+    public void setUniversity(String university) {
+        this.university = university;
+    }
+    public String getFaculty() {
+        return faculty;
+    }
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
     public Set<Role> getRoles() {
         return roles;
     }
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
 }
