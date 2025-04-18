@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.modelDB;
 import java.util.HashSet;
 import java.util.Set;
 
