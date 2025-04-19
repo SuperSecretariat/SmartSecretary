@@ -7,6 +7,7 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
+import com.example.demo.response.JwtResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,11 +32,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         Optional<User> optionalUser = userRepository.findByIdNumber(loginRequest.getIdNumber());
+        Set<Role> userRole = optionalUser.get().getRoles();
 
+        List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.getPassword().equals(loginRequest.getPassword()))
-                return ResponseEntity.ok("Logarea s-a finalizat cu succes");
+                return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getIdNumber(), roleNames));
             else
                 return ResponseEntity.status(401).body("Parola incorecta");
         } else {
