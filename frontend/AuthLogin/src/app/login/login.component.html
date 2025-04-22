@@ -56,13 +56,14 @@
         <div class="form-group">
           @if (f.submitted && isLoginFailed) {
           <div class="alert alert-danger" role="alert">
-            Login failed: {{ errorMessage }}
+            Login failed {{ errorMessage }}
           </div>
           }
         </div>
       </form>
       } @else {
-      <div class="alert alert-success">Logged in as {{ roles }}.</div>
+      <div class="alert alert-success">
+        Logged in as {{ formattedRoles }}.</div>
       }
     </div>
   </div>
