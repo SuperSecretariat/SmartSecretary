@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table( name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "id_number"),
+                @UniqueConstraint(columnNames = "registration_number"),
                 @UniqueConstraint(columnNames = "email")
         })
 public class User {
@@ -30,8 +30,8 @@ public class User {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "id_number", nullable = false)
-    private String idNumber;
+    @Column(name = "registration_number", nullable = false)
+    private String regNumber;
 
     @NotBlank
     @Size(max = 50)
@@ -54,6 +54,12 @@ public class User {
     @Column(name = "faculty")
     private String faculty;
 
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
+
+    @Column(name = "CNP")
+    private String CNP;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -64,7 +70,7 @@ public class User {
     public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password) {
         this.lastName = lastName;
         this.firstName = firstName;
-        this.idNumber = idNumber;
+        this.regNumber = idNumber;
         this.university = university;
         this.faculty = faculty;
         this.email = email;
@@ -90,10 +96,10 @@ public class User {
         this.firstName = firstName;
     }
     public String getIdNumber() {
-        return idNumber;
+        return regNumber;
     }
     public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
+        this.regNumber = idNumber;
     }
     public String getEmail() {
         return email;

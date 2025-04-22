@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        Optional<User> optionalUser = userRepository.findByIdNumber(loginRequest.getIdNumber());
+        Optional<User> optionalUser = userRepository.findByRegNumber(loginRequest.getIdNumber());
         Set<Role> userRole = optionalUser.get().getRoles();
 
         List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
@@ -48,7 +48,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        Optional<User> optionalUser = userRepository.findByIdNumber(registerRequest.getIdNumber());
+        Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getIdNumber());
 
         if (optionalUser.isPresent()) {
             return ResponseEntity.status(409).body("Un cont cu acelasi numar matricol a fost creat deja");
