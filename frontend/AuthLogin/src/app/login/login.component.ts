@@ -20,6 +20,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService, private storageService: StorageService) { }
 
+  get formattedRoles(): string {
+    if (!this.roles || this.roles.length === 0) {
+      return 'User';
+    }
+    return this.roles.map(role => role.replace('ROLE_', '')).join(', ');
+  }
+
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.isLoggedIn = true;
@@ -33,10 +40,10 @@ export class LoginComponent implements OnInit {
     this.authService.login(idNumber, password).subscribe({
       next: data => {
         this.storageService.saveUser(data);
-
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.roles = this.storageService.getUser().roles;
+        this.roles = data.roles;
+        this.roles = data.roles.map((role: string) => role.replace('ROLE_', ''));
         this.reloadPage();
       },
       error: err => {
