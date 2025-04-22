@@ -29,7 +29,7 @@ public class AdminAuthController {
 
     @PostMapping("/register-secretary")
     public ResponseEntity<?> registerSecretary(@Valid @RequestBody RegisterRequest registerRequest){
-        Optional<User> optionalUser = userRepository.findByIdNumber(registerRequest.getIdNumber());
+        Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getIdNumber());
 
         if (optionalUser.isPresent()) {
             return ResponseEntity.status(409).body("Un cont cu acelasi numar matricol a fost creat deja");
