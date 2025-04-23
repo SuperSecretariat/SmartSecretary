@@ -48,25 +48,10 @@ public class Admin {
         this.email = email;
     }
     public String getAuthKey() {
-        try{
-            String key = this.authKey;
-            String decrypt = decrypt(key);
-            return decrypt;
-
-        }
-        catch (Exception e){
-            throw new IllegalStateException("Cannot decrypt authKey",e);
-        }
+       return authKey;
     }
     public void setAuthKey(String authKey) {
-        try {
-            String key = authKey;
-            String encrypted = encrypt(key);
-            this.authKey = encrypted;
-
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to generate encrypted key", e);
-        }
+       this.authKey = authKey;
     }
     public static Admin withRandomKey(String email) {
         try {

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -93,12 +94,12 @@ public class AuthController {
             Student studentData = studentRepository.findByRegNumber(registerRequest.getRegistrationNumber()).get();
             String firstNameRegister = registerRequest.getFirstName().toLowerCase();
             String lastNameRegister = registerRequest.getLastName().toLowerCase();
-            String dateOfBirthRegister = registerRequest.getDateOfBirth();
+            LocalDate dateOfBirthRegister = registerRequest.getDateOfBirth().toLocalDate();
             String CNPRegister = registerRequest.getCNP();
 
             String firstNameStudent = studentData.getFirstName().toLowerCase();
             String lastNameStudent = studentData.getLastName().toLowerCase();
-            String dateOfBirthStudent = studentData.getDateOfBirth();
+            LocalDate dateOfBirthStudent = studentData.getDateOfBirth().toLocalDate();
             String CNPStudent = studentData.getCNP();
 
             if(!firstNameRegister.equals(firstNameStudent))

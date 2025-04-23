@@ -4,6 +4,8 @@ import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
+import static com.example.demo.util.AESUtil.encrypt;
+
 public class SecretaryRequest {
 
     @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
@@ -26,7 +28,12 @@ public class SecretaryRequest {
         this.firstName = firstName;
         this.lastName = lastName;
         this.CNP = CNP;
-        this.authKey = authKey;
+        try{
+            String encryptedKey = encrypt(authKey);
+        }
+        catch (Exception e){
+            throw new IllegalStateException("Encryption failed",e);
+        }
     }
 
     public String getLastName() {

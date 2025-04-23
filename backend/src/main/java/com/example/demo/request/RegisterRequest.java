@@ -4,6 +4,7 @@ import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class RegisterRequest {
@@ -89,8 +90,8 @@ public class RegisterRequest {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public Date getDateOfBirth() {
+        return Date.valueOf(dateOfBirth);
     }
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
