@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Date;
+
 @RestController
 @RequestMapping("/api/add")
 public class AddController {
@@ -32,7 +34,7 @@ public class AddController {
 
     @PostMapping("/student")
     public ResponseEntity<?> addStudent(@RequestBody StudentRequest studentRequest){
-        Student newStudent = new Student(studentRequest.getFirstName(), studentRequest.getLastName(), studentRequest.getRegistrationNumber(), studentRequest.getDateOfBirth(), studentRequest.getCNP());
+        Student newStudent = new Student(studentRequest.getFirstName(), studentRequest.getLastName(), studentRequest.getRegistrationNumber(), Date.valueOf(studentRequest.getDateOfBirth()), studentRequest.getCNP());
         studentRepository.save(newStudent);
         return ResponseEntity.ok("New student added to the database");
     }

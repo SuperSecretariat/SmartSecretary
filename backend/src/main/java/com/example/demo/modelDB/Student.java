@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -32,7 +33,7 @@ public class Student {
     private String regNumber;
 
     @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
 
     @Column(name = "CNP")
     private String CNP;
@@ -40,7 +41,7 @@ public class Student {
     public Student() {
 
     }
-    public Student(String firstName, String lastName, String regNumber, LocalDate dateOfBirth, String CNP) {
+    public Student(String firstName, String lastName, String regNumber, Date dateOfBirth, String CNP) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.regNumber = regNumber;
@@ -72,10 +73,10 @@ public class Student {
     public void setRegNumber(String regNumber) {
         this.regNumber = regNumber;
     }
-    public LocalDate getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
     public String getCNP() {

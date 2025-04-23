@@ -1,4 +1,5 @@
 package com.example.demo.modelDB;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class User {
     private String faculty;
 
     @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
 
     @Column(name = "CNP")
     private String CNP;
@@ -68,7 +69,7 @@ public class User {
     public User() {
     }
 
-    public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password, LocalDate dateOfBirth, String CNP) {
+    public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password, Date dateOfBirth, String CNP) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.regNumber = idNumber;
@@ -128,8 +129,8 @@ public class User {
     public void setFaculty(String faculty) {
         this.faculty = faculty;
     }
-    public LocalDate getDateOfBirth() {return dateOfBirth;    }
-    public void setDateOfBirth(LocalDate dateOfBirth) {this.dateOfBirth = dateOfBirth;}
+    public Date getDateOfBirth() {return dateOfBirth;    }
+    public void setDateOfBirth(Date dateOfBirth) {this.dateOfBirth = dateOfBirth;}
     public Set<Role> getRoles() {
         return roles;
     }

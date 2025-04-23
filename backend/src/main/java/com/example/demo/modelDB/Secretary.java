@@ -73,15 +73,7 @@ public class Secretary {
         this.CNP = CNP;
     }
     public String getAuthKey() {
-        try{
-            String key = this.authKey;
-            String decrypt = decrypt(key);
-            return decrypt;
-
-        }
-        catch (Exception e){
-            throw new IllegalStateException("Cannot decrypt authKey",e);
-        }
+        return authKey;
     }
     public static Secretary withRandomKey(String firstName, String lastName, String CNP) {
         try {
