@@ -9,4 +9,7 @@ public class ErrorMessage {
     public static final String MISSING_FIRST_NAME = "First name is missing";
     public static final String MISSING_UNIVERSITY = "University is missing";
     public static final String MISSING_FACULTY = "Faculty is missing";
+    public static final String MISSING_DATE_OF_BIRTH = "Date of birth is missing";
+    public static final String MISSING_CNP = "CNP is missing";
+    public static final String MISSING_AUTHKEY = "AuthKey is missing";
 }

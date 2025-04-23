@@ -29,20 +29,22 @@ public class AdminAuthController {
 
     @PostMapping("/register-secretary")
     public ResponseEntity<?> registerSecretary(@Valid @RequestBody RegisterRequest registerRequest){
-        Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getIdNumber());
+        Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getRegistrationNumber());
 
         if (optionalUser.isPresent()) {
             return ResponseEntity.status(409).body("Un cont cu acelasi numar matricol a fost creat deja");
         }
-
+            //TO-DO: think of a new form for secretary registration
             User newUser = new User(
                     registerRequest.getLastName(),
                     registerRequest.getFirstName(),
-                    registerRequest.getIdNumber(),
+                    registerRequest.getRegistrationNumber(),
                     registerRequest.getUniversity(),
                     registerRequest.getFaculty(),
                     registerRequest.getEmail(),
-                    registerRequest.getPassword()
+                    registerRequest.getPassword(),
+                    registerRequest.getDateOfBirth(),
+                    registerRequest.getCNP()
             );
         Optional<Role> secretaryRole = roleRepository.findByName(ERole.ROLE_SECRETARY);
         Set<Role> roles = new HashSet<>();

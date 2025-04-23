@@ -67,7 +67,7 @@ public class User {
     public User() {
     }
 
-    public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password) {
+    public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password, String dateOfBirth, String CNP) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.regNumber = idNumber;
@@ -75,6 +75,8 @@ public class User {
         this.faculty = faculty;
         this.email = email;
         this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.CNP = CNP;
     }
 
     public Long getId() {
