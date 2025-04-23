@@ -5,6 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
+import static com.example.demo.util.AESUtil.decrypt;
+import static com.example.demo.util.AESUtil.encrypt;
+
 @Entity
 @Table( name = "secretaries",
         uniqueConstraints = {
@@ -68,7 +73,27 @@ public class Secretary {
         this.CNP = CNP;
     }
     public String getAuthKey() {
-        return authKey;
+        try{
+            String key = this.authKey;
+            String decrypt = decrypt(key);
+            return decrypt;
+
+        }
+        catch (Exception e){
+            throw new IllegalStateException("Cannot decrypt authKey",e);
+        }
+    }
+    public static Secretary withRandomKey(String firstName, String lastName, String CNP) {
+        try {
+            String key = generateRandomKey();
+            String encrypted = encrypt(key);
+            return new Secretary(firstName,lastName,CNP, encrypted);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to generate encrypted key", e);
+        }
+    }
+    private static String generateRandomKey() {
+        return UUID.randomUUID().toString();
     }
     public void setAuthKey(String authKey) {
         this.authKey = authKey;

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import com.example.demo.util.AESUtil;
 import java.util.UUID;
 
+import static com.example.demo.util.AESUtil.decrypt;
 import static com.example.demo.util.AESUtil.encrypt;
 
 @Entity
@@ -47,10 +48,25 @@ public class Admin {
         this.email = email;
     }
     public String getAuthKey() {
-        return authKey;
+        try{
+            String key = this.authKey;
+            String decrypt = decrypt(key);
+            return decrypt;
+
+        }
+        catch (Exception e){
+            throw new IllegalStateException("Cannot decrypt authKey",e);
+        }
     }
     public void setAuthKey(String authKey) {
-        this.authKey = authKey;
+        try {
+            String key = authKey;
+            String encrypted = encrypt(key);
+            this.authKey = encrypted;
+
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to generate encrypted key", e);
+        }
     }
     public static Admin withRandomKey(String email) {
         try {
