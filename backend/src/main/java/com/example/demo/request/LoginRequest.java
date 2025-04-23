@@ -6,22 +6,22 @@ import jakarta.validation.constraints.NotBlank;
 public class LoginRequest {
 
     @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
-    private String idNumber;
+    private String registrationNumber;
 
     @NotBlank(message = ErrorMessage.MISSING_PASSWORD)
     private String password;
 
-    public LoginRequest(String idNumber, String password) {
-        this.idNumber = idNumber;
+    public LoginRequest(String registrationNumber, String password) {
+        this.registrationNumber = registrationNumber;
         this.password = password;
     }
 
-    public String getIdNumber() {
-        return idNumber;
+    public String getRegistrationNumber() {
+        return registrationNumber;
     }
 
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     public String getPassword() {

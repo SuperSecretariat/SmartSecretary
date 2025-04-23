@@ -13,7 +13,7 @@ public class RegisterRequest {
     private String lastName;
 
     @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
-    private String idNumber;
+    private String registrationNumber;
 
     @NotBlank(message = ErrorMessage.MISSING_UNIVERSITY)
     private String university;
@@ -30,24 +30,34 @@ public class RegisterRequest {
     @NotBlank(message = ErrorMessage.MISSING_CONFIRMATION_PASSWORD)
     private String confirmationPassword;
 
+    @NotBlank(message = ErrorMessage.MISSING_DATE_OF_BIRTH)
+    private String dateOfBirth;
+
+    @NotBlank(message = ErrorMessage.MISSING_CNP)
+    private String CNP;
+
     public RegisterRequest(
             @JsonProperty("firstName") String firstName,
             @JsonProperty("lastName") String lastName,
             @JsonProperty("email") String email,
-            @JsonProperty("idNumber") String idNumber,
+            @JsonProperty("registrationNumber") String registrationNumber,
             @JsonProperty("university") String university,
             @JsonProperty("faculty") String faculty,
             @JsonProperty("password") String password,
-            @JsonProperty("confirmationPassword") String confirmationPassword)
+            @JsonProperty("confirmationPassword") String confirmationPassword,
+            @JsonProperty("dateOfBirth") String dateOfBirth,
+            @JsonProperty("CNP") String CNP)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.idNumber = idNumber;
+        this.registrationNumber = registrationNumber;
         this.university = university;
         this.faculty = faculty;
         this.password = password;
         this.confirmationPassword = confirmationPassword;
+        this.dateOfBirth = dateOfBirth;
+        this.CNP = CNP;
     }
 
 
@@ -57,8 +67,8 @@ public class RegisterRequest {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getIdNumber() { return idNumber; }
-    public void setIdNumber(String idNumber) { this.idNumber = idNumber; }
+    public String getRegistrationNumber() { return registrationNumber; }
+    public void setRegistrationNumber(String registrationNumber) { this.registrationNumber = registrationNumber; }
 
     public String getFaculty() {
         return faculty;
@@ -76,6 +86,20 @@ public class RegisterRequest {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getCNP() {
+        return CNP;
+    }
+    public void setCNP(String CNP) {
+        this.CNP = CNP;
+    }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
