@@ -4,6 +4,8 @@ import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDate;
+
 public class StudentRequest {
 
     @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
@@ -16,7 +18,7 @@ public class StudentRequest {
     private String registrationNumber;
 
     @NotBlank(message = ErrorMessage.MISSING_DATE_OF_BIRTH)
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = ErrorMessage.MISSING_CNP)
     private String CNP;
@@ -25,7 +27,7 @@ public class StudentRequest {
             @JsonProperty("firstName") String firstName,
             @JsonProperty("lastName") String lastName,
             @JsonProperty("registrationNumber") String registrationNumber,
-            @JsonProperty("dateOfBirth") String dateOfBirth,
+            @JsonProperty("dateOfBirth") LocalDate dateOfBirth,
             @JsonProperty("CNP") String CNP){
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,7 +36,7 @@ public class StudentRequest {
         this.CNP = CNP;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 

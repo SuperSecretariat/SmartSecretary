@@ -3,8 +3,10 @@ package com.example.demo.modelDB;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
+import com.example.demo.util.AESUtil;
 import java.util.UUID;
+
+import static com.example.demo.util.AESUtil.encrypt;
 
 @Entity
 @Table( name = "admins",
@@ -51,7 +53,13 @@ public class Admin {
         this.authKey = authKey;
     }
     public static Admin withRandomKey(String email) {
-        return new Admin(email, generateRandomKey());
+        try {
+            String key = generateRandomKey();
+            String encrypted = encrypt(key);
+            return new Admin(email, encrypted);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to generate encrypted key", e);
+        }
     }
     private static String generateRandomKey() {
         return UUID.randomUUID().toString();
