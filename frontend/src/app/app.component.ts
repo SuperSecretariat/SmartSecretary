@@ -1,21 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { NavBarComponent } from "./nav-bar/nav-bar.component";
+import { FooterComponent } from "./footer/footer.component";
+import { HeaderComponent } from "./header/header.component";
 
 @Component({
   selector: 'app-root',
-  template: `<h1>Smart Secretary</h1>`,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+  imports: [DashboardComponent, NavBarComponent, FooterComponent, HeaderComponent],
 })
-export class AppComponent implements OnInit {
-  ngOnInit(): void {
-    fetch('http://localhost:8081/api/ping')
-      .then(response => {
-        if (response.ok) {
-          console.log('✅ Connected to backend');
-        } else {
-          console.log('❌ Backend responded but with error');
-        }
-      })
-      .catch(error => {
-        console.log('❌ Could not connect to backend', error);
-      });
-  }
+export class AppComponent{
+  title : string = 'Smart Secretary';
 }
