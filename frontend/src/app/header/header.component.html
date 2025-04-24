@@ -1,1 +1,36 @@
-<h1>Header</h1>
+<mat-toolbar class="centered-toolbar">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    <span>Menu</span>
+
+    <span class="header-title">Newsfeed</span>
+    <span class="example-spacer"></span>
+
+    <button mat-icon-button class="example-icon search-icon" aria-label="Search">
+        <mat-icon>search</mat-icon>
+    </button>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-toolbar>
+
+
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <mat-list role="list">
+            <mat-list-item role="listitem">Item 1</mat-list-item>
+            <mat-divider/>
+            <mat-list-item role="listitem">Item 2</mat-list-item>
+            <mat-divider/>
+            <mat-list-item role="listitem">Item 3</mat-list-item>
+          </mat-list>
+    </mat-drawer>
+  
+    <div class="example-sidenav-content" (click)="drawer.close()">
+      
+    </div>
+  
+</mat-drawer-container>
+  
+  

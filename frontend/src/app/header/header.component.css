@@ -1,0 +1,36 @@
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.example-container {      /*     to modify     */
+    position: absolute;
+    top: 8vh;
+    bottom: 8vh;
+    left: 0;
+    width: 100%;
+}
+
+.header-title {
+    position: absolute; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+  }
+
+.centered-toolbar {
+  display: flex;
+  align-items: center;
+  height: 5vh;
+}
+  
+.example-sidenav-content {
+    height: 100%;
+}
+
+.example-sidenav {
+    background-color: gray;
+    padding: 20px;
+    
+}

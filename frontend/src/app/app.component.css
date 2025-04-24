@@ -1,52 +1,45 @@
 .app-container {
     display: grid;
 
-    gap: 10px; /* Space between grid items */
     grid-template-rows: auto 1fr auto;
     grid-template-columns: 1fr 3fr; /* Adjust column sizes */
     grid-template-areas:
       "header header"
-      "sidebar dashboard"
+      "dashboard dashboard"
       "footer footer";
-    height: 98vh; /* Full height of the viewport */
+    height: 100vh; /* Full height of the viewport */
 }
 
 .header {
     grid-area: header;
-    background-color: teal;
+    background-color: rgb(21,96,189);
     color: white;
-    text-align: center;
     padding: 10px;
-    outline: black solid 3px;
 }
 
-.sidebar {
+/*.sidebar {
     grid-area: sidebar;
     background-color: greenyellow;
     color: black;
     padding: 10px;
-    outline: black solid 3px;
     align-items: center;
     display: flex;
     justify-content: center;
-}
+}*/
 
 .dashboard {
     grid-area: dashboard;
-    background-color: rebeccapurple;
+    background-color: rgb(232, 223, 255);
     color: white;
     padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: black solid 3px;
 }
 
 .footer {
     grid-area: footer;
-    background-color: goldenrod;
+    background-color: rgb(21,96,189);
     color: white;
-    text-align: center;
     padding: 10px;
-    outline: black solid 3px;
 }
