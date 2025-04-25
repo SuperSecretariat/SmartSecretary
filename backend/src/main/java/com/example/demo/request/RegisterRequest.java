@@ -1,7 +1,7 @@
 package com.example.demo.request;
 
 import com.example.demo.constants.ErrorMessage;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.demo.constants.ValidationGroup;
 import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Date;
@@ -9,60 +9,38 @@ import java.time.LocalDate;
 
 public class RegisterRequest {
 
-    @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
+
+    @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class})
     private String firstName;
 
-    @NotBlank(message = ErrorMessage.MISSING_LAST_NAME)
+    @NotBlank(message = ErrorMessage.MISSING_LAST_NAME, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class})
     private String lastName;
 
-    @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
+    @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class, ValidationGroup.AdminGroup.class})
     private String registrationNumber;
 
-    @NotBlank(message = ErrorMessage.MISSING_UNIVERSITY)
+    @NotBlank(message = ErrorMessage.MISSING_UNIVERSITY, groups = ValidationGroup.StudentGroup.class)
     private String university;
 
-    @NotBlank(message = ErrorMessage.MISSING_FACULTY)
+    @NotBlank(message = ErrorMessage.MISSING_FACULTY, groups = ValidationGroup.StudentGroup.class)
     private String faculty;
 
-    @NotBlank(message = ErrorMessage.MISSING_EMAIL)
+    @NotBlank(message = ErrorMessage.MISSING_EMAIL, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class, ValidationGroup.AdminGroup.class})
     private String email;
 
-    @NotBlank(message = ErrorMessage.MISSING_PASSWORD)
+    @NotBlank(message = ErrorMessage.MISSING_PASSWORD, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class, ValidationGroup.AdminGroup.class})
     private String password;
 
-    @NotBlank(message = ErrorMessage.MISSING_CONFIRMATION_PASSWORD)
+    @NotBlank(message = ErrorMessage.MISSING_CONFIRMATION_PASSWORD, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class, ValidationGroup.AdminGroup.class})
     private String confirmationPassword;
 
-    @NotBlank(message = ErrorMessage.MISSING_DATE_OF_BIRTH)
+    @NotBlank(message = ErrorMessage.MISSING_DATE_OF_BIRTH, groups = ValidationGroup.StudentGroup.class)
     private LocalDate dateOfBirth;
 
-    @NotBlank(message = ErrorMessage.MISSING_CNP)
-    private String CNP;
+    @NotBlank(message = ErrorMessage.MISSING_CNP, groups = {ValidationGroup.StudentGroup.class, ValidationGroup.SecretaryGroup.class})
+    private String cnp;
 
-    public RegisterRequest(
-            @JsonProperty("firstName") String firstName,
-            @JsonProperty("lastName") String lastName,
-            @JsonProperty("email") String email,
-            @JsonProperty("registrationNumber") String registrationNumber,
-            @JsonProperty("university") String university,
-            @JsonProperty("faculty") String faculty,
-            @JsonProperty("password") String password,
-            @JsonProperty("confirmationPassword") String confirmationPassword,
-            @JsonProperty("dateOfBirth") LocalDate dateOfBirth,
-            @JsonProperty("CNP") String CNP)
-    {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.registrationNumber = registrationNumber;
-        this.university = university;
-        this.faculty = faculty;
-        this.password = password;
-        this.confirmationPassword = confirmationPassword;
-        this.dateOfBirth = dateOfBirth;
-        this.CNP = CNP;
-    }
-
+    public RegisterRequest(){}
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -97,11 +75,11 @@ public class RegisterRequest {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getCNP() {
-        return CNP;
+    public String getCnp() {
+        return this.cnp;
     }
-    public void setCNP(String CNP) {
-        this.CNP = CNP;
+    public void setCnp(String cnp) {
+        this.cnp = cnp;
     }
 
     public String getPassword() { return password; }

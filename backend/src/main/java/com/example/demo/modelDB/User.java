@@ -60,7 +60,7 @@ public class User {
     private Date dateOfBirth;
 
     @Column(name = "CNP")
-    private String CNP;
+    private String cnp;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -69,16 +69,16 @@ public class User {
     public User() {
     }
 
-    public User(String lastName, String firstName, String idNumber, String university, String faculty, String email, String password, Date dateOfBirth, String CNP) {
+    public User(String lastName, String firstName, String regNumber, String university, String faculty, String email, String password, Date dateOfBirth, String cnp) {
         this.lastName = lastName;
         this.firstName = firstName;
-        this.regNumber = idNumber;
+        this.regNumber = regNumber;
         this.university = university;
         this.faculty = faculty;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
-        this.CNP = CNP;
+        this.cnp = cnp;
     }
 
     public Long getId() {
@@ -99,11 +99,11 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    public String getIdNumber() {
+    public String getRegNumber() {
         return regNumber;
     }
-    public void setIdNumber(String idNumber) {
-        this.regNumber = idNumber;
+    public void setRegNumber(String regNumber) {
+        this.regNumber = regNumber;
     }
     public String getEmail() {
         return email;
@@ -136,5 +136,12 @@ public class User {
     }
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getCnp() {
+        return cnp;
+    }
+    public void setCnp(String cnp) {
+        this.cnp = cnp;
     }
 }

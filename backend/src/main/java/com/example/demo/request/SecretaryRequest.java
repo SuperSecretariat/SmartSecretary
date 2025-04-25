@@ -24,12 +24,12 @@ public class SecretaryRequest {
             @JsonProperty("firstName") String firstName,
             @JsonProperty("lastName") String lastName,
             @JsonProperty("CNP") String CNP,
-            @JsonProperty("AuthKey") String authKey){
+            @JsonProperty("authKey") String authKey){
         this.firstName = firstName;
         this.lastName = lastName;
         this.CNP = CNP;
         try{
-            String encryptedKey = encrypt(authKey);
+            this.authKey = encrypt(authKey);
         }
         catch (Exception e){
             throw new IllegalStateException("Encryption failed",e);
