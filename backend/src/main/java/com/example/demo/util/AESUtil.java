@@ -9,7 +9,9 @@ public class AESUtil {
 
     private static final String ALGORITHM = "AES";
 
-    private static final String SECRET = System.getenv("AES_SECRET");
+    private static final String SECRET = System.getenv("AES_SECRET") != null
+            ? System.getenv("AES_SECRET")
+            : "DefaultSecretKey";
 
     static {
         if (SECRET == null || SECRET.length() != 16) {

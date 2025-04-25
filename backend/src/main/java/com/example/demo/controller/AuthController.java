@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.constants.ValidationGroup;
 import com.example.demo.model.enums.ERole;
 import com.example.demo.modelDB.Role;
 import com.example.demo.modelDB.Student;
@@ -12,7 +13,9 @@ import com.example.demo.request.RegisterRequest;
 import com.example.demo.response.JwtResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.Normalizer;
@@ -44,7 +47,7 @@ public class AuthController {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.getPassword().equals(loginRequest.getPassword()))
-                return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getIdNumber(), roleNames));
+                return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getRegNumber(), roleNames));
             else
                 return ResponseEntity.status(401).body("Parola incorecta");
         } else {
@@ -53,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> register(@Validated(ValidationGroup.StudentGroup.class) @RequestBody RegisterRequest registerRequest) {
         Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getRegistrationNumber());
 
         if (optionalUser.isPresent()) {
@@ -71,14 +74,14 @@ public class AuthController {
                     registerRequest.getEmail(),
                     registerRequest.getPassword(),
                     registerRequest.getDateOfBirth(),
-                    registerRequest.getCNP()
+                    registerRequest.getCnp()
             );
             Optional<Role> studentRole = roleRepository.findByName(ERole.ROLE_STUDENT);
             Set<Role> roles = new HashSet<>();
             roles.add(studentRole.get());
             newUser.setRoles(roles);
             userRepository.save(newUser);
-            return ResponseEntity.ok("Cont creat cu succes!");
+            return ResponseEntity.ok("Account created successfully");
         }
         else {
             return ResponseEntity.status(400).body("Data provided is wrong!");
@@ -95,7 +98,7 @@ public class AuthController {
             String firstNameRegister = registerRequest.getFirstName().toLowerCase();
             String lastNameRegister = registerRequest.getLastName().toLowerCase();
             LocalDate dateOfBirthRegister = registerRequest.getDateOfBirth().toLocalDate();
-            String CNPRegister = registerRequest.getCNP();
+            String CNPRegister = registerRequest.getCnp();
 
             String firstNameStudent = studentData.getFirstName().toLowerCase();
             String lastNameStudent = studentData.getLastName().toLowerCase();
