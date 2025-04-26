@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,21 +39,24 @@ public class AuthController {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         Optional<User> optionalUser = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(404).body("User doesn't exist");
+        }
         Set<Role> userRole = optionalUser.get().getRoles();
 
         List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
-        if (optionalUser.isPresent()) {
+        if (passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
             User user = optionalUser.get();
-            if (user.getPassword().equals(loginRequest.getPassword()))
-                return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getRegNumber(), roleNames));
-            else
-                return ResponseEntity.status(401).body("Parola incorecta");
-        } else {
-            return ResponseEntity.status(404).body("Contul nu exista");
-        }
+            return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getRegNumber(), roleNames));
+        } else
+            return ResponseEntity.status(401).body("Incorrect password");
     }
 
     @PostMapping("/register")
@@ -65,6 +69,7 @@ public class AuthController {
 
         if(validateUserCredentials(registerRequest))
         {
+            String hashedPassword=passwordEncoder.encode(registerRequest.getPassword());
             User newUser = new User(
                     registerRequest.getLastName(),
                     registerRequest.getFirstName(),
@@ -72,7 +77,7 @@ public class AuthController {
                     registerRequest.getUniversity(),
                     registerRequest.getFaculty(),
                     registerRequest.getEmail(),
-                    registerRequest.getPassword(),
+                    hashedPassword,
                     registerRequest.getDateOfBirth(),
                     registerRequest.getCnp()
             );
@@ -117,5 +122,4 @@ public class AuthController {
             return true;
         }
     }
-
 }
