@@ -16,21 +16,25 @@
 </mat-toolbar>
 
 
-<mat-drawer-container class="example-container" autosize>
+<mat-drawer-container class="example-container">
     <mat-drawer #drawer class="example-sidenav" mode="side">
         <mat-list role="list">
-            <mat-list-item role="listitem">Item 1</mat-list-item>
-            <mat-divider/>
-            <mat-list-item role="listitem">Item 2</mat-list-item>
-            <mat-divider/>
-            <mat-list-item role="listitem">Item 3</mat-list-item>
-          </mat-list>
+            <ng-container *ngFor="let item of getMenuItems(); let last = last";>
+                <mat-list-item role="listitem">
+                    <a routerLink={{item.getRoute()}}>
+                        {{item.getName()}}
+                    </a>
+                </mat-list-item>
+                <mat-divider *ngIf="!last"></mat-divider>
+            </ng-container>
+        </mat-list>
     </mat-drawer>
   
     <div class="example-sidenav-content" (click)="drawer.close()">
+        <ng-content></ng-content>
       
     </div>
-  
+    
 </mat-drawer-container>
   
   

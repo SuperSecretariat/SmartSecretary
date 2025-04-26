@@ -1,12 +1,14 @@
-.footer-logo{
-    width: 3vw;
-    height: auto;
-}
-
 .footer-content {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.footer-logo{
+    width: 4vw;
+    height: auto;
+    margin-bottom: 1 rem;
 }
 
 .logo-text {
