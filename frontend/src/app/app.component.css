@@ -2,10 +2,10 @@
     display: grid;
 
     grid-template-rows: auto 1fr auto;
-    grid-template-columns: 1fr 3fr; /* Adjust column sizes */
+    grid-template-columns: 1fr; 
     grid-template-areas:
       "header header"
-      "dashboard dashboard"
+      "mainwindow mainwindow"
       "footer footer";
     height: 100vh; /* Full height of the viewport */
 }
@@ -27,11 +27,21 @@
     justify-content: center;
 }*/
 
-.dashboard {
-    grid-area: dashboard;
+.dashboard-NavBarVisible {
     background-color: rgb(232, 223, 255);
     color: white;
-    padding: 10px;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-NavBarNotVisible {
+    background-color: rgb(232, 223, 255);
+    color: white;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,3 +53,19 @@
     color: white;
     padding: 10px;
 }
+
+.navbar {
+    width: 30%;
+    display: flex;
+    align-items: center;
+
+}
+
+.main-window {
+    grid-area: mainwindow;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+

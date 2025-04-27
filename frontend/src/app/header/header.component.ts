@@ -8,6 +8,7 @@ import { MenuItem } from '../models/menu-item.model';
 import { CommonModule } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet} from '@angular/router';
+import { navbarVisibilityService } from '../services/navbarVisibility.service';
 
 @Component({
   selector: 'app-header',
@@ -24,9 +25,13 @@ import { RouterLink, RouterOutlet} from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
+
+
 export class HeaderComponent implements OnInit {
   showFiller = true;
   private menuItems: MenuItem[] = [];
+
+  constructor(private navbarVisibilityService: navbarVisibilityService) {}
 
   ngOnInit() {
     
@@ -38,6 +43,14 @@ export class HeaderComponent implements OnInit {
       new MenuItem('Services', '/services'),
       new MenuItem('Produces', '/products')
     ]
+  }
+
+  toggleOnNavBar(): void {
+    this.navbarVisibilityService.showComponent();
+  }
+
+  toggleOffNavBar(): void {
+    this.navbarVisibilityService.hideComponent();
   }
 
   getMenuItems(): MenuItem[] {
