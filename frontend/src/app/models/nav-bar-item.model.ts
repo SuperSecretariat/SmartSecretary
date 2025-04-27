@@ -1,4 +1,4 @@
-export class MenuItem {
+export class NavBarItem {
     private name: string;
     private route: string;
 

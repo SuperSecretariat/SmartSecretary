@@ -11,15 +11,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent implements OnInit {
-  isGdprVisible: boolean = true;
+  isGdprVisible: boolean;
+  breakpointObserver: BreakpointObserver;
 
 
-  constructor(private responsive: BreakpointObserver) { }
+  constructor(private breakpointObserverParam: BreakpointObserver) {
+    this.breakpointObserver = breakpointObserverParam;
+    this.isGdprVisible = true; // Default value
+  }
 
   ngOnInit(): void {
-    this.responsive.observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, Breakpoints.WebPortrait, Breakpoints.WebLandscape]).subscribe(result => {
+    this.breakpointObserver.observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, Breakpoints.WebPortrait, Breakpoints.WebLandscape]).subscribe(result => {
       const breakpoints = result.breakpoints;
-
 
       // Check the current breakpoint and set isGdprVisible accordingly
       // Add breakpoints as you need so you can handle more screen sizes

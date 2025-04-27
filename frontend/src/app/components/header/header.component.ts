@@ -4,11 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { MenuItem } from '../models/menu-item.model';
 import { CommonModule } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet} from '@angular/router';
-import { navbarVisibilityService } from '../services/navbarVisibility.service';
+import { NavBarVisibilityService } from '../../services/navbarVisibility.service';
 
 @Component({
   selector: 'app-header',
@@ -19,8 +18,8 @@ import { navbarVisibilityService } from '../services/navbarVisibility.service';
     MatSidenavModule,
     MatListModule,
     CommonModule,
-    RouterLink,
-    RouterOutlet
+    // RouterLink,
+    // RouterOutlet
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
@@ -29,32 +28,20 @@ import { navbarVisibilityService } from '../services/navbarVisibility.service';
 
 export class HeaderComponent implements OnInit {
   showFiller = true;
-  private menuItems: MenuItem[] = [];
+  navBarVisibilityService : NavBarVisibilityService;
 
-  constructor(private navbarVisibilityService: navbarVisibilityService) {}
+  constructor(private navBarVisibilityServiceParam: NavBarVisibilityService) {
+    this.navBarVisibilityService = navBarVisibilityServiceParam;
+  }
 
   ngOnInit() {
-    
-    // Initialize the menu items here or fetch them from a service
-    this.menuItems = [
-      new MenuItem('Home', '/home'),
-      new MenuItem('About', '/about'),
-      new MenuItem('Contact', '/contact'),
-      new MenuItem('Services', '/services'),
-      new MenuItem('Produces', '/products')
-    ]
+    // Initialize the component and set up any necessary data or state
+    // For example, you can fetch menu items from a service or define them here
+    console.log('Header component initialized');
   }
 
-  toggleOnNavBar(): void {
-    this.navbarVisibilityService.showComponent();
-  }
-
-  toggleOffNavBar(): void {
-    this.navbarVisibilityService.hideComponent();
-  }
-
-  getMenuItems(): MenuItem[] {
-    return this.menuItems;
+  toggleNavBar(): void {
+    this.navBarVisibilityService.switchVisibility();
   }
 
 }

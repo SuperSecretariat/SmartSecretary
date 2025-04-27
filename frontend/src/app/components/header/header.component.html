@@ -1,5 +1,5 @@
 <mat-toolbar class="centered-toolbar">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="toggleOnNavBar()">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="this.toggleNavBar()">
         <mat-icon>menu</mat-icon>
       </button>
     <span>Menu</span>
@@ -14,7 +14,3 @@
         <mat-icon>logout</mat-icon>
     </button>
 </mat-toolbar>
-  
-    <div class="example-sidenav-content" (click)="toggleOffNavBar()">
-        <ng-content></ng-content>
-    </div>
