@@ -1,0 +1,125 @@
+package com.example.demo.controller;
+
+import com.example.demo.constants.ValidationGroup;
+import com.example.demo.model.enums.ERole;
+import com.example.demo.modelDB.Role;
+import com.example.demo.modelDB.Student;
+import com.example.demo.modelDB.User;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.request.LoginRequest;
+import com.example.demo.request.RegisterRequest;
+import com.example.demo.response.JwtResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.Normalizer;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+        Optional<User> optionalUser = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(404).body("User doesn't exist");
+        }
+        Set<Role> userRole = optionalUser.get().getRoles();
+
+        List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
+        if (passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
+            User user = optionalUser.get();
+            return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getRegNumber(), roleNames));
+        } else
+            return ResponseEntity.status(401).body("Incorrect password");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Validated(ValidationGroup.StudentGroup.class) @RequestBody RegisterRequest registerRequest) {
+        Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getRegistrationNumber());
+
+        if (optionalUser.isPresent()) {
+            return ResponseEntity.status(409).body("Un cont cu acelasi numar matricol a fost creat deja");
+        }
+
+        if(validateUserCredentials(registerRequest))
+        {
+            String hashedPassword=passwordEncoder.encode(registerRequest.getPassword());
+            User newUser = new User(
+                    registerRequest.getLastName(),
+                    registerRequest.getFirstName(),
+                    registerRequest.getRegistrationNumber(),
+                    registerRequest.getUniversity(),
+                    registerRequest.getFaculty(),
+                    registerRequest.getEmail(),
+                    hashedPassword,
+                    registerRequest.getDateOfBirth(),
+                    registerRequest.getCnp()
+            );
+            Optional<Role> studentRole = roleRepository.findByName(ERole.ROLE_STUDENT);
+            Set<Role> roles = new HashSet<>();
+            roles.add(studentRole.get());
+            newUser.setRoles(roles);
+            userRepository.save(newUser);
+            return ResponseEntity.ok("Account created successfully");
+        }
+        else {
+            return ResponseEntity.status(400).body("Data provided is wrong!");
+        }
+
+
+    }
+
+    private boolean validateUserCredentials(RegisterRequest registerRequest){
+        if(!studentRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
+            return false;
+        else {
+            Student studentData = studentRepository.findByRegNumber(registerRequest.getRegistrationNumber()).get();
+            String firstNameRegister = registerRequest.getFirstName().toLowerCase();
+            String lastNameRegister = registerRequest.getLastName().toLowerCase();
+            LocalDate dateOfBirthRegister = registerRequest.getDateOfBirth().toLocalDate();
+            String CNPRegister = registerRequest.getCnp();
+
+            String firstNameStudent = studentData.getFirstName().toLowerCase();
+            String lastNameStudent = studentData.getLastName().toLowerCase();
+            LocalDate dateOfBirthStudent = studentData.getDateOfBirth().toLocalDate();
+            String CNPStudent = studentData.getCNP();
+
+            if(!firstNameRegister.equals(firstNameStudent))
+                return false;
+            else if(!lastNameRegister.equals(lastNameStudent))
+                return false;
+            else if(!dateOfBirthRegister.equals(dateOfBirthStudent))
+                return false;
+            else if(!CNPRegister.equals(CNPStudent))
+                return false;
+
+            return true;
+        }
+    }
+}
