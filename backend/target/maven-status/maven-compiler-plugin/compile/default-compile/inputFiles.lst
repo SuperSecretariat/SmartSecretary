@@ -1,0 +1,17 @@
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\config\CorsConfig.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\Cryptography.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\Decryption.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\Encryption.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\IncompleteDataException.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\Login.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\MainAuthLogin.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\Register.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\Student.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\StudentDto.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\StudentRepository.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\controller\StudentService.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\model\enums\DocumentStatus.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\model\enums\DocumentType.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\model\enums\NotificationType.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\model\enums\UserType.java
+C:\Users\jaber\Desktop\SmartSecretary\backend\src\main\java\com\example\demo\SmartSecretaryApplication.java
