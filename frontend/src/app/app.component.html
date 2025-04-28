@@ -4,7 +4,7 @@
   </header>
   <div class="main-window">
     <div class="navbar" *ngIf="isNavBarVisible">
-      <app-nav-bar></app-nav-bar>
+      <app-nav-bar class="app-nav"></app-nav-bar>
     </div>
     <div [ngClass]="{ 'dashboard-NavBarVisible': isNavBarVisible, 'dashboard-NavBarNotVisible': !isNavBarVisible}">
       <app-dashboard></app-dashboard>

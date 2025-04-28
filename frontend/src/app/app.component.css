@@ -30,7 +30,7 @@
 .dashboard-NavBarVisible {
     background-color: rgb(232, 223, 255);
     color: white;
-    width: 70%;
+    width: 80%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -55,10 +55,10 @@
 }
 
 .navbar {
-    width: 30%;
+    width: 20%;
     display: flex;
     align-items: center;
-
+    height: 100%;
 }
 
 .main-window {
@@ -69,3 +69,7 @@
     align-items: center;
 }
 
+.app-nav {
+    height: 100%;
+    width: 100%;
+}
