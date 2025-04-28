@@ -34,3 +34,18 @@
     padding: 20px;
     
 }
+
+button {
+    transition: transform 0.2s ease, background-color 0.3s ease; 
+    border-radius: 50%; 
+}
+
+button:hover {
+    transform: scale(1.1); 
+    background-color: rgba(134, 186, 231, 0.1); 
+}
+
+button:active {
+    transform: scale(0.95); 
+    background-color: rgba(172, 202, 227, 0.2); 
+}
