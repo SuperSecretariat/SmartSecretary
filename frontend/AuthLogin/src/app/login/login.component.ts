@@ -10,7 +10,7 @@ import { StorageService } from '../_services/storage.service';
 })
 export class LoginComponent implements OnInit {
   form: any = {
-    idNumber: null,
+    registrationNumber: null,
     password: null
   };
   isLoggedIn = false;
@@ -35,9 +35,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { idNumber, password } = this.form;
+    const { registrationNumber, password } = this.form;
 
-    this.authService.login(idNumber, password).subscribe({
+    this.authService.login(registrationNumber, password).subscribe({
       next: data => {
         this.storageService.saveUser(data);
         this.isLoginFailed = false;

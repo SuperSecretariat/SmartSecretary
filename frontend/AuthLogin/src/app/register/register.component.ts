@@ -13,7 +13,11 @@ export class RegisterComponent {
     firstName: null,
     lastName: null,
     email: null,
-    idNumber: null,
+    registrationNumber: null,
+    dateOfBirth: null,
+    CNP: null,
+    university: null,
+    faculty: null,
     password: null,
     confirmationPassword: null
   };
@@ -29,7 +33,7 @@ export class RegisterComponent {
   constructor(private authService: AuthService) { }
 
   onSubmit(): void {
-    const { firstName, lastName, email, idNumber, password, confirmationPassword } = this.form;
+    const { firstName, lastName, email, registrationNumber, dateOfBirth, CNP,university, faculty, password, confirmationPassword } = this.form;
 
      // Check if passwords match
     if (!this.passwordsMatch()) {
@@ -38,7 +42,7 @@ export class RegisterComponent {
       return; // Stop the submission
     }
 
-    this.authService.register(firstName, lastName, email, idNumber, password, confirmationPassword).subscribe({
+    this.authService.register(firstName, lastName, email, registrationNumber, dateOfBirth, CNP, university, faculty, password, confirmationPassword).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessful = true;

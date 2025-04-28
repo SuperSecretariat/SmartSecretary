@@ -90,24 +90,116 @@
           }
         </div>
         <div class="form-group">
-            <label for="idNumber">ID Number</label>
+            <label for="registrationNumber">Registration number</label>
             <input
               type="text"
               class="form-control"
-              name="idNumber"
-              [(ngModel)]="form.idNumber"
+              name="registrationNumber"
+              [(ngModel)]="form.registrationNumber"
               required
-              idNumber
-              #idNumber="ngModel"
-              [ngClass]="{ 'is-invalid': f.submitted && idNumber.errors }"
+              registrationNumber
+              #registrationNumber="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && registrationNumber.errors }"
             />
-            @if (idNumber.errors && f.submitted) {
+            @if (registrationNumber.errors && f.submitted) {
             <div class="invalid-feedback">
-              @if (idNumber.errors['required']) {
-              <div>ID Number is required</div>
+              @if (registrationNumber.errors['required']) {
+              <div>Registration number is required</div>
               }
-              @if (idNumber.errors['idNumber']) {
-              <div>ID Number must be a valid id number address</div>
+              @if (registrationNumber.errors['registrationNumber']) {
+              <div>Registration number must be a valid id number address</div>
+              }
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="dateOfBirth">Date Of Birth</label>
+            <input
+              type="text"
+              class="form-control"
+              name="dateOfBirth"
+              [(ngModel)]="form.dateOfBirth"
+              required
+              dateOfBirth
+              #dateOfBirth="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && dateOfBirth.errors }"
+            />
+            @if (dateOfBirth.errors && f.submitted) {
+            <div class="invalid-feedback">
+              @if (dateOfBirth.errors['required']) {
+              <div>Date Of Birth is required</div>
+              }
+              @if (dateOfBirth.errors['dateOfBirth']) {
+              <div>Date Of Birth must be a valid id number address</div>
+              }
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="CNP">CNP</label>
+            <input
+              type="text"
+              class="form-control"
+              name="CNP"
+              [(ngModel)]="form.CNP"
+              required
+              CNP
+              #CNP="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && CNP.errors }"
+            />
+            @if (CNP.errors && f.submitted) {
+            <div class="invalid-feedback">
+              @if (CNP.errors['required']) {
+              <div>Registration number is required</div>
+              }
+              @if (CNP.errors['CNP']) {
+              <div>Registration number must be a valid id number address</div>
+              }
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="university">University</label>
+            <input
+              type="text"
+              class="form-control"
+              name="university"
+              [(ngModel)]="form.university"
+              required
+              university
+              #university="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && university.errors }"
+            />
+            @if (university.errors && f.submitted) {
+            <div class="invalid-feedback">
+              @if (university.errors['required']) {
+              <div>University is required</div>
+              }
+              @if (university.errors['university']) {
+              <div>University must be a valid id number address</div>
+              }
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="faculty">Faculty</label>
+            <input
+              type="text"
+              class="form-control"
+              name="faculty"
+              [(ngModel)]="form.faculty"
+              required
+              faculty
+              #faculty="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && faculty.errors }"
+            />
+            @if (faculty.errors && f.submitted) {
+            <div class="invalid-feedback">
+              @if (faculty.errors['required']) {
+              <div>faculty is required</div>
+              }
+              @if (faculty.errors['faculty']) {
+              <div>faculty must be a valid id number address</div>
               }
             </div>
             }

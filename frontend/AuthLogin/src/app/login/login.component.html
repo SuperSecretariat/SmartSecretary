@@ -13,18 +13,18 @@
         novalidate
       >
         <div class="form-group">
-          <label for="idNumber">ID Number</label>
+          <label for="registrationNumber">Registration number</label>
           <input
             type="text"
             class="form-control"
-            name="idNumber"
-            [(ngModel)]="form.idNumber"
+            name="registrationNumber"
+            [(ngModel)]="form.registrationNumber"
             required
-            #idNumber="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && idNumber.errors }"
+            #registrationNumber="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && registrationNumber.errors }"
           />
-          @if (idNumber.errors && f.submitted) {
-          <div class="invalid-feedback">idNumber is required!</div>
+          @if (registrationNumber.errors && f.submitted) {
+          <div class="invalid-feedback">Registration Number is required!</div>
           }
         </div>
         <div class="form-group">
