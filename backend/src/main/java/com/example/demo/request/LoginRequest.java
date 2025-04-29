@@ -1,26 +1,27 @@
 package com.example.demo.request;
 
+import com.example.demo.constants.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
 
-    @NotBlank(message = "Numarul matricol nu poate sa lipseasca")
-    private String idNumber;
+    @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
+    private String registrationNumber;
 
-    @NotBlank(message = "Nu te poti conecta fara parola")
+    @NotBlank(message = ErrorMessage.MISSING_PASSWORD)
     private String password;
 
-    public LoginRequest(String idNumber, String password) {
-        this.idNumber = idNumber;
+    public LoginRequest(String registrationNumber, String password) {
+        this.registrationNumber = registrationNumber;
         this.password = password;
     }
 
-    public String getIdNumber() {
-        return idNumber;
+    public String getRegistrationNumber() {
+        return registrationNumber;
     }
 
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     public String getPassword() {
