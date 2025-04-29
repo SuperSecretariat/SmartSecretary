@@ -15,7 +15,7 @@ export class RegisterComponent {
     email: null,
     registrationNumber: null,
     dateOfBirth: null,
-    CNP: null,
+    cnp: null,
     university: null,
     faculty: null,
     password: null,
@@ -33,16 +33,27 @@ export class RegisterComponent {
   constructor(private authService: AuthService) { }
 
   onSubmit(): void {
-    const { firstName, lastName, email, registrationNumber, dateOfBirth, CNP,university, faculty, password, confirmationPassword } = this.form;
+    const { firstName, lastName, email, registrationNumber, dateOfBirth, cnp, university, faculty, password, confirmationPassword } = this.form;
 
-     // Check if passwords match
+    // Check if passwords match
     if (!this.passwordsMatch()) {
       this.errorMessage = "Passwords do not match!";
       this.isSignUpFailed = true;
       return; // Stop the submission
     }
 
-    this.authService.register(firstName, lastName, email, registrationNumber, dateOfBirth, CNP, university, faculty, password, confirmationPassword).subscribe({
+    let formattedDateOfBirth = dateOfBirth;
+    if (dateOfBirth instanceof Date) {
+      formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
+    }
+    else if (typeof dateOfBirth === 'string' && dateOfBirth.includes('T')) {
+      // If it's an ISO string, extract just the date part
+      formattedDateOfBirth = dateOfBirth.split('T')[0];
+    }
+    
+    console.log('Sending dateOfBirth:', formattedDateOfBirth);
+
+    this.authService.register(firstName, lastName, email, registrationNumber, formattedDateOfBirth, cnp, university, faculty, password, confirmationPassword).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessful = true;
