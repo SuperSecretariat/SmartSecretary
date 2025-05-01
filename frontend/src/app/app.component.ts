@@ -1,32 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { DashboardComponent } from "./components/dashboard/dashboard.component";
-import { FooterComponent } from "./components/footer/footer.component";
-import { HeaderComponent } from "./components/header/header.component";
-import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { CommonModule } from '@angular/common';
-import { NavBarVisibilityService } from './services/navbarVisibility.service';
-import { RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { StorageService } from './components/_services/storage.service';
+import { AuthService } from './components/_services/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [DashboardComponent, FooterComponent, HeaderComponent, NavBarComponent, CommonModule] 
+  standalone: false
 })
-export class AppComponent{
-  title : string;
-  navBarVisibilityService : NavBarVisibilityService;
-  isNavBarVisible : boolean;
+export class AppComponent {
+  private roles: string[] = [];
+  isLoggedIn = false;
+  showAdminBoard = false;
+  showSecretaryBoard = false;
+  showStudentBoard = false;
+  username?: string;
 
-  constructor(private navBarVisibilityServiceParam : NavBarVisibilityService) { 
-    this.navBarVisibilityService = navBarVisibilityServiceParam;
-    this.title = 'Smart Secretary';
-    this.isNavBarVisible = false;
+  constructor(private storageService: StorageService, private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.storageService.isLoggedIn();
+
+    if (this.isLoggedIn) {
+      const user = this.storageService.getUser();
+      this.roles = user.roles;
+
+      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
+      this.showSecretaryBoard = this.roles.includes('ROLE_SECRETARY');
+      this.showStudentBoard = this.roles.includes('ROLE_STUDENT');
+
+      this.username = user.username;
+    }
   }
 
-  ngOnInit() {
-    this.navBarVisibilityService.getVisibility().subscribe(visibilityValue => {
-      this.isNavBarVisible = visibilityValue;
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: res => {
+        console.log(res);
+        this.storageService.clean();
+
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
     });
   }
 }
