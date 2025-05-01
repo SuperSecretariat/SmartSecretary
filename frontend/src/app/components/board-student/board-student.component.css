@@ -1,0 +1,80 @@
+.app-container {
+    display: grid;
+
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr; 
+    grid-template-areas:
+      "header header"
+      "mainwindow mainwindow"
+      "footer footer";
+    height: 100vh; /* Full height of the viewport */
+}
+
+.header {
+    grid-area: header;
+    background-color: rgb(21,96,189);
+    color: white;
+    padding: 10px;
+}
+
+/*.sidebar {
+    grid-area: sidebar;
+    background-color: greenyellow;
+    color: black;
+    padding: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}*/
+
+.dashboard-NavBarVisible {
+    background-color: rgb(232, 223, 255);
+    color: white;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-NavBarNotVisible {
+    background-color: rgb(232, 223, 255);
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer {
+    grid-area: footer;
+    background-color: rgb(21,96,189);
+    color: white;
+    padding: 10px;
+}
+
+.navbar {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.main-window {
+    grid-area: mainwindow;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+
+.app-nav {
+    height: 100%;
+    width: 100%;
+}
+
+.app-dashboard {
+    height: 100%;
+    width: 100%;
+}
