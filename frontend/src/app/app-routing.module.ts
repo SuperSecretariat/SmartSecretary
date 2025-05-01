@@ -5,9 +5,9 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { BoardStudentComponent } from './components/board-student/board-student.component';
-import { BoardSecretaryComponent } from './components/board-secretary/board-secretary.component';
-import { BoardAdminComponent } from './components/board-admin/board-admin.component';
+import { BoardStudentComponent } from './pages/board-student/board-student.component';
+import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
+import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },

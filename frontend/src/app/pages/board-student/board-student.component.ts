@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
-import { DashboardComponent } from "../dashboard/dashboard.component";
-import { FooterComponent } from "../footer/footer.component";
-import { HeaderComponent } from "../header/header.component";
-import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { UserService } from '../../components/_services/user.service';
+import { DashboardComponent } from "../../components/dashboard/dashboard.component";
+import { FooterComponent } from "../../components/footer/footer.component";
+import { HeaderComponent } from "../../components/header/header.component";
+import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
 import { CommonModule } from '@angular/common';
-import { NavBarVisibilityService } from '../_services/navbarVisibility.service';
+import { NavBarVisibilityService } from '../../components/_services/navbarVisibility.service';
 import { RouterModule } from '@angular/router';
 
 @Component({

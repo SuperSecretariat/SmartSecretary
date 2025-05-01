@@ -9,11 +9,11 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { BoardAdminComponent } from './components/board-admin/board-admin.component';
+import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
-import { BoardStudentComponent } from './components/board-student/board-student.component';
-import { BoardSecretaryComponent } from './components/board-secretary/board-secretary.component';
+import { BoardStudentComponent } from './pages/board-student/board-student.component';
+import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { HeaderComponent } from "./components/header/header.component";
 import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
