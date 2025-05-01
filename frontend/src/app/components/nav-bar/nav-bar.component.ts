@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { NavBarItem } from '../../models/nav-bar-item.model';
+import { NavBarItem } from '../models/nav-bar-item.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 

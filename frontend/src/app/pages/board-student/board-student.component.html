@@ -1,0 +1,18 @@
+<div class="app-container">
+  <header class="header">
+    <app-header></app-header>
+  </header>
+
+  <div class="main-window">
+    <div class="navbar" *ngIf="isNavBarVisible">
+      <app-nav-bar class="app-nav"></app-nav-bar>
+    </div>
+    <div [ngClass]="{ 'dashboard-NavBarVisible': isNavBarVisible, 'dashboard-NavBarNotVisible': !isNavBarVisible}">
+      <app-dashboard class="app-dashboard"></app-dashboard>
+    </div>
+  </div>
+  
+  <footer class="footer">
+    <app-footer></app-footer>
+  </footer>
+</div>

@@ -23,7 +23,7 @@ export class NavBarVisibilityService implements OnInit {
     switchVisibility(): void {
         this.isNavBarVisible.next(!this.isNavBarVisible.getValue());
         
-        // console.log("Navbar changed visibility -> visible value = " + this.isNavBarVisible.getValue());
+        //console.log("Navbar changed visibility -> visible value = " + this.isNavBarVisible.getValue());
     }
 
     getVisibility(): Observable<boolean> {

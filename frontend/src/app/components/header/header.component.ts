@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet} from '@angular/router';
-import { NavBarVisibilityService } from '../../services/navbarVisibility.service';
+import { NavBarVisibilityService } from '../_services/navbarVisibility.service';
 
 @Component({
   selector: 'app-header',
@@ -17,9 +17,7 @@ import { NavBarVisibilityService } from '../../services/navbarVisibility.service
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    CommonModule,
-    // RouterLink,
-    // RouterOutlet
+    CommonModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
