@@ -33,13 +33,17 @@ export class NavBarComponent implements OnInit {
       return;
     }
 
-    this.navBarItems = [
-      new NavBarItem('Home', '/home'),
-      new NavBarItem('Create form', '/create-form'),
-      new NavBarItem('Submitted forms', '/submitted-forms'),
-      new NavBarItem('Account Manager', '/account'),
-      new NavBarItem('News Feed', '/newsfeed'),
-    ];
+  const user = this.storageService.getUser();
+  const roles: string[] = user.roles;
+  const rolePrefix = roles[0].replace('ROLE_', '').toLowerCase();
+
+  this.navBarItems = [
+    new NavBarItem('Home', `/${rolePrefix}/home`),
+    new NavBarItem('Create form', `/${rolePrefix}/create-form`),
+    new NavBarItem('Submitted forms', `/${rolePrefix}/submitted-forms`),
+    new NavBarItem('Account Manager', `/${rolePrefix}/account`),
+    new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
+  ];
 
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
