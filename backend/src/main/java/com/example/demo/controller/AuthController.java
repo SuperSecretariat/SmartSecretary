@@ -1,30 +1,24 @@
 package com.example.demo.controller;
 
-import com.example.demo.constants.ValidationGroup;
 import com.example.demo.model.enums.ERole;
-import com.example.demo.modelDB.Role;
-import com.example.demo.modelDB.Student;
-import com.example.demo.modelDB.User;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.StudentRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.modelDB.*;
+import com.example.demo.repository.*;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import com.example.demo.response.JwtResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.Normalizer;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.example.demo.util.AESUtil.decrypt;
+import static com.example.demo.util.AESUtil.encrypt;
 
 
 @RestController
@@ -38,6 +32,12 @@ public class AuthController {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
+    private SecretaryRepository secretaryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -60,66 +60,103 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Validated(ValidationGroup.StudentGroup.class) @RequestBody RegisterRequest registerRequest) {
-        Optional<User> optionalUser = userRepository.findByRegNumber(registerRequest.getRegistrationNumber());
-
-        if (optionalUser.isPresent()) {
-            return ResponseEntity.status(409).body("Un cont cu acelasi numar matricol a fost creat deja");
-        }
-
-        if(validateUserCredentials(registerRequest))
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+        ERole newAccountRole = null;
+        if(userRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
         {
-            String hashedPassword=passwordEncoder.encode(registerRequest.getPassword());
+            return ResponseEntity.status(409).body("An account with the the same registration number/authentication key has already been created");
+        }
+        else{
+            String tempAuthKey = encryptException(registerRequest.getRegistrationNumber());
+            if(studentRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
+                newAccountRole = ERole.ROLE_STUDENT;
+            else if(secretaryRepository.existsByAuthKey(tempAuthKey))
+                newAccountRole = ERole.ROLE_SECRETARY;
+            else if(adminRepository.existsByAuthKey(tempAuthKey))
+                newAccountRole = ERole.ROLE_ADMIN;
+            else
+                return ResponseEntity.status(404).body("Registration number/authentication key are not valid");
+        }
+        if(validateData(registerRequest, newAccountRole)){
+            Optional<Role> accountRole = roleRepository.findByName(newAccountRole);
+            Set<Role> roles = new HashSet<>();
+            roles.add(accountRole.get());
+            String tempKey = registerRequest.getRegistrationNumber();
+            String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
+            if(newAccountRole.equals(ERole.ROLE_ADMIN) || newAccountRole.equals(ERole.ROLE_SECRETARY))
+                encryptException(tempKey);
             User newUser = new User(
                     registerRequest.getLastName(),
                     registerRequest.getFirstName(),
-                    registerRequest.getRegistrationNumber(),
-                    registerRequest.getUniversity(),
-                    registerRequest.getFaculty(),
+                    tempKey,
+                    null,
+                    null,
                     registerRequest.getEmail(),
                     hashedPassword,
-                    registerRequest.getDateOfBirth(),
-                    registerRequest.getCnp()
+                    null,
+                    null
             );
-            Optional<Role> studentRole = roleRepository.findByName(ERole.ROLE_STUDENT);
-            Set<Role> roles = new HashSet<>();
-            roles.add(studentRole.get());
             newUser.setRoles(roles);
             userRepository.save(newUser);
-            return ResponseEntity.ok("Account created successfully");
+            return ResponseEntity.ok("Account Created successfully");
         }
-        else {
-            return ResponseEntity.status(400).body("Data provided is wrong!");
-        }
-
-
+        else
+            return ResponseEntity.status(400).body("Data provided is wrong");
     }
 
-    private boolean validateUserCredentials(RegisterRequest registerRequest){
-        if(!studentRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
-            return false;
-        else {
-            Student studentData = studentRepository.findByRegNumber(registerRequest.getRegistrationNumber()).get();
-            String firstNameRegister = registerRequest.getFirstName().toLowerCase();
-            String lastNameRegister = registerRequest.getLastName().toLowerCase();
-            LocalDate dateOfBirthRegister = registerRequest.getDateOfBirth().toLocalDate();
-            String CNPRegister = registerRequest.getCnp();
+    private boolean validateData(RegisterRequest registerRequest, ERole registerRole){
+        String tempAuthKey = encryptException(registerRequest.getRegistrationNumber());
+        switch(registerRole){
+            case ROLE_STUDENT:
+                Student tempStudent = studentRepository.findByRegNumber(registerRequest.getRegistrationNumber()).get();
+                if(tempStudent.getRegNumber().equals(registerRequest.getRegistrationNumber()) && tempStudent.getEmail().equals(registerRequest.getEmail())){
+                    return true;
+                }
+                else
+                    return false;
 
-            String firstNameStudent = studentData.getFirstName().toLowerCase();
-            String lastNameStudent = studentData.getLastName().toLowerCase();
-            LocalDate dateOfBirthStudent = studentData.getDateOfBirth().toLocalDate();
-            String CNPStudent = studentData.getCNP();
+            case ROLE_SECRETARY:
 
-            if(!firstNameRegister.equals(firstNameStudent))
-                return false;
-            else if(!lastNameRegister.equals(lastNameStudent))
-                return false;
-            else if(!dateOfBirthRegister.equals(dateOfBirthStudent))
-                return false;
-            else if(!CNPRegister.equals(CNPStudent))
-                return false;
+                Secretary tempSecretary = secretaryRepository.findByAuthKey(tempAuthKey).get();
+                String tempSecretaryKey = decryptException(tempSecretary.getAuthKey());
+                if(tempSecretaryKey.equals(registerRequest.getRegistrationNumber()) && tempSecretary.getEmail().equals(registerRequest.getEmail()))
+                {
+                    return true;
+                }
+                else
+                    return false;
 
-            return true;
+            case ROLE_ADMIN:
+                Admin tempAdmin = adminRepository.findByAuthKey(tempAuthKey).get();
+                String tempAdminKey = decryptException(tempAdmin.getAuthKey());
+                if(tempAdminKey.equals(registerRequest.getRegistrationNumber()) && tempAdmin.getEmail().equals(registerRequest.getEmail())){
+                    return true;
+                }
+                else
+                    return false;
+
+            default:
+                return false;
         }
     }
+
+    private static String encryptException(String input){
+        try{
+            return encrypt(input);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String decryptException(String input){
+        try{
+            return decrypt(input);
+        } catch(Exception e){
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

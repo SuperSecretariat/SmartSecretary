@@ -31,7 +31,7 @@ public class Admin {
     public Admin() {
 
     }
-    public Admin(String email, String authKey) {
+    public Admin(String authKey, String email) {
         this.email = email;
         this.authKey = authKey;
     }

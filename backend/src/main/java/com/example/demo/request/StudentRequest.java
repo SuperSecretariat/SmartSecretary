@@ -8,51 +8,24 @@ import java.time.LocalDate;
 
 public class StudentRequest {
 
-    @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
-    private String firstName;
-
-    @NotBlank(message = ErrorMessage.MISSING_LAST_NAME)
-    private String lastName;
-
     @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
     private String registrationNumber;
 
-    @NotBlank(message = ErrorMessage.MISSING_DATE_OF_BIRTH)
-    private LocalDate dateOfBirth;
-
-    @NotBlank(message = ErrorMessage.MISSING_CNP)
-    private String CNP;
+    @NotBlank(message = ErrorMessage.MISSING_EMAIL)
+    private String email;
 
     public StudentRequest(
-            @JsonProperty("firstName") String firstName,
-            @JsonProperty("lastName") String lastName,
-            @JsonProperty("registrationNumber") String registrationNumber,
-            @JsonProperty("dateOfBirth") LocalDate dateOfBirth,
-            @JsonProperty("CNP") String CNP){
-        this.firstName = firstName;
-        this.lastName = lastName;
+            @JsonProperty("email") String email,
+            @JsonProperty("registrationNumber") String registrationNumber)
+{
         this.registrationNumber = registrationNumber;
-        this.dateOfBirth = dateOfBirth;
-        this.CNP = CNP;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public String getCNP() {
-        return CNP;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+        this.email = email;
     }
 
     public String getRegistrationNumber() {
         return registrationNumber;
+    }
+    public String getEmail() {
+        return email;
     }
 }

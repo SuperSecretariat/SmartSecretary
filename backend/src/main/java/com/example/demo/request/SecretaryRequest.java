@@ -8,26 +8,16 @@ import static com.example.demo.util.AESUtil.encrypt;
 
 public class SecretaryRequest {
 
-    @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
-    private String firstName;
-
-    @NotBlank(message = ErrorMessage.MISSING_LAST_NAME)
-    private String lastName;
-
-    @NotBlank(message = ErrorMessage.MISSING_CNP)
-    private String CNP;
-
     @NotBlank(message = ErrorMessage.MISSING_AUTHKEY)
     private String authKey;
 
+    @NotBlank(message = ErrorMessage.MISSING_EMAIL)
+    private String email;
+
     public SecretaryRequest(
-            @JsonProperty("firstName") String firstName,
-            @JsonProperty("lastName") String lastName,
-            @JsonProperty("CNP") String CNP,
+            @JsonProperty("email") String email,
             @JsonProperty("authKey") String authKey){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.CNP = CNP;
+        this.email = email;
         try{
             this.authKey = encrypt(authKey);
         }
@@ -36,19 +26,10 @@ public class SecretaryRequest {
         }
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getCNP() {
-        return CNP;
-    }
-
     public String getAuthKey() {
         return authKey;
+    }
+    public String getEmail() {
+        return email;
     }
 }

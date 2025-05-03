@@ -20,35 +20,21 @@ public class Student {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "first_name")
-    private  String firstName;
-
-    @NotBlank
-    @Size(max = 20)
-    @Column(name = "last_name")
-    private String lastName;
-
-    @NotBlank
-    @Size(max = 20)
     @Column(name = "registration_number", nullable = false)
     private String regNumber;
 
-    @Column(name = "date_of_birth")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
+    @NotBlank
+    @Size(max = 50)
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "CNP")
-    private String CNP;
 
     public Student() {
 
     }
-    public Student(String firstName, String lastName, String regNumber, Date dateOfBirth, String CNP) {
-    this.firstName = firstName;
-    this.lastName = lastName;
+    public Student(String regNumber, String email) {
     this.regNumber = regNumber;
-    this.dateOfBirth = dateOfBirth;
-    this.CNP = CNP;
+    this.email = email;
     }
 
     public Long getId() {
@@ -57,37 +43,16 @@ public class Student {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
     public String getRegNumber() {
         return regNumber;
     }
     public void setRegNumber(String regNumber) {
         this.regNumber = regNumber;
     }
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getEmail() {
+        return email;
     }
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setEmail(String email) {
+        this.email = email;
     }
-    public String getCNP() {
-        return CNP;
-    }
-    public void setCNP(String CNP) {
-        this.CNP = CNP;
-    }
-
-
-
 }
