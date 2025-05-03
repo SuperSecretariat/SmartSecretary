@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface SecretaryRepository extends JpaRepository<Secretary, Long> {
     Optional<Secretary> findByAuthKey(String authKey);
     boolean existsByAuthKey(String authKey);
-    boolean existsByCNP(String CNP);
-    Optional<Secretary> findByCNP(String CNP);
 }

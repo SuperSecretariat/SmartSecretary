@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
-
+/*
+TO-DO: verificarea daca nr matricol/ auth key exista
+ */
 @RestController
 @RequestMapping("/api/add")
 public class AddController {
@@ -34,21 +36,21 @@ public class AddController {
 
     @PostMapping("/student")
     public ResponseEntity<?> addStudent(@RequestBody StudentRequest studentRequest){
-        Student newStudent = new Student(studentRequest.getFirstName(), studentRequest.getLastName(), studentRequest.getRegistrationNumber(), Date.valueOf(studentRequest.getDateOfBirth()), studentRequest.getCNP());
+        Student newStudent = new Student(studentRequest.getRegistrationNumber(), studentRequest.getEmail());
         studentRepository.save(newStudent);
         return ResponseEntity.ok("New student added to the database");
     }
 
     @PostMapping("/secretary")
     public ResponseEntity<?> addSecretary(@RequestBody SecretaryRequest secretaryRequest){
-        Secretary newSecretary = new Secretary(secretaryRequest.getFirstName(), secretaryRequest.getLastName(), secretaryRequest.getCNP(), secretaryRequest.getAuthKey());
+        Secretary newSecretary = new Secretary(secretaryRequest.getAuthKey(), secretaryRequest.getEmail());
         secretaryRepository.save(newSecretary);
         return ResponseEntity.ok("New secretary added to the database");
     }
 
     @PostMapping("/admin")
     public ResponseEntity<?> addAdmin(@RequestBody AdminRequest adminRequest){
-        Admin newAdmin = new Admin(adminRequest.getEmail(), adminRequest.getAuthKey());
+        Admin newAdmin = new Admin(adminRequest.getAuthKey(), adminRequest.getEmail());
         adminRepository.save(newAdmin);
         return ResponseEntity.ok("New admin added to the database");
 

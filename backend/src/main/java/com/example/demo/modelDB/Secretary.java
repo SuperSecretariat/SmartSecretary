@@ -21,17 +21,9 @@ public class Secretary {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
-    @Column(name = "first_name")
-    private  String firstName;
-
-    @NotBlank
-    @Size(max = 20)
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "CNP")
-    private String CNP;
+    @Size(max = 50)
+    @Column(name = "email")
+    private String email;
 
     @NotBlank
     @NotNull
@@ -42,11 +34,9 @@ public class Secretary {
     public Secretary() {
 
     }
-    public Secretary(String firstName, String lastName, String CNP, String authKey) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.CNP = CNP;
+    public Secretary(String authKey, String email) {
         this.authKey = authKey;
+        this.email = email;
     }
     public Long getId() {
         return id;
@@ -54,40 +44,19 @@ public class Secretary {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    public String getCNP() {
-        return CNP;
-    }
-    public void setCNP(String CNP) {
-        this.CNP = CNP;
-    }
     public String getAuthKey() {
         return authKey;
-    }
-    public static Secretary withRandomKey(String firstName, String lastName, String CNP) {
-        try {
-            String key = generateRandomKey();
-            String encrypted = encrypt(key);
-            return new Secretary(firstName,lastName,CNP, encrypted);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to generate encrypted key", e);
-        }
     }
     private static String generateRandomKey() {
         return UUID.randomUUID().toString();
     }
     public void setAuthKey(String authKey) {
         this.authKey = authKey;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
