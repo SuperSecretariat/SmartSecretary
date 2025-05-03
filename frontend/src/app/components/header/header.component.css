@@ -42,10 +42,10 @@ button {
 
 button:hover {
     transform: scale(1.1); 
-    background-color: rgba(134, 186, 231, 0.1); 
+    background-color: rgba(143, 201, 248, 0.288); 
 }
 
 button:active {
     transform: scale(0.95); 
-    background-color: rgba(172, 202, 227, 0.2); 
+    background-color: rgba(143, 201, 248, 0.483); 
 }

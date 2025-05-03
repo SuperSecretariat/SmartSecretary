@@ -10,6 +10,10 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
+import { CreateFormComponent } from './components/create-form/create-form.component';
+import { SubmittedFormsComponent } from './components/submitted-forms/submitted-forms.component';
+import { AccountComponent } from './components/account/account.component';
+import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
 import { BoardStudentComponent } from './pages/board-student/board-student.component';
@@ -37,7 +41,11 @@ import { FooterComponent } from "./components/footer/footer.component";
     HeaderComponent,
     NavBarComponent,
     DashboardComponent,
-    FooterComponent
+    FooterComponent,
+    CreateFormComponent,
+    SubmittedFormsComponent,
+    AccountComponent,
+    NewsfeedComponent
 ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

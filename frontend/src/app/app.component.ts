@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { StorageService } from './components/_services/storage.service';
 import { AuthService } from './components/_services/auth.service';
+import { NavBarVisibilityService } from './components/_services/navbarVisibility.service';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +16,15 @@ export class AppComponent {
   showSecretaryBoard = false;
   showStudentBoard = false;
   username?: string;
+  isNavBarVisible = false;
 
-  constructor(private storageService: StorageService, private authService: AuthService) { }
+  constructor(
+    private storageService: StorageService,
+    private authService: AuthService,
+    private navBarVisibilityService: NavBarVisibilityService) 
+    { this.navBarVisibilityService.getVisibility().subscribe(value => {
+      this.isNavBarVisible = value;});
+    }
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
