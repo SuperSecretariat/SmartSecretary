@@ -14,18 +14,50 @@ import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'create-form', component: CreateFormComponent },
-  { path: 'submitted-forms', component: SubmittedFormsComponent },
-  { path: 'account', component: AccountComponent },
-  { path: 'newsfeed', component: NewsfeedComponent },
-  { path: 'student', component: BoardStudentComponent },
-  { path: 'mod', component: BoardSecretaryComponent },
-  { path: 'admin', component: BoardAdminComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: 'home', component: HomeComponent },
+
+  {
+    path: 'student',
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'create-form', component: CreateFormComponent },
+      { path: 'submitted-forms', component: SubmittedFormsComponent },
+      { path: 'account', component: AccountComponent },
+      { path: 'newsfeed', component: NewsfeedComponent },
+    ]
+  },
+  {
+    path: 'admin',
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'create-form', component: CreateFormComponent },
+      { path: 'submitted-forms', component: SubmittedFormsComponent },
+      { path: 'account', component: AccountComponent },
+      { path: 'newsfeed', component: NewsfeedComponent },
+    ]
+  },
+  {
+    path: 'secretary',
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'create-form', component: CreateFormComponent },
+      { path: 'submitted-forms', component: SubmittedFormsComponent },
+      { path: 'account', component: AccountComponent },
+      { path: 'newsfeed', component: NewsfeedComponent },
+    ]
+  },
+  //{ path: 'home', component: HomeComponent },
+  //{ path: 'profile', component: ProfileComponent },
+  //{ path: 'create-form', component: CreateFormComponent },
+  ///{ path: 'submitted-forms', component: SubmittedFormsComponent },
+  //{ path: 'account', component: AccountComponent },
+  //{ path: 'newsfeed', component: NewsfeedComponent },
+  //{ path: 'student', component: BoardStudentComponent },
+  //{ path: 'mod', component: BoardSecretaryComponent },
+  //{ path: 'admin', component: BoardAdminComponent },
+  //{ path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

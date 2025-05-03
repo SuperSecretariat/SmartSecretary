@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,11 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private storageService: StorageService) { }
+  constructor(
+    private authService: AuthService,
+    private storageService: StorageService,
+    private router: Router
+  ) { }
 
   get formattedRoles(): string {
     if (!this.roles || this.roles.length === 0) {
@@ -43,8 +48,12 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = data.roles;
-        this.roles = data.roles.map((role: string) => role.replace('ROLE_', ''));
-        this.reloadPage();
+        const firstRole = this.roles[0];
+        const rolePrefix = firstRole.replace('ROLE_', '').toLowerCase();
+  
+        this.router.navigate([`/${rolePrefix}/home`]).then(() => {
+          window.location.reload();
+        });
       },
       error: err => {
         this.errorMessage = err.error.message;
