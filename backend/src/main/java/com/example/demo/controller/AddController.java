@@ -36,7 +36,7 @@ public class AddController {
 
     @PostMapping("/student")
     public ResponseEntity<?> addStudent(@RequestBody StudentRequest studentRequest){
-        if(studentRepository.existsByRegNumber(studentRequest.getRegistrationNumber()))
+        if(!studentRepository.existsByRegNumber(studentRequest.getRegistrationNumber()))
         {
             Student newStudent = new Student(studentRequest.getRegistrationNumber(), studentRequest.getEmail());
             studentRepository.save(newStudent);
@@ -49,7 +49,7 @@ public class AddController {
 
     @PostMapping("/secretary")
     public ResponseEntity<?> addSecretary(@RequestBody SecretaryRequest secretaryRequest){
-        if(secretaryRepository.existsByAuthKey(secretaryRequest.getAuthKey())){
+        if(!secretaryRepository.existsByAuthKey(secretaryRequest.getAuthKey())){
             Secretary newSecretary = new Secretary(secretaryRequest.getAuthKey(), secretaryRequest.getEmail());
             secretaryRepository.save(newSecretary);
             return ResponseEntity.ok("New secretary added to the database");
@@ -61,7 +61,7 @@ public class AddController {
 
     @PostMapping("/admin")
     public ResponseEntity<?> addAdmin(@RequestBody AdminRequest adminRequest){
-        if(adminRepository.existsByAuthKey(adminRequest.getAuthKey()))
+        if(!adminRepository.existsByAuthKey(adminRequest.getAuthKey()))
         {
             Admin newAdmin = new Admin(adminRequest.getAuthKey(), adminRequest.getEmail());
             adminRepository.save(newAdmin);
