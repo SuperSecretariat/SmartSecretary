@@ -6,9 +6,13 @@ import com.example.demo.repository.*;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import com.example.demo.response.JwtResponse;
+import com.example.demo.service.UserDetailsImpl;
+import com.example.demo.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.example.demo.util.AESUtil.decrypt;
 import static com.example.demo.util.AESUtil.encrypt;
@@ -42,6 +47,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         Optional<User> optionalUser = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
@@ -54,7 +62,12 @@ public class AuthController {
         List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
         if (passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
             User user = optionalUser.get();
-            return ResponseEntity.ok(new JwtResponse("placeholder-token", user.getId(), user.getRegNumber(), roleNames));
+            UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+
+            String token = jwtUtil.generateJwtToken(
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+            );
+            return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getRegNumber(), roleNames));
         } else
             return ResponseEntity.status(401).body("Incorrect password");
     }
@@ -102,6 +115,17 @@ public class AuthController {
         }
         else
             return ResponseEntity.status(400).body("Data provided is wrong");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        List<String> rolesName = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+
+        JwtResponse response = new JwtResponse(null, userDetails.getId(), userDetails.getUsername(), rolesName);
+
+        return ResponseEntity.ok(response);
     }
 
     private boolean validateData(RegisterRequest registerRequest, ERole registerRole){
