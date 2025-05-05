@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long> {
-    List<Form> findByActive(boolean isActive);
+    List<Form> findByActive(boolean active);
 }
