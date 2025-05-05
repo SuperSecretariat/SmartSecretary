@@ -57,7 +57,8 @@ public class UserDataController {
             String token = headerAuth.substring(7);
 
             if(jwtUtil.validateJwtToken(token)){
-                Optional<User> user = userRepository.findById(updateRequest.getId());
+                String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+                Optional<User> user = userRepository.findByRegNumber(registrationNumber);
                 if(user.isPresent())
                 {
                     User currentUser = user.get();
