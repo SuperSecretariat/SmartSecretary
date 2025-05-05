@@ -8,6 +8,7 @@ import com.example.demo.request.RegisterRequest;
 import com.example.demo.response.JwtResponse;
 import com.example.demo.service.UserDetailsImpl;
 import com.example.demo.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -115,6 +116,22 @@ public class AuthController {
         }
         else
             return ResponseEntity.status(400).body("Data provided is wrong");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        String headerAuth = request.getHeader("Authorization");
+        String token = null;
+        System.out.println(headerAuth);
+
+        if(headerAuth != null && headerAuth.startsWith("Bearer ")){
+            token = headerAuth.substring(7);
+
+            jwtUtil.invalidateToken(token);
+
+            return ResponseEntity.ok("User logged out successfully!");
+        }
+        return ResponseEntity.status(401).body("Error when logging out the user");
     }
 
     @GetMapping("/me")
