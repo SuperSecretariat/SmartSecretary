@@ -8,9 +8,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class UpdateProfileRequest {
-    @NotBlank(message = ErrorMessage.MISSING_ID)
-    private Long id;
-
     @NotBlank(message = ErrorMessage.MISSING_UNIVERSITY)
     private String university;
 
@@ -23,8 +20,7 @@ public class UpdateProfileRequest {
     @NotBlank(message = ErrorMessage.MISSING_CNP)
     private String cnp;
 
-    public UpdateProfileRequest(Long id, String university, String faculty,Date dateOfBirth, String cnp){
-        this.id = id;
+    public UpdateProfileRequest(String university, String faculty,Date dateOfBirth, String cnp){
         this.university = university;
         this.faculty = faculty;
         this.dateOfBirth = dateOfBirth;
@@ -47,7 +43,4 @@ public class UpdateProfileRequest {
         return cnp;
     }
 
-    public Long getId() {
-        return id;
-    }
 }
