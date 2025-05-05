@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8080/api/test/'; //De modificat dupa ce face Vilcu AUTH_API-ul in backend
+const API_URL = 'http://localhost:8081/api/test/'; //De modificat dupa ce face Vilcu AUTH_API-ul in backend
 
 @Injectable({
   providedIn: 'root',
