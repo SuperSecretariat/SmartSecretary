@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
 import com.example.demo.modelDB.User;
+import com.example.demo.service.TokenBlacklistService;
 import com.example.demo.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -23,6 +24,9 @@ public class JwtUtil {
     private final int jwtExpirationMs = 86400000;
 
     @Autowired
+    private TokenBlacklistService tokenBlacklistService;
+
+    @Autowired
     public JwtUtil(@Value("${jwt.secret}")String jwtSecret){
         this.jwtSecret = jwtSecret;
     }
@@ -38,6 +42,17 @@ public class JwtUtil {
                 .compact();
     }
 
+    public void invalidateToken(String token){
+        try{
+            Claims claims = Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).getBody();
+            Date expirationDate = claims.getExpiration();
+
+            tokenBlacklistService.blackListToken(token, expirationDate.getTime());
+        }catch(Exception e){
+            logger.error("Error invalidating the token: {}", e.getMessage());
+        }
+    }
+
     private Key key(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
@@ -48,6 +63,8 @@ public class JwtUtil {
 
     public boolean validateJwtToken(String authToken){
         try{
+            if(tokenBlacklistService.isBlacklisted(authToken))
+                return false;
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
             return true;
         }catch(MalformedJwtException e){
