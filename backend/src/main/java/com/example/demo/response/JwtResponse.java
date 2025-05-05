@@ -1,5 +1,6 @@
 package com.example.demo.response;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class JwtResponse {
@@ -7,6 +8,13 @@ public class JwtResponse {
     private String type = "Bearer";
     private Long id;
     private String registrationNumber;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String cnp;
+   // private LocalDate dateOfBirth;
+    private String university;
+    private String faculty;
     private List<String> roles;
 
     public JwtResponse(String token, Long id, String registrationNumber, List<String> roles){
@@ -16,8 +24,56 @@ public class JwtResponse {
         this.roles = roles;
     }
 
+    public JwtResponse(
+            String token,
+            String registrationNumber,
+            String firstName,
+            String lastName,
+            String email,
+            String cnp,
+            //LocalDate dateOfBirth,
+            String university,
+            String faculty,
+            List<String> roles){
+        this.token = token;
+        this.registrationNumber = registrationNumber;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.cnp = cnp;
+        //this.dateOfBirth = dateOfBirth;
+        this.university = university;
+        this.faculty = faculty;
+        this.roles = roles;
+
+    }
+
     public String getToken() {
         return token;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getCnp() {
+        return cnp;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getType() {
