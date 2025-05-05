@@ -27,7 +27,12 @@ export class AccountComponent implements OnInit{
       this.storageService.getUserProfile().subscribe({
         next: data => {
           this.currentUser = data;
-          this.isProfileComplete = !!(
+          console.log(this.isProfileComplete);
+          console.log(this.currentUser.university);
+          console.log(this.currentUser.faculty);
+          console.log(this.currentUser.dateOfBirth);
+          console.log(this.currentUser.cnp);
+          this.isProfileComplete = (
             this.currentUser.university && 
             this.currentUser.faculty && 
             this.currentUser.dateOfBirth && 
@@ -50,6 +55,7 @@ export class AccountComponent implements OnInit{
       this.isFormSubmitting = true;
       
       const { university, faculty, dateOfBirth, cnp } = this.additionalForm;
+      const token = this.storageService.getUser().token;
       
       this.storageService.updateUserProfile(university, faculty, dateOfBirth, cnp).subscribe({
         next: (response) => {

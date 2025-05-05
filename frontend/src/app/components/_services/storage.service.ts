@@ -47,8 +47,10 @@ export class StorageService {
     return this.http.get(this.profileUrl, { headers });
   }
 
-  private updateProfileUrl = 'http://localhost:8081/api/user/profile';
+  private updateProfileUrl = 'http://localhost:8081/api/user/update';
   updateUserProfile(university: string, faculty: string, dateOfBirth: string, cnp: string): Observable<any> {
+    const token = this.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(
       this.updateProfileUrl,
       {
@@ -58,7 +60,7 @@ export class StorageService {
         cnp
       },
       {
-        headers: httpOptions.headers,
+        headers: headers,
         responseType: 'text'
       }
     );
