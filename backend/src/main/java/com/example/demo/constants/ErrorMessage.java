@@ -12,4 +12,5 @@ public class ErrorMessage {
     public static final String MISSING_DATE_OF_BIRTH = "Date of birth is missing";
     public static final String MISSING_CNP = "CNP is missing";
     public static final String MISSING_AUTHKEY = "AuthKey is missing";
+    public static final String MISSING_ID = "Id for the Database is missing";
 }
