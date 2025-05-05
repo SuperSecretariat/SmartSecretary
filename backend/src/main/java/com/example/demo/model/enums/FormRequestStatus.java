@@ -1,6 +1,6 @@
 package com.example.demo.model.enums;
 
-public enum DocumentStatus {
+public enum FormRequestStatus {
     // TO BE DISPUTED
     PENDING,
     IN_PROGRESS,
