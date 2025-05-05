@@ -40,7 +40,7 @@ public class UserDataController {
                         .map(item -> item.getAuthority())
                         .collect(Collectors.toList());
 
-                JwtResponse response = new JwtResponse(token, userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getEmail(), userDetails.getCnp(), userDetails.getUniversity(), userDetails.getFaculty(), roles);
+                JwtResponse response = new JwtResponse(token, userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getEmail(), userDetails.getCnp(), userDetails.getDateOfBirth(), userDetails.getUniversity(), userDetails.getFaculty(), roles);
                 return ResponseEntity.ok(response);
             }
             else
