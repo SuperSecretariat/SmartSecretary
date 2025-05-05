@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 const USER_KEY = 'auth-user';
 
@@ -6,7 +8,7 @@ const USER_KEY = 'auth-user';
   providedIn: 'root'
 })
 export class StorageService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   clean(): void {
     window.sessionStorage.clear();
@@ -33,5 +35,12 @@ export class StorageService {
     }
 
     return false;
+  }
+
+  private profileUrl = 'http://localhost:8081/api/user/profile';
+  getUserProfile(): Observable<any> {
+    const token = this.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.get(this.profileUrl, { headers });
   }
 }
