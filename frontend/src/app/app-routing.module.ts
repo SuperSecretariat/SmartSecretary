@@ -12,6 +12,7 @@ import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 import { BoardStudentComponent } from './pages/board-student/board-student.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
+import { AuthGuard } from './components/_helpers/auth.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,7 +25,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'create-form', component: CreateFormComponent },
       { path: 'submitted-forms', component: SubmittedFormsComponent },
-      { path: 'account', component: AccountComponent },
+      { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
     ]
   },
@@ -34,7 +35,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'create-form', component: CreateFormComponent },
       { path: 'submitted-forms', component: SubmittedFormsComponent },
-      { path: 'account', component: AccountComponent },
+      { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
     ]
   },
@@ -44,7 +45,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'create-form', component: CreateFormComponent },
       { path: 'submitted-forms', component: SubmittedFormsComponent },
-      { path: 'account', component: AccountComponent },
+      { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
     ]
   },

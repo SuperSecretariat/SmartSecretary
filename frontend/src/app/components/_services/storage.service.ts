@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const USER_KEY = 'auth-user';
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +45,22 @@ export class StorageService {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(this.profileUrl, { headers });
+  }
+
+  private updateProfileUrl = 'http://localhost:8081/api/user/profile';
+  updateUserProfile(university: string, faculty: string, dateOfBirth: string, cnp: string): Observable<any> {
+    return this.http.post(
+      this.updateProfileUrl,
+      {
+        university,
+        faculty,
+        dateOfBirth,
+        cnp
+      },
+      {
+        headers: httpOptions.headers,
+        responseType: 'text'
+      }
+    );
   }
 }
