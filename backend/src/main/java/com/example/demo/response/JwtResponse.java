@@ -1,5 +1,6 @@
 package com.example.demo.response;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class JwtResponse {
     private String firstName;
     private String lastName;
     private String cnp;
-   // private LocalDate dateOfBirth;
+    private Date dateOfBirth;
     private String university;
     private String faculty;
     private List<String> roles;
@@ -31,7 +32,7 @@ public class JwtResponse {
             String lastName,
             String email,
             String cnp,
-            //LocalDate dateOfBirth,
+            Date dateOfBirth,
             String university,
             String faculty,
             List<String> roles){
@@ -41,7 +42,7 @@ public class JwtResponse {
         this.firstName = firstName;
         this.lastName = lastName;
         this.cnp = cnp;
-        //this.dateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
         this.university = university;
         this.faculty = faculty;
         this.roles = roles;
@@ -71,6 +72,9 @@ public class JwtResponse {
     public String getCnp() {
         return cnp;
     }
+
+    public Date getDateOfBirth(){ return dateOfBirth; }
+
 
     public String getEmail() {
         return email;

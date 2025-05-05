@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,7 @@ public class UserDetailsImpl implements UserDetails {
     private String firstName;
     private String lastName;
     private String cnp;
-    //private LocalDate dateOfBirth;
+    private Date dateOfBirth;
     private String university;
     private String faculty;
     private Collection<? extends GrantedAuthority> authorities;
@@ -37,7 +38,7 @@ public class UserDetailsImpl implements UserDetails {
             String firstName,
             String lastName,
             String cnp,
-            //LocalDate dateOfBirth,
+            Date dateOfBirth,
             String university,
             String faculty){
         this.id = id;
@@ -48,7 +49,7 @@ public class UserDetailsImpl implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.cnp = cnp;
-        //this.dateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
         this.university = university;
         this.faculty = faculty;
     }
@@ -56,7 +57,7 @@ public class UserDetailsImpl implements UserDetails {
     public static UserDetailsImpl build(User user){
         List<GrantedAuthority> authorityList = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
-        return new UserDetailsImpl(user.getId(), user.getRegNumber(), user.getEmail(), user.getPassword(), authorityList, user.getFirstName(), user.getLastName(), user.getCnp(), user.getUniversity(), user.getFaculty());
+        return new UserDetailsImpl(user.getId(), user.getRegNumber(), user.getEmail(), user.getPassword(), authorityList, user.getFirstName(), user.getLastName(), user.getCnp(), user.getDateOfBirth(), user.getUniversity(), user.getFaculty());
 
     }
 
@@ -77,11 +78,10 @@ public class UserDetailsImpl implements UserDetails {
         return lastName;
     }
 
-    /*
-    public LocalDate getDateOfBirth() {
+
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
-     */
 
     public String getUniversity() {
         return university;

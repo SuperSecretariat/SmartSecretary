@@ -1,11 +1,11 @@
 package com.example.demo.request;
 
 import com.example.demo.constants.ErrorMessage;
-import com.fasterxml.jackson.core.ErrorReportConfiguration;
+
 import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Date;
-import java.time.LocalDate;
+
 
 public class UpdateProfileRequest {
     @NotBlank(message = ErrorMessage.MISSING_UNIVERSITY)
