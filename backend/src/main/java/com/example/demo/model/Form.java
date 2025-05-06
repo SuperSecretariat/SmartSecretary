@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
+import jakarta.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,20 +14,44 @@ public class Form {
     private long id;
 
     @NotBlank
-
     private String title;
 
     private boolean active;
 
-    private int version;
+    @PositiveOrZero
+    private int numberOfInputFields;
 
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "form_id")
-//    private List<FormField> fields = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "form_id")
+    private List<FormField> fields = new ArrayList<>();
 
     public Form(){}
 
-//    public void addField(FormField field) {
-//        fields.add(field);
-//    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setNumberOfInputFields(int numberOfInputFields) {
+        this.numberOfInputFields = numberOfInputFields;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public int getNumberOfInputFields() {
+        return numberOfInputFields;
+    }
 }

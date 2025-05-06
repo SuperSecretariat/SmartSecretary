@@ -3,8 +3,6 @@ package com.example.demo.model;
 import com.example.demo.model.enums.FormRequestStatus;
 import jakarta.persistence.*;
 
-import java.util.Map;
-
 @Entity
 public class FormRequest {
 
