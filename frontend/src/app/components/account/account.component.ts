@@ -1,81 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../_services/storage.service';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router'; 
 
 @Component({
+  standalone: true,
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrl: './account.component.css',
-  standalone: false
+  styleUrls: ['./account.component.css'],
+  imports: [CommonModule, FormsModule]
 })
-export class AccountComponent implements OnInit{
-  currentUser: any;
-  isProfileComplete = false;
-  isFormSubmitting = false;
-  isUpdateSuccessful = false;
-  errorMessage = '';
-
-  additionalForm: any = {
-    university: null,
-    faculty: null,
-    dateOfBirth: null,
-    cnp: null
+export class AccountComponent {
+  isProfileComplete: boolean = false;
+  isFormSubmitting: boolean = false;
+  isUpdateSuccessful: boolean = false;
+  errorMessage: string = '';
+  additionalForm = {
+    university: '',
+    faculty: '',
+    dateOfBirth: '',
+    cnp: ''
   };
-  
-    constructor(private storageService: StorageService) { }
-  
-    ngOnInit(): void {
-      this.storageService.getUserProfile().subscribe({
-        next: data => {
-          this.currentUser = data;
-          console.log(this.isProfileComplete);
-          console.log(this.currentUser.university);
-          console.log(this.currentUser.faculty);
-          console.log(this.currentUser.dateOfBirth);
-          console.log(this.currentUser.cnp);
-          this.isProfileComplete = (
-            this.currentUser.university && 
-            this.currentUser.faculty && 
-            this.currentUser.dateOfBirth && 
-            this.currentUser.cnp
-          );
-          if (this.isProfileComplete) {
-            this.additionalForm = {
-              university: this.currentUser.university,
-              faculty: this.currentUser.faculty,
-              dateOfBirth: this.currentUser.dateOfBirth,
-              cnp: this.currentUser.cnp
-            };
-          }
-        },
-        error: err => console.error('Failed to fetch user profile', err)
-      });
-    }
+  currentUser = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    registrationNumber: '123456',
+    university: 'Example University',
+    faculty: 'Computer Science',
+    dateOfBirth: '1990-01-01',
+    cnp: '1234567890123'
+  };
 
-    onSubmit(): void {
-      this.isFormSubmitting = true;
-      
-      const { university, faculty, dateOfBirth, cnp } = this.additionalForm;
-      const token = this.storageService.getUser().token;
-      
-      this.storageService.updateUserProfile(university, faculty, dateOfBirth, cnp).subscribe({
-        next: (response) => {
-          this.isUpdateSuccessful = true;
-          this.isFormSubmitting = false;
-          this.currentUser = { 
-            ...this.currentUser, 
-            university, 
-            faculty, 
-            dateOfBirth, 
-            cnp 
-          };
-          this.isProfileComplete = true;
-          this.storageService.saveUser(this.currentUser);
-        },
-        error: (err) => {
-          this.errorMessage = err.error.message || 'Error updating profile';
-          this.isFormSubmitting = false;
-          this.isUpdateSuccessful = false;
-        }
-      });
-    }
+  requests: { id: number; formName: string; status: string }[] = [];
+  currentUserId: string = ''; 
+
+  constructor(private router: Router) {} 
+
+  onSubmit(): void {
+    this.isFormSubmitting = true;
+    setTimeout(() => {
+      this.isFormSubmitting = false;
+      this.isUpdateSuccessful = true;
+    }, 1000);
+  }
+
+  logout(): void {
+    this.requests = [];
+    this.currentUserId = '';
+    localStorage.removeItem(`requests_${this.currentUserId}`);
+    this.router.navigate(['/login']);
+  }
 }
