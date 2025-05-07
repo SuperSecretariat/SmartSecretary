@@ -16,6 +16,7 @@ import { SubmittedFormsComponent } from './components/submitted-forms/submitted-
 import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 
+import { RouterModule } from '@angular/router';
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
 import { BoardStudentComponent } from './pages/board-student/board-student.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
@@ -29,11 +30,9 @@ import { FooterComponent } from "./components/footer/footer.component";
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
-    BoardSecretaryComponent,
-    AccountComponent
+    BoardSecretaryComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +45,11 @@ import { FooterComponent } from "./components/footer/footer.component";
     FooterComponent,
     CreateFormComponent,
     SubmittedFormsComponent,
-    NewsfeedComponent
+    NewsfeedComponent,
+    CommonModule,
+    HomeComponent,
+    AccountComponent, 
+    RouterModule
 ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
