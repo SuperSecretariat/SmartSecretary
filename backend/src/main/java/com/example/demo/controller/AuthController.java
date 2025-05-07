@@ -76,7 +76,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         ERole newAccountRole = null;
-        if(userRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
+        String email = registerRequest.getEmail();
+        if(userRepository.existsByEmail(email))
         {
             return ResponseEntity.status(409).body("An account with the the same registration number/authentication key has already been created");
         }
@@ -98,7 +99,10 @@ public class AuthController {
             String tempKey = registerRequest.getRegistrationNumber();
             String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
             if(newAccountRole.equals(ERole.ROLE_ADMIN) || newAccountRole.equals(ERole.ROLE_SECRETARY))
-                encryptException(tempKey);
+            {
+                tempKey = encryptException(tempKey);
+            }
+
             User newUser = new User(
                     registerRequest.getLastName(),
                     registerRequest.getFirstName(),
