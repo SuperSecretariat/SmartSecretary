@@ -1,0 +1,18 @@
+.footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-logo{
+    width: 4vw;
+    height: auto;
+    margin-bottom: 1 rem;
+}
+
+.logo-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}

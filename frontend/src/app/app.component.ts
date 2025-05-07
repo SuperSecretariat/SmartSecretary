@@ -1,21 +1,57 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { StorageService } from './components/_services/storage.service';
+import { AuthService } from './components/_services/auth.service';
+import { NavBarVisibilityService } from './components/_services/navbarVisibility.service';
 
 @Component({
   selector: 'app-root',
-  template: `<h1>Smart Secretary</h1>`,
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  standalone: false
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
+  private roles: string[] = [];
+  isLoggedIn = false;
+  showAdminBoard = false;
+  showSecretaryBoard = false;
+  showStudentBoard = false;
+  username?: string;
+  isNavBarVisible = false;
+
+  constructor(
+    private storageService: StorageService,
+    private authService: AuthService,
+    private navBarVisibilityService: NavBarVisibilityService) 
+    { this.navBarVisibilityService.getVisibility().subscribe(value => {
+      this.isNavBarVisible = value;});
+    }
+
   ngOnInit(): void {
-    fetch('http://localhost:8081/api/ping')
-      .then(response => {
-        if (response.ok) {
-          console.log('✅ Connected to backend');
-        } else {
-          console.log('❌ Backend responded but with error');
-        }
-      })
-      .catch(error => {
-        console.log('❌ Could not connect to backend', error);
-      });
+    this.isLoggedIn = this.storageService.isLoggedIn();
+
+    if (this.isLoggedIn) {
+      const user = this.storageService.getUser();
+      this.roles = user.roles;
+
+      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
+      this.showSecretaryBoard = this.roles.includes('ROLE_SECRETARY');
+      this.showStudentBoard = this.roles.includes('ROLE_STUDENT');
+
+      this.username = user.username;
+    }
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: res => {
+        console.log(res);
+        this.storageService.clean();
+
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 }

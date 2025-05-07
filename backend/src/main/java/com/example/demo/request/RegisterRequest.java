@@ -1,44 +1,33 @@
 package com.example.demo.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.demo.constants.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class RegisterRequest {
 
-    @NotBlank(message = "Prenumele nu poate lipsi")
+
+    @NotBlank(message = ErrorMessage.MISSING_FIRST_NAME)
     private String firstName;
 
-    @NotBlank(message = "Nume de familie nu poate lipsi")
+    @NotBlank(message = ErrorMessage.MISSING_LAST_NAME)
     private String lastName;
 
-    @NotBlank(message = "Numar matricol nu poate lipsi")
-    private String idNumber;
+    @NotBlank(message = ErrorMessage.MISSING_REGISTRATION_NUMBER)
+    private String registrationNumber;
 
-    @NotBlank(message = "Email nu poate lipsi")
+    @NotBlank(message = ErrorMessage.MISSING_EMAIL)
     private String email;
 
-    @NotBlank(message = "Introdu parola")
+    @NotBlank(message = ErrorMessage.MISSING_PASSWORD)
     private String password;
 
-    @NotBlank(message = "Confirma parola")
+    @NotBlank(message = ErrorMessage.MISSING_CONFIRMATION_PASSWORD)
     private String confirmationPassword;
 
-    public RegisterRequest(
-            @JsonProperty("firstName") String firstName,
-            @JsonProperty("lastName") String lastName,
-            @JsonProperty("email") String email,
-            @JsonProperty("idNumber") String idNumber,
-            @JsonProperty("password") String password,
-            @JsonProperty("confirmationPassword") String confirmationPassword)
-    {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.idNumber = idNumber;
-        this.password = password;
-        this.confirmationPassword = confirmationPassword;
-    }
-
+    public RegisterRequest(){}
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -46,8 +35,8 @@ public class RegisterRequest {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getIdNumber() { return idNumber; }
-    public void setIdNumber(String idNumber) { this.idNumber = idNumber; }
+    public String getRegistrationNumber() { return registrationNumber; }
+    public void setRegistrationNumber(String registrationNumber) { this.registrationNumber = registrationNumber; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

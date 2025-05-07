@@ -1,0 +1,5 @@
+<div class="footer-content">
+    <img class="footer-logo" src="logo-univ.png" alt="Logo UAIC">
+    <p [ngClass]="{ 'logo-text': this.isGdprVisible}"> Alexandru Ioan Cuza University</p>
+    <p class="gdpr-text" *ngIf="this.isGdprVisible">© 2025 UAIC. All rights reserved.</p>
+</div>

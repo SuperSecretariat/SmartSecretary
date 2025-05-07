@@ -1,0 +1,75 @@
+import { Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { NavBarVisibilityService } from '../_services/navbarVisibility.service';
+import { AuthService } from '../_services/auth.service';
+import { StorageService } from '../_services/storage.service';
+import { Router,NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
+  standalone: true,
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    CommonModule
+  ]
+})
+export class HeaderComponent implements OnInit {
+  showFiller = true;
+  isLoggedIn: boolean = false;
+  navBarVisibilityService: NavBarVisibilityService;
+  currentTitle: string = 'SmartSecretary';
+
+  constructor(
+    private navBarVisibilityServiceParam: NavBarVisibilityService,
+    private authService: AuthService,
+    private storageService: StorageService,
+    private router: Router
+  ) {
+    this.navBarVisibilityService = navBarVisibilityServiceParam;
+  }
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.storageService.isLoggedIn();
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const url = this.router.url;
+
+        if (url.includes('/home')) this.currentTitle = 'Home';
+        else if (url.includes('/create-form')) this.currentTitle = 'Create Form';
+        else if (url.includes('/submitted-forms')) this.currentTitle = 'Submitted Forms';
+        else if (url.includes('/account')) this.currentTitle = 'Account Manager';
+        else if (url.includes('/newsfeed')) this.currentTitle = 'Newsfeed';
+        
+        else if (url.includes('/student')) this.currentTitle = 'Student Dashboard';
+        else if (url.includes('/login')) this.currentTitle = 'Login';
+        else if (url.includes('/register')) this.currentTitle = 'Register';
+        else this.currentTitle = 'SmartSecretary';
+      });
+  }
+
+  toggleNavBar(): void {
+    this.navBarVisibilityService.switchVisibility();
+  }
+
+  logout(): void { // nu s-a putut gasi endpoint de signout
+    this.storageService.clean();
+    this.router.navigate(['/home']).then(() => {
+      window.location.reload();
+    });
+  }
+}

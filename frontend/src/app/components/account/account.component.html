@@ -1,0 +1,158 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Account Profile</h3>
+        </div>
+        <div class="card-body">
+          <!-- Show Additional Details Form if profile is not complete -->
+          @if (!isProfileComplete) {
+            <div class="row mb-3">
+              <div class="col-12">
+                <div class="alert alert-info">
+                  Please complete your profile by providing the additional information below.
+                </div>
+              </div>
+            </div>
+            
+            <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+              <div class="form-group mb-3">
+                <label for="university">University</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="university"
+                  [(ngModel)]="additionalForm.university"
+                  required
+                  #university="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && university.errors }"
+                />
+                @if (university.errors && f.submitted) {
+                  <div class="invalid-feedback">
+                    <div>University is required</div>
+                  </div>
+                }
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="faculty">Faculty</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="faculty"
+                  [(ngModel)]="additionalForm.faculty"
+                  required
+                  #faculty="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && faculty.errors }"
+                />
+                @if (faculty.errors && f.submitted) {
+                  <div class="invalid-feedback">
+                    <div>Faculty is required</div>
+                  </div>
+                }
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="dateOfBirth"
+                  [(ngModel)]="additionalForm.dateOfBirth"
+                  required
+                  #dateOfBirth="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && dateOfBirth.errors }"
+                />
+                @if (dateOfBirth.errors && f.submitted) {
+                  <div class="invalid-feedback">
+                    <div>Date of Birth is required</div>
+                  </div>
+                }
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="cnp">CNP (Personal Numeric Code)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="cnp"
+                  [(ngModel)]="additionalForm.cnp"
+                  required
+                  minlength="13"
+                  maxlength="13"
+                  pattern="[0-9]{13}"
+                  #cnp="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && cnp.errors }"
+                />
+                @if (cnp.errors && f.submitted) {
+                  <div class="invalid-feedback">
+                    @if (cnp.errors['required']) {
+                      <div>CNP is required</div>
+                    }
+                    @if (cnp.errors['minlength'] || cnp.errors['maxlength'] || cnp.errors['pattern']) {
+                      <div>CNP must be exactly 13 digits</div>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="form-group mb-3">
+                <button class="btn btn-primary" [disabled]="isFormSubmitting">
+                  <span *ngIf="isFormSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Save Profile
+                </button>
+              </div>
+
+              @if (isUpdateSuccessful) {
+                <div class="alert alert-success">
+                  Profile updated successfully!
+                </div>
+              }
+
+              @if (errorMessage) {
+                <div class="alert alert-danger">
+                  {{ errorMessage }}
+                </div>
+              }
+            </form>
+          }
+
+          <!-- Show User Profile if complete -->
+          @if (isProfileComplete) {
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <strong>First Name:</strong> {{ currentUser.firstName }}
+                </div>
+                <div class="mb-3">
+                  <strong>Last Name:</strong> {{ currentUser.lastName }}
+                </div>
+                <div class="mb-3">
+                  <strong>Email:</strong> {{ currentUser.email }}
+                </div>
+                <div class="mb-3">
+                  <strong>Registration Number:</strong> {{ currentUser.registrationNumber }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <strong>University:</strong> {{ currentUser.university }}
+                </div>
+                <div class="mb-3">
+                  <strong>Faculty:</strong> {{ currentUser.faculty }}
+                </div>
+                <div class="mb-3">
+                  <strong>Date of Birth:</strong> {{ currentUser.dateOfBirth | date:'mediumDate' }}
+                </div>
+                <div class="mb-3">
+                  <strong>CNP:</strong> {{ currentUser.cnp }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
