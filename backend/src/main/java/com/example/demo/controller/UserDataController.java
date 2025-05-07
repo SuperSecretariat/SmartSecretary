@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.demo.util.AESUtil.decrypt;
+import static com.example.demo.util.AESUtil.encrypt;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserDataController {
@@ -57,20 +60,32 @@ public class UserDataController {
             String token = headerAuth.substring(7);
 
             if(jwtUtil.validateJwtToken(token)){
+                User currentUser;
                 String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                Optional<User> user = userRepository.findByRegNumber(registrationNumber);
-                if(user.isPresent())
+                String tempKey = encryptException(registrationNumber);
+                Optional<User> userStudent = userRepository.findByRegNumber(registrationNumber);
+                Optional<User> userCrypt = userRepository.findByRegNumber(tempKey);
+                boolean isAdmin = false;
+
+                if(userStudent.isEmpty() && userStudent.isEmpty())
                 {
-                    User currentUser = user.get();
-                    currentUser.setCnp(updateRequest.getCnp());
-                    currentUser.setFaculty(updateRequest.getFaculty());
-                    currentUser.setUniversity(updateRequest.getUniversity());
-                    currentUser.setDateOfBirth(updateRequest.getDateOfBirth());
-                    userRepository.save(currentUser);
-                    return ResponseEntity.ok("Profile information updated successfully");
-                }
-                else
                     return ResponseEntity.status(404).body("There isn't an user with this id in the database");
+                }
+
+                if(userCrypt.isPresent())
+                    isAdmin = true;
+
+                if(isAdmin)
+                    currentUser = userCrypt.get();
+                else
+                    currentUser = userStudent.get();
+
+                currentUser.setCnp(updateRequest.getCnp());
+                currentUser.setFaculty(updateRequest.getFaculty());
+                currentUser.setUniversity(updateRequest.getUniversity());
+                currentUser.setDateOfBirth(updateRequest.getDateOfBirth());
+                userRepository.save(currentUser);
+                return ResponseEntity.ok("Profile information updated successfully");
             }
             else
                 return ResponseEntity.status(401).body("Invalid token");
@@ -78,6 +93,23 @@ public class UserDataController {
         {
            return ResponseEntity.status(401).body("An error has occured: " + e.getMessage());
         }
+    }
 
+    private static String encryptException(String input){
+        try{
+            return encrypt(input);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String decryptException(String input){
+        try{
+            return decrypt(input);
+        } catch(Exception e){
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }
