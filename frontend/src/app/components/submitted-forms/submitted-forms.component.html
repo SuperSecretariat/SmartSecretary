@@ -1,4 +1,60 @@
-<div class="searchBar">
-    <search-bar></search-bar>
+<div class="container">
+  <div class="border rounded p-4 bg-light shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="section-title">Submitted Requests</h2>
+      <button class="btn btn-outline-primary search-button" (click)="toggleSearchBar()">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+    <div class="search-bar mb-4" *ngIf="showSearchBar">
+      <div class="row">
+        <div class="col-md-4">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by ID"
+            [(ngModel)]="searchId"
+            (input)="applyFilters()"
+          />
+        </div>
+        <div class="col-md-4">
+          <select
+            class="form-control"
+            [(ngModel)]="filterFormName"
+            (change)="applyFilters()"
+          >
+            <option value="">All Forms</option>
+            <option *ngFor="let formType of formTypes" [value]="formType">
+              {{ formType }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <select
+            class="form-control"
+            [(ngModel)]="filterStatus"
+            (change)="applyFilters()"
+          >
+            <option value="">All Statuses</option>
+            <option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="request-list-vertical">
+      <div *ngFor="let request of filteredRequests" class="request-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="request-details">
+              <span><strong>Request ID:</strong> {{ request.id }}</span>
+              <span><strong>Form Type:</strong> {{ request.formName }}</span>
+              <span><strong>Status:</strong> {{ request.status }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<h1>Submitted-forms</h1>

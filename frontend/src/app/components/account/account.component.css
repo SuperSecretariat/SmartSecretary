@@ -1,0 +1,15 @@
+.list-group-item.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .card-body h5 {
+    margin-bottom: 15px;
+  }
