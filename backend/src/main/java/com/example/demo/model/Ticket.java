@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import com.example.demo.modelDB.User;
 import jakarta.persistence.*;
-import org.aspectj.bridge.Message;
 
 import java.util.ArrayList;
 import java.util.List;
