@@ -1,4 +1,233 @@
-.searchBar {
-    display: flex;
-    justify-content: end;
+/* Stiluri pentru carduri */
+.card-header {
+  background-color: #f8f9fa;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-body h3 {
+  margin-bottom: 15px;
+}
+
+/* Stiluri pentru tabel */
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+  font-weight: bold;
+  text-align: left;
+}
+/* Container pentru lista verticală */
+.request-list-vertical {
+display: flex;
+flex-direction: column; /* Afișează elementele pe direcția verticală */
+gap: 15px; /* Spațiu între carduri */
+padding: 10px;
+background-color: #f8f9fa;
+border: 1px solid #ddd;
+border-radius: 5px;
+}
+/* Container pentru lista verticală */
+.request-list-vertical {
+display: flex;
+flex-direction: column; /* Afișează cardurile pe verticală */
+gap: 15px; /* Spațiu între carduri */
+padding: 10px;
+background-color: #f8f9fa;
+border: 1px solid #ddd;
+border-radius: 5px;
+}
+
+/* Stiluri pentru fiecare card */
+.request-card {
+width: 100%; /* Cardurile ocupă întreaga lățime */
+}
+
+.card {
+border: 1px solid #ddd;
+border-radius: 5px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+padding: 10px;
+background-color: #fff;
+color: #333;
+}
+
+/* Stiluri pentru detaliile cererii */
+.request-details {
+display: flex; /* Afișează elementele pe aceeași linie */
+justify-content: space-between; /* Spațiu egal între elemente */
+align-items: center; /* Aliniere verticală */
+font-size: 14px;
+gap: 20px; /* Spațiu între elemente */
+}
+
+button.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+button.btn-primary i {
+  font-size: 1.2rem;
+}
+
+/* Stiluri pentru titlu și buton */
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+button.btn-primary i {
+  font-size: 1.2rem;
+}
+
+/* Stiluri pentru chenarul general */
+.border {
+  border: 1px solid #e0e0e0; /* Margine subtilă */
+  border-radius: 12px; /* Colțuri mai rotunjite */
+  background-color: #f9f9f9; /* Fundal deschis */
+  padding: 2rem; /* Spațiu intern mai generos */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Umbra subtilă */
+}
+
+/* Stiluri pentru titlu */
+.section-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #4a4a4a; /* Gri închis */
+  margin: 0;
+  text-transform: capitalize; /* Prima literă mare */
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #007bff; /* Linie sub titlu */
+  padding-bottom: 0.5rem;
+}
+
+/* Stiluri pentru buton */
+button.btn-outline-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 2px solid #007bff; /* Albastru vibrant */
+  border-radius: 5px;
+  color: #007bff;
+  transition: all 0.3s ease;
+}
+
+button.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+button.btn-outline-primary i {
+  font-size: 1.2rem;
+}
+
+/* Stiluri pentru secțiunea de căutare */
+.search-bar {
+  background-color: #fff;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Lista cererilor */
+.request-list-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Font general pentru întreaga componentă */
+:host {
+  font-family: 'Roboto', Arial, sans-serif; /* Font folosit în AccountManager */
+  font-size: 14px; /* Dimensiune generală a textului */
+  color: #333; /* Culoare generală a textului */
+}
+
+/* Stiluri pentru titlu */
+.section-title {
+  font-family: 'Roboto', Arial, sans-serif; /* Font specific pentru titlu */
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #4a4a4a; /* Gri închis */
+  margin: 0;
+  text-transform: capitalize; /* Prima literă mare */
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #007bff; /* Linie sub titlu */
+  padding-bottom: 0.5rem;
+}
+
+/* Stiluri pentru buton */
+button.btn-outline-primary {
+  font-family: 'Roboto', Arial, sans-serif; /* Font specific pentru buton */
+  font-size: 1rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Stiluri pentru secțiunea de căutare */
+.search-bar {
+  font-family: 'Roboto', Arial, sans-serif; /* Font specific pentru secțiunea de căutare */
+  font-size: 14px;
+  color: #333;
+}
+
+/* Stiluri pentru lista cererilor */
+.request-list-vertical {
+  font-family: 'Roboto', Arial, sans-serif; /* Font specific pentru lista cererilor */
+  font-size: 14px;
+  color: #333;
+}
+
+.request-details span {
+  font-family: 'Roboto', Arial, sans-serif; /* Font specific pentru detalii */
+  font-size: 14px;
+  color: #333;
+}
+
+/* Stiluri pentru butonul de căutare */
+.search-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%; /* Formă rotundă */
+  padding: 0;
+  font-size: 1.2rem;
+  background-color: transparent;
+  border: 2px solid #007bff; /* Albastru vibrant */
+  color: #007bff;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.search-button i {
+  font-size: 1.2rem; /* Dimensiunea pictogramei */
 }
