@@ -79,7 +79,7 @@ public class UserDataController {
                     currentUser = userCrypt.get();
                 else
                     currentUser = userStudent.get();
-
+                System.out.println(currentUser.getFirstName() + " " + isAdmin);
                 currentUser.setCnp(updateRequest.getCnp());
                 currentUser.setFaculty(updateRequest.getFaculty());
                 currentUser.setUniversity(updateRequest.getUniversity());
