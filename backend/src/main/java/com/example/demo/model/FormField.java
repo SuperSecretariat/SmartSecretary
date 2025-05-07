@@ -1,9 +1,7 @@
 package com.example.demo.model;
 
-import com.example.demo.model.enums.FieldType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class FormField {
@@ -16,18 +14,62 @@ public class FormField {
     private long formId;
 
     @NotBlank
-    private String name;
+    private String page;
 
-    private FieldType type;
+    @NotBlank
+    private String top;
 
-    private boolean required;
+    @NotBlank
+    @Column(name = "\"left\"")
+    private String left;
 
-    public FormField() {
+    @NotBlank
+    private String width;
+
+    @NotBlank
+    private String height;
+
+    public FormField() {}
+
+    public FormField(long formId, String page, String top, String left, String width, String height) {
+        this.formId = formId;
+        this.page = page;
+        this.top = top;
+        this.left = left;
+        this.width = width;
+        this.height = height;
     }
 
-    public FormField(long formId, String name, FieldType type) {
-        this.formId = formId;
-        this.name = name;
-        this.type = type;
+    @Override
+    public String toString() {
+        return "FormField{" +
+                "id=" + id +
+                ", formId=" + formId +
+                ", page='" + page + '\'' +
+                ", top='" + top + '\'' +
+                ", left='" + left + '\'' +
+                ", width='" + width + '\'' +
+                ", height='" + height + '\'' +
+                '}';
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public String getTop() {
+        return top;
+    }
+
+    public String getLeft() {
+        return left;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public String getHeight() {
+        return height;
     }
 }
