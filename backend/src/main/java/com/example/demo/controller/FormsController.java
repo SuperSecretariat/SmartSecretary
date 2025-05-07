@@ -1,13 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.exceptions.FormCreationException;
+import com.example.demo.exceptions.InvalidFormIdException;
+import com.example.demo.exceptions.NoFormFieldsFoundException;
 import com.example.demo.model.Form;
-import com.example.demo.repository.FormRepository;
+import com.example.demo.model.FormField;
+import com.example.demo.model.FormFieldJsonObject;
+import com.example.demo.request.FormCreationRequest;
 import com.example.demo.service.FormService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,5 +32,59 @@ public class FormsController {
     @GetMapping
     public ResponseEntity<List<Form>> getActiveForms() {
         return ResponseEntity.ok(formService.getAllActiveForms());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Form> getFormById(@PathVariable Long id) {
+        try {
+            Form form = formService.getFormById(id);
+            return ResponseEntity.ok(form);
+        }
+        catch (InvalidFormIdException e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("{id}/fields")
+    public ResponseEntity<List<FormFieldJsonObject>> getFormFieldsOfFormWIthId(@PathVariable Long id) {
+        try {
+            List<FormFieldJsonObject> formFields = formService.getFormFieldsOfFormWithId(id);
+            return ResponseEntity.ok(formFields);
+        }
+        catch (InvalidFormIdException | NoFormFieldsFoundException e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createForm(@RequestBody FormCreationRequest formCreationRequest) {
+        try{
+            Form form = formService.createForm(formCreationRequest);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(form.getId())
+                    .toUri();
+            return ResponseEntity.created(location).build();
+        }
+        catch (IOException | InterruptedException | FormCreationException e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
+        }
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<?> getFormImage(@PathVariable Long id) {
+        try{
+            byte[] imageBytes = formService.getFormImage(id);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG); // or IMAGE_PNG etc.
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        }
+        catch (IOException | InvalidFormIdException e){
+            System.err.println(e.getMessage());
+            return ResponseEntity.status(503).body("Unable to load form. Please try again later.");
+        }
     }
 }
