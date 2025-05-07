@@ -9,10 +9,15 @@ import com.example.demo.repository.FormFieldRepository;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.request.FormCreationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -71,4 +76,9 @@ public class FormService {
     }
 
     public void validateFormRequest(FormRequest formRequest) {}
+
+    public byte[] getFormImage(String title) throws IOException {
+        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".png");
+        return Files.readAllBytes(path);
+    }
 }

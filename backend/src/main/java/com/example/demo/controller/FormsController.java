@@ -5,8 +5,12 @@ import com.example.demo.model.Form;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.request.FormCreationRequest;
 import com.example.demo.service.FormService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
@@ -50,6 +54,19 @@ public class FormsController {
         catch (IOException | InterruptedException | FormCreationException e) {
             System.err.println(e.getMessage());
             return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
+        }
+    }
+
+    @GetMapping("/{title}/image")
+    public ResponseEntity<?> getFormImage(@PathVariable String title) {
+        try{
+            byte[] imageBytes = formService.getFormImage(title);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG); // or IMAGE_PNG etc.
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        }
+        catch (IOException e){
+            return ResponseEntity.status(503).body("Unable to load form. Please try again later.");
         }
     }
 }
