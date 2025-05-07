@@ -53,7 +53,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        Optional<User> optionalUser = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
+        String tempKey = encryptException(loginRequest.getRegistrationNumber());
+        Optional<User> optionalUser = userRepository.findByRegNumber(tempKey);
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(404).body("User doesn't exist");
