@@ -4,11 +4,14 @@ import com.example.demo.exceptions.FormCreationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PdfFileUtil {
-    public static String mapPdfInputFieldsToCssPercentages(String pdfFilePath) throws IOException, InterruptedException, FormCreationException {
+    public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException {
+        Path pdfFilePath = Paths.get("src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf");
         String pythonScriptPath = "src/main/resources/scripts/convert_points_to_percentages.py";
-        ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath);
+        ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath.toString());
         Process process = processBuilder.start();
         int exitCode = process.waitFor();
 

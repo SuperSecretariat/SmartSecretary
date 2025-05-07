@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.exceptions.FormCreationException;
+import com.example.demo.exceptions.InvalidFormIdException;
+import com.example.demo.exceptions.NoFormFieldsFoundException;
 import com.example.demo.model.Form;
 import com.example.demo.model.FormField;
 import com.example.demo.model.FormFieldJsonObject;
@@ -11,6 +13,7 @@ import com.example.demo.request.FormCreationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FormService {
@@ -71,14 +75,47 @@ public class FormService {
         return this.formRepository.findByActive(true);
     }
 
-    public Form getFormById(Long id) {
-        return this.formRepository.findById(id).orElse(null);
+    public Form getFormById(Long id) throws InvalidFormIdException {
+        Optional<Form> form = this.formRepository.findById(id);
+        if (form.isEmpty()) {
+            throw new InvalidFormIdException("The form with the given ID does not exist.");
+        }
+        return form.get();
     }
 
     public void validateFormRequest(FormRequest formRequest) {}
 
-    public byte[] getFormImage(String title) throws IOException {
-        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".png");
+    public byte[] getFormImage(Long id) throws IOException, InvalidFormIdException {
+        Optional<Form> form = this.formRepository.findById(id);
+        if (form.isEmpty()) {
+            throw new InvalidFormIdException("The form with the given ID does not exist.");
+        }
+        String title = form.get().getTitle();
+        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
+        System.out.println(path);
         return Files.readAllBytes(path);
+    }
+
+    public List<FormFieldJsonObject> getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {
+        if (!doesFormExist(id)) {
+            throw new InvalidFormIdException("The form with the given ID does not exist.");
+        }
+        List<FormField> formFields = this.formFieldRepository.findByFormId(id);
+        if (formFields.isEmpty()) {
+            throw new NoFormFieldsFoundException("No form fields found for the given form ID.");
+        }
+        return formFields.stream()
+                .map(formField -> new FormFieldJsonObject(
+                        formField.getPage(),
+                        formField.getTop(),
+                        formField.getLeft(),
+                        formField.getWidth(),
+                        formField.getHeight()
+                ))
+                .toList();
+    }
+
+    private boolean doesFormExist(Long id) {
+        return this.formRepository.existsById(id);
     }
 }

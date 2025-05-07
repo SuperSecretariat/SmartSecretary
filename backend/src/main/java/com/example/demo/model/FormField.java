@@ -39,4 +39,37 @@ public class FormField {
         this.width = width;
         this.height = height;
     }
+
+    @Override
+    public String toString() {
+        return "FormField{" +
+                "id=" + id +
+                ", formId=" + formId +
+                ", page='" + page + '\'' +
+                ", top='" + top + '\'' +
+                ", left='" + left + '\'' +
+                ", width='" + width + '\'' +
+                ", height='" + height + '\'' +
+                '}';
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public String getTop() {
+        return top;
+    }
+
+    public String getLeft() {
+        return left;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
 }
