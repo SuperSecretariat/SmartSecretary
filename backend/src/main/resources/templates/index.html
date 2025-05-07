@@ -1,38 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Document List</title>
+    <title>Upload Document</title>
 </head>
-<body style="font-family: 'Courier 10 Pitch'">
-<h1 style="text-align: center">Document List</h1>
-<form action="/v1/documents/addDocument" method="post">
-    <label for="name">Document Name:</label>
-    <input type="text" id="name" name="name" required><br><br>
-    <label for="type">Document Type:</label>
-    <input type="text" id="type" name="type" required><br><br>
-    <input type="submit" value="Submit">
+<body style="font-family: 'Courier 10 Pitch'; text-align: center;">
+<h1>Upload Document</h1>
+<form action="/v1/documents/addDocument" method="post" enctype="multipart/form-data">
+    <label for="file">Select file:</label>
+    <input type="file" id="file" name="file" required><br><br>
+    <input type="submit" value="Upload">
 </form>
-<br>
-<br>
-
-<button onclick="fetchDocuments()">Get Documents</button>
-<ul id="documentList"></ul>
-
-
-<script>
-    function fetchDocuments() {
-        fetch('/v1/documents/')
-            .then(response => response.json())
-            .then(data => {
-                const documentList = document.getElementById('documentList');
-                documentList.innerHTML = '';
-                data.forEach(doc => {
-                    const li = document.createElement('li');
-                    li.textContent = (String) ("Formular cu id-ul: " + doc.id +", nume: \"" + doc.name + "\", de tipul: " + doc.type + ".");
-                    documentList.appendChild(li);
-                });
-            });
-    }
-</script>
 </body>
 </html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Uploaded Documents</title>
+</head>
+<body style="font-family: 'Courier 10 Pitch'; text-align: center;">
+<h1>Available Documents</h1>
+
+<p><a th:href="@{/v1/documents/}">Upload another file</a></p>
+
+<table style="margin: 0 auto; border-collapse: collapse;">
+    <thead>
+    <tr>
+        <th style="border: 1px solid #333; padding: 6px;">ID</th>
+        <th style="border: 1px solid #333; padding: 6px;">Filename</th>
+        <th style="border: 1px solid #333; padding: 6px;">Download</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="doc : ${documents}">
+        <td style="border: 1px solid #333; padding: 6px;" th:text="${doc.id}">1</td>
+        <td style="border: 1px solid #333; padding: 6px;" th:text="${doc.fileName}">file.txt</td>
+        <td style="border: 1px solid #333; padding: 6px;">
+            <a th:href="@{/v1/documents/download/{id}(id=${doc.id})}">
+                Download
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
