@@ -1,48 +1,19 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { SearchBarComponent } from '../dashboard/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-submitted-forms',
+  imports: [
+    SearchBarComponent
+  ],
   templateUrl: './submitted-forms.component.html',
-  styleUrls: ['./submitted-forms.component.css'],
-  imports: [CommonModule, FormsModule]
+  styleUrl: './submitted-forms.component.css'
 })
-export class SubmittedFormsComponent {
-  submittedRequests: { id: number; formName: string; status: string }[] = [];
-  filteredRequests: { id: number; formName: string; status: string }[] = [];
-  currentUserId: string = 'user123';
-  searchId: string = '';
-  filterFormName: string = '';
-  filterStatus: string = '';
-  formTypes: string[] = ['Form1', 'Form2', 'Form3'];
-  statuses: string[] = ['Pending', 'Accepted', 'Rejected'];
-  showSearchBar: boolean = false;
-
-  constructor() {
-    this.loadSubmittedRequests();
-  }
-
-  private loadSubmittedRequests(): void {
-    const storedSubmittedRequests = localStorage.getItem(`submitted_requests_${this.currentUserId}`);
-    if (storedSubmittedRequests) {
-      this.submittedRequests = JSON.parse(storedSubmittedRequests);
-    } else {
-      this.submittedRequests = [];
-    }
-    this.filteredRequests = [...this.submittedRequests];
-  }
-
-  applyFilters(): void {
-    this.filteredRequests = this.submittedRequests.filter(request => {
-      const matchesId = this.searchId ? request.id.toString().includes(this.searchId) : true;
-      const matchesFormName = this.filterFormName ? request.formName === this.filterFormName : true;
-      const matchesStatus = this.filterStatus ? request.status === this.filterStatus : true;
-      return matchesId && matchesFormName && matchesStatus;
-    });
-  }
-
-  toggleSearchBar(): void {
-    this.showSearchBar = !this.showSearchBar;
+export class SubmittedFormsComponent implements OnInit{
+  ngOnInit(): void {
+    // Initialize the component and set up any necessary data or state
+    // For example, you can fetch menu items from a service or define them here
+    console.log('SubmittedForms component initialized');
   }
 }

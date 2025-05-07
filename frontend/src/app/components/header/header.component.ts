@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
     this.navBarVisibilityService.switchVisibility();
   }
 
-  logout(): void { 
+  logout(): void { // nu s-a putut gasi endpoint de signout
     this.storageService.clean();
     this.router.navigate(['/home']).then(() => {
       window.location.reload();
