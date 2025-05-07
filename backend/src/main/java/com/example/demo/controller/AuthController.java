@@ -54,22 +54,33 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         String tempKey = encryptException(loginRequest.getRegistrationNumber());
-        Optional<User> optionalUser = userRepository.findByRegNumber(tempKey);
-
-        if (optionalUser.isEmpty()) {
+        Optional<User> optionalUserCrypt = userRepository.findByRegNumber(tempKey);
+        Optional<User> optionalUserStudent = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
+        boolean isAdmin = true;
+        if (optionalUserCrypt.isEmpty() && optionalUserStudent.isEmpty())
             return ResponseEntity.status(404).body("User doesn't exist");
+
+        if(!optionalUserStudent.isEmpty()) {
+            isAdmin = false;
         }
-        Set<Role> userRole = optionalUser.get().getRoles();
+
+        User currentUser;
+        if(isAdmin)
+            currentUser = optionalUserCrypt.get();
+        else
+            currentUser = optionalUserStudent.get();
+
+        System.out.println(currentUser.getFirstName() + " " + isAdmin);
+        Set<Role> userRole = currentUser.getRoles();
 
         List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
-        if (passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
-            User user = optionalUser.get();
-            UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+        if (passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
+            UserDetailsImpl userDetails = UserDetailsImpl.build(currentUser);
 
             String token = jwtUtil.generateJwtToken(
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
             );
-            return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getRegNumber(), roleNames));
+            return ResponseEntity.ok(new JwtResponse(token, currentUser.getId(), currentUser.getRegNumber(), roleNames));
         } else
             return ResponseEntity.status(401).body("Incorrect password");
     }
