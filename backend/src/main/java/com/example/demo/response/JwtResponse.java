@@ -1,5 +1,8 @@
 package com.example.demo.response;
 
+import com.example.demo.constants.ErrorMessage;
+import com.example.demo.constants.ValidationMessage;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +20,7 @@ public class JwtResponse {
     private String university;
     private String faculty;
     private List<String> roles;
+    private String responseMessage;
 
     public JwtResponse(String token, Long id, String registrationNumber, List<String> roles){
         this.token = token;
@@ -47,6 +51,14 @@ public class JwtResponse {
         this.faculty = faculty;
         this.roles = roles;
 
+    }
+
+    public JwtResponse(String message){
+        this.responseMessage = message;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
     }
 
     public String getToken() {

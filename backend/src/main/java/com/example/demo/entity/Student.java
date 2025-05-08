@@ -1,12 +1,8 @@
-package com.example.demo.modelDB;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.sql.Date;
-import java.time.LocalDate;
 
 @Entity
 @Table( name = "students",

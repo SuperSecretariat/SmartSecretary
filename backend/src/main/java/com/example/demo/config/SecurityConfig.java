@@ -18,8 +18,12 @@ import java.util.Base64;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final AuthTokenFilter authTokenFilter;
+
     @Autowired
-    private AuthTokenFilter authTokenFilter;
+    public SecurityConfig(AuthTokenFilter authTokenFilter){
+        this.authTokenFilter = authTokenFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
