@@ -2,8 +2,9 @@ name: Notify Discord on PR
 
 on:
   pull_request:
-    types: [opened]
-  branches:
+    types: 
+      - opened
+    branches:
       - main
       - develop
 
