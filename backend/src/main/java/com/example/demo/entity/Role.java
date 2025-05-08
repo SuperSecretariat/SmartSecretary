@@ -1,4 +1,4 @@
-package com.example.demo.modelDB;
+package com.example.demo.entity;
 
 import com.example.demo.model.enums.ERole;
 import jakarta.persistence.*;

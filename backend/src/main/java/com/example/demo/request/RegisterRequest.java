@@ -27,7 +27,9 @@ public class RegisterRequest {
     @NotBlank(message = ErrorMessage.MISSING_CONFIRMATION_PASSWORD)
     private String confirmationPassword;
 
-    public RegisterRequest(){}
+    public RegisterRequest(){
+        //SonarQube comment: constructor needed for JSON parsing
+    }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }

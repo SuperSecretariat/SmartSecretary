@@ -1,6 +1,5 @@
 package com.example.demo.util;
 
-import com.example.demo.modelDB.User;
 import com.example.demo.service.TokenBlacklistService;
 import com.example.demo.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
@@ -14,20 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     private final String jwtSecret;
-    private final int jwtExpirationMs = 86400000;
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+    private static final int JWT_EXPIRATION_MS = 86400000;
+    private final TokenBlacklistService tokenBlacklistService;
+
 
     @Autowired
-    private TokenBlacklistService tokenBlacklistService;
-
-    @Autowired
-    public JwtUtil(@Value("${jwt.secret}")String jwtSecret){
+    public JwtUtil(TokenBlacklistService tokenBlacklistService, @Value("${jwt.secret}")String jwtSecret)
+    {
+        this.tokenBlacklistService = tokenBlacklistService;
         this.jwtSecret = jwtSecret;
     }
 
@@ -37,7 +36,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime() + JWT_EXPIRATION_MS))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -65,7 +64,7 @@ public class JwtUtil {
         try{
             if(tokenBlacklistService.isBlacklisted(authToken))
                 return false;
-            Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
+            Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(authToken);
             return true;
         }catch(MalformedJwtException e){
             logger.error("Invalid JWT Token: {}", e.getMessage());
