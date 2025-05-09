@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AddService} from '../../../components/_services/add.service';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-board-secretary-add',
@@ -8,7 +9,8 @@ import {AddService} from '../../../components/_services/add.service';
   styleUrl: './board-secretary-add.component.css'
 })
 export class BoardSecretaryAddComponent{
-  form: any = {
+  @ViewChild('form') form!: NgForm;
+  formData: any = {
     registrationNumber: null,
     email: null
   };
@@ -21,13 +23,13 @@ export class BoardSecretaryAddComponent{
   errorMessage = '';
 
   onSubmit(): void {
-    const { registrationNumber, email } = this.form;
+    const { registrationNumber, email } = this.formData;
 
     this.addService.addStudent(registrationNumber, email).subscribe({
       next: data => {
         console.log(data);
-        this.isSuccessful = true;
         this.form.resetForm();
+        this.isSuccessful = true;
       },
       error: err => {
         console.log('Add error:', err);
