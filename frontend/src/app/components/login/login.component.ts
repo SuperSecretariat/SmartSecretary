@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit {
   roles: string[] = [];
 
   constructor(
-    private authService: AuthService,
-    private storageService: StorageService,
-    private router: Router
+    private readonly authService: AuthService,
+    private readonly storageService: StorageService,
+    private readonly router: Router
   ) { }
 
   get formattedRoles(): string {
