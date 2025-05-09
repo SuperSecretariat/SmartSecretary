@@ -1,7 +1,6 @@
 <div class="col-md-12 form">
   <div class="card card-container">
     <div class="title">Add Admin</div>
-    @if (!isSuccessfulAdmin) {
       <form
         name="formAdmin"
         (ngSubmit)="formAdmin.form.valid && onSubmitAdmin()"
@@ -67,18 +66,18 @@
             Add Failed!<br />{{ errorMessage }}
           </div>
         }
+        @if (isSuccessfulAdmin){
+          <br>
+          <div class="alert alert-success">Added successfully</div>
+        }
       </form>
-    } @else {
-      <br>
-      <div class="alert alert-success">Added successfully</div>
-    }
+
   </div>
 </div>
 
 <div class="col-md-12 form">
   <div class="card card-container">
     <div class="title">Add Secretary</div>
-    @if (!isSuccessfulSecretary) {
       <form
         name="formSecretary"
         (ngSubmit)="formSecretary.form.valid && onSubmitSecretary()"
@@ -144,11 +143,11 @@
             Add Failed!<br />{{ errorMessage }}
           </div>
         }
+        @if (isSuccessfulSecretary) {
+          <br>
+          <div class="alert alert-success">Added successfully</div>
+        }
       </form>
-    } @else {
-      <br>
-      <div class="alert alert-success">Added successfully</div>
-    }
   </div>
 </div>
 

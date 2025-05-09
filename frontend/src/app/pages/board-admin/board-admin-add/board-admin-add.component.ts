@@ -35,7 +35,7 @@ export class BoardAdminAddComponent{
       next: data => {
         console.log(data);
         this.isSuccessfulAdmin = true;
-        this.formAdmin.reset();
+        this.formAdmin.resetForm();
       },
       error: err => {
         console.log('Add error:', err);
@@ -52,7 +52,7 @@ export class BoardAdminAddComponent{
       next: data => {
         console.log(data);
         this.isSuccessfulSecretary = true;
-        this.formSecretary.reset();
+        this.formSecretary.resetForm();
       },
       error: err => {
         console.log('Add error:', err);

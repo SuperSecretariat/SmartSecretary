@@ -44,10 +44,18 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('Admin Dashboard', `/${rolePrefix}/dashboard`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
       ];
-    else
+    else if(roles.includes("ROLE_SECRETARY"))
       this.navBarItems = [
         new NavBarItem('Home', `/${rolePrefix}/home`),
         new NavBarItem('Secretary Dashboard', `/${rolePrefix}/dashboard`),
+        new NavBarItem('Account Manager', `/${rolePrefix}/account`),
+        new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
+      ];
+    else
+      this.navBarItems = [
+        new NavBarItem('Home', `/${rolePrefix}/home`),
+        new NavBarItem('Create form', `/${rolePrefix}/create-form`),
+        new NavBarItem('Submitted forms', `/${rolePrefix}/submitted-forms`),
         new NavBarItem('Account Manager', `/${rolePrefix}/account`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
       ];

@@ -27,8 +27,7 @@ export class BoardSecretaryAddComponent{
       next: data => {
         console.log(data);
         this.isSuccessful = true;
-        window.location.reload();
-        this.form.reset();
+        this.form.resetForm();
       },
       error: err => {
         console.log('Add error:', err);
