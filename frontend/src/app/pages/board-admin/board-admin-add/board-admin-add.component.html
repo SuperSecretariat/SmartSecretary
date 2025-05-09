@@ -1,0 +1,153 @@
+<div class="col-md-12 form">
+  <div class="card card-container">
+    <div class="title">Add Admin</div>
+      <form
+        name="formAdmin"
+        (ngSubmit)="formAdmin.form.valid && onSubmitAdmin()"
+        #formAdmin="ngForm"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            [(ngModel)]="formAdminData.email"
+            required
+            email
+            #email="ngModel"
+            [ngClass]="{ 'is-invalid': formAdmin.submitted && email.errors }"
+          />
+          @if (email.errors && formAdmin.submitted) {
+            <br>
+            <div class="invalid-feedback">
+              @if (email.errors['required']) {
+                <div>Email is required</div>
+              }
+              @if (email.errors['email']) {
+                <div>Email must be a valid email address</div>
+              }
+            </div>
+          }
+        </div>
+        <br>
+        <div class="form-group">
+          <label for="authKey">Auth Key</label>
+          <input
+            class="form-control"
+            name="authKey"
+            [(ngModel)]="formAdminData.authKey"
+            required
+            minlength="6"
+            #authKey="ngModel"
+            [ngClass]="{ 'is-invalid': formAdmin.submitted && authKey.errors }"
+          />
+          @if (authKey.errors && formAdmin.submitted) {
+            <br>
+            <div class="invalid-feedback">
+              @if (authKey.errors['required']) {
+                <div>AuthKey is required</div>
+              }
+              @if (authKey.errors['minlength']) {
+                <div>AuthKey must be at least 6 characters</div>
+              }
+            </div>
+          }
+        </div>
+        <br>
+        <div class="form-group">
+          <button class="btn btn-primary btn-block">Add</button>
+        </div>
+
+        @if (formAdmin.submitted && !isSuccessfulAdmin) {
+          <br>
+          <div class="alert alert-warning">
+            Add Failed!<br />{{ errorMessage }}
+          </div>
+        }
+        @if (isSuccessfulAdmin){
+          <br>
+          <div class="alert alert-success">Added successfully</div>
+        }
+      </form>
+
+  </div>
+</div>
+
+<div class="col-md-12 form">
+  <div class="card card-container">
+    <div class="title">Add Secretary</div>
+      <form
+        name="formSecretary"
+        (ngSubmit)="formSecretary.form.valid && onSubmitSecretary()"
+        #formSecretary="ngForm"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            [(ngModel)]="formSecretaryData.email"
+            required
+            email
+            #email="ngModel"
+            [ngClass]="{ 'is-invalid': formSecretary.submitted && email.errors }"
+          />
+          @if (email.errors && formSecretary.submitted) {
+            <br>
+            <div class="invalid-feedback">
+              @if (email.errors['required']) {
+                <div>Email is required</div>
+              }
+              @if (email.errors['email']) {
+                <div>Email must be a valid email address</div>
+              }
+            </div>
+          }
+        </div>
+        <br>
+        <div class="form-group">
+          <label for="authKey">Auth Key</label>
+          <input
+            class="form-control"
+            name="authKey"
+            [(ngModel)]="formSecretaryData.authKey"
+            required
+            minlength="6"
+            #authKey="ngModel"
+            [ngClass]="{ 'is-invalid': formSecretary.submitted && authKey.errors }"
+          />
+          @if (authKey.errors && formSecretary.submitted) {
+            <br>
+            <div class="invalid-feedback">
+              @if (authKey.errors['required']) {
+                <div>AuthKey is required</div>
+              }
+              @if (authKey.errors['minlength']) {
+                <div>AuthKey must be at least 6 characters</div>
+              }
+            </div>
+          }
+        </div>
+        <br>
+        <div class="form-group">
+          <button class="btn btn-primary btn-block">Add</button>
+        </div>
+
+        @if (formSecretary.submitted && !isSuccessfulSecretary) {
+          <br>
+          <div class="alert alert-warning">
+            Add Failed!<br />{{ errorMessage }}
+          </div>
+        }
+        @if (isSuccessfulSecretary) {
+          <br>
+          <div class="alert alert-success">Added successfully</div>
+        }
+      </form>
+  </div>
+</div>
+
