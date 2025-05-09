@@ -37,13 +37,20 @@ export class NavBarComponent implements OnInit {
   const roles: string[] = user.roles;
   const rolePrefix = roles[0].replace('ROLE_', '').toLowerCase();
 
-  this.navBarItems = [
-    new NavBarItem('Home', `/${rolePrefix}/home`),
-    new NavBarItem('Create form', `/${rolePrefix}/create-form`),
-    new NavBarItem('Submitted forms', `/${rolePrefix}/submitted-forms`),
-    new NavBarItem('Account Manager', `/${rolePrefix}/account`),
-    new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
-  ];
+    if(roles.includes("ROLE_ADMIN"))
+      this.navBarItems = [
+        new NavBarItem('Home', `/${rolePrefix}/home`),
+        new NavBarItem('Account Manager', `/${rolePrefix}/account`),
+        new NavBarItem('Admin Dashboard', `/${rolePrefix}/dashboard`),
+        new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
+      ];
+    else
+      this.navBarItems = [
+        new NavBarItem('Home', `/${rolePrefix}/home`),
+        new NavBarItem('Secretary Dashboard', `/${rolePrefix}/dashboard`),
+        new NavBarItem('Account Manager', `/${rolePrefix}/account`),
+        new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
+      ];
 
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
@@ -60,6 +67,7 @@ export class NavBarComponent implements OnInit {
       }
     }
 
+
   }
 
   getNavBarItems(): { name: string; route: string }[] {
@@ -69,6 +77,6 @@ export class NavBarComponent implements OnInit {
     }));
   }
 
-  
+
 }
 

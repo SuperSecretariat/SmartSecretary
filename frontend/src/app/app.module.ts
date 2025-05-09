@@ -21,6 +21,12 @@ import { HeaderComponent } from "./components/header/header.component";
 import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import { FooterComponent } from "./components/footer/footer.component";
+import { AdminNavBarComponent } from "./components/admin-nav-bar/admin-nav-bar.component";
+import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board-admin-add.component";
+import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
+import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+
 
 @NgModule({
   declarations: [
@@ -31,11 +37,16 @@ import { FooterComponent } from "./components/footer/footer.component";
     ProfileComponent,
     BoardAdminComponent,
     BoardSecretaryComponent,
-    AccountComponent
+    AccountComponent,
+    SecretaryNavBarComponent,
+    BoardAdminAddComponent,
+    BoardAdminShowAuthKeyComponent,
+    BoardSecretaryAddComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    AdminNavBarComponent,
     FormsModule,
     HeaderComponent,
     NavBarComponent,

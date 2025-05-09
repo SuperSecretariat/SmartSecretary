@@ -10,7 +10,7 @@ import { UserService } from '../../components/_services/user.service';
 export class BoardSecretaryComponent implements OnInit {
   content?: string;
 
-  constructor(private userService: UserService) { }
+  constructor(private readonly userService: UserService) { }
 
   ngOnInit(): void {
     this.userService.getSecretaryBoard().subscribe({
