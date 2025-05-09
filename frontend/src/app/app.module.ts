@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,7 +16,6 @@ import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
-import { BoardStudentComponent } from './pages/board-student/board-student.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { HeaderComponent } from "./components/header/header.component";
 import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
@@ -39,7 +37,6 @@ import { FooterComponent } from "./components/footer/footer.component";
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule,
     HeaderComponent,
     NavBarComponent,
     DashboardComponent,
@@ -48,7 +45,10 @@ import { FooterComponent } from "./components/footer/footer.component";
     SubmittedFormsComponent,
     NewsfeedComponent
 ],
-  providers: [httpInterceptorProviders],
+  providers: [
+    httpInterceptorProviders,
+    provideHttpClient(withInterceptorsFromDi())
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

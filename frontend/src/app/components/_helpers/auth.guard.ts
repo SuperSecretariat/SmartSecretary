@@ -8,7 +8,7 @@ import { StorageService } from '../_services/storage.service';
 })
 export class AuthGuard implements CanActivate {
   
-  constructor(private storageService: StorageService, private router: Router) {}
+  constructor(private readonly storageService: StorageService, private readonly router: Router) {}
   
   canActivate(
     route: ActivatedRouteSnapshot,

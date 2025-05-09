@@ -4,14 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { ProfileComponent } from './components/profile/profile.component';
 import { CreateFormComponent } from './components/create-form/create-form.component';
 import { SubmittedFormsComponent } from './components/submitted-forms/submitted-forms.component';
 import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
-import { BoardStudentComponent } from './pages/board-student/board-student.component';
-import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
-import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { AuthGuard } from './components/_helpers/auth.guard';
 
 const routes: Routes = [

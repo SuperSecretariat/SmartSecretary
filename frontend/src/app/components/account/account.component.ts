@@ -21,7 +21,7 @@ export class AccountComponent implements OnInit{
     cnp: null
   };
   
-    constructor(private storageService: StorageService) { }
+    constructor(private readonly storageService: StorageService) { }
   
     ngOnInit(): void {
       this.storageService.getUserProfile().subscribe({
@@ -55,7 +55,6 @@ export class AccountComponent implements OnInit{
       this.isFormSubmitting = true;
       
       const { university, faculty, dateOfBirth, cnp } = this.additionalForm;
-      const token = this.storageService.getUser().token;
       
       this.storageService.updateUserProfile(university, faculty, dateOfBirth, cnp).subscribe({
         next: (response) => {
@@ -72,7 +71,7 @@ export class AccountComponent implements OnInit{
           this.storageService.saveUser(this.currentUser);
         },
         error: (err) => {
-          this.errorMessage = err.error.message || 'Error updating profile';
+          this.errorMessage = err.error.message ?? 'Error updating profile';
           this.isFormSubmitting = false;
           this.isUpdateSuccessful = false;
         }
