@@ -11,7 +11,6 @@ import java.util.Base64;
 public class AESUtil {
 
     private static final String ALGORITHM = "AES";
-
     private static final String SECRET = System.getenv("AES_SECRET") != null
             ? System.getenv("AES_SECRET")
             : "DefaultSecretKey";

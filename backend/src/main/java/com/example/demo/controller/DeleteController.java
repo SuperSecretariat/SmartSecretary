@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Only deletes from the `users` table.
  */
+
 @RestController
 @RequestMapping("/api/delete")
 public class DeleteController {
