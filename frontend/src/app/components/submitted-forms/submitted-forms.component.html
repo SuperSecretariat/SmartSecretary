@@ -1,4 +1,22 @@
-<div class="searchBar">
-    <search-bar></search-bar>
-</div>
-<h1>Submitted-forms</h1>
+<div class="container card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3>Submitted forms</h3>
+      <app-search (filtersApplied)="onFiltersApplied($event)"></app-search>
+    </div>
+  
+    <ul class="request-list">
+      <div *ngIf="filteredRequests.length > 0" class="submitted-requests">
+        <div *ngFor="let request of filteredRequests" class="card mb-3">
+          <div class="card-body request-item">
+            <span class="request-id"><strong>ID:</strong> {{ request.id }}</span>
+            <span class="request-form"><strong>Form:</strong> {{ request.formName }}</span>
+            <span class="request-status"><strong>Status:</strong> {{ request.status }}</span>
+          </div>
+        </div>
+      </div>
+    </ul>
+  
+    <div *ngIf="filteredRequests.length === 0" class="no-requests">
+      <p>No submitted forms found.</p>
+    </div>
+  </div>
