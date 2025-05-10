@@ -6,12 +6,16 @@
           <h3>Account Profile</h3>
         </div>
         <div class="card-body">
-          <!-- Show Additional Details Form if profile is not complete -->
-          @if (!isProfileComplete) {
+          <!-- Show Additional Details Form if profile is not complete or in edit mode -->
+          @if (!isProfileComplete || isEditMode) {
             <div class="row mb-3">
               <div class="col-12">
                 <div class="alert alert-info">
-                  Please complete your profile by providing the additional information below.
+                  @if (!isProfileComplete) {
+                    Please complete your profile by providing the additional information below.
+                  } @else {
+                    You can modify your profile information below.
+                  }
                 </div>
               </div>
             </div>
@@ -38,16 +42,6 @@
 
               <div class="form-group mb-3">
                 <label for="faculty">Faculty</label>
-                <!-- <input
-                  type="text"
-                  class="form-control"
-                  name="faculty"
-                  [(ngModel)]="additionalForm.faculty"
-                  required
-                  #faculty="ngModel"
-                  [ngClass]="{ 'is-invalid': f.submitted && faculty.errors }"
-                /> -->
-
                 <select
                   class="form-control"
                   name="faculty"
@@ -128,6 +122,11 @@
                   <output *ngIf="isFormSubmitting" class="spinner-border spinner-border-sm" aria-hidden="true"></output>
                   Save Profile
                 </button>
+                @if (isEditMode) {
+                  <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">
+                    Cancel
+                  </button>
+                }
               </div>
 
               @if (isUpdateSuccessful) {
@@ -144,8 +143,8 @@
             </form>
           }
 
-          <!-- Show User Profile if complete -->
-          @if (isProfileComplete) {
+          <!-- Show User Profile if complete and not in edit mode -->
+          @if (isProfileComplete && !isEditMode) {
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
@@ -174,6 +173,13 @@
                 <div class="mb-3">
                   <strong>CNP:</strong> {{ currentUser.cnp }}
                 </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <button class="btn btn-primary" (click)="editProfile()">
+                  Modify Details
+                </button>
               </div>
             </div>
           }
