@@ -43,57 +43,73 @@ public class UserDataController {
 
     @GetMapping("/profile")
     public ResponseEntity<JwtResponse> getUserProfile(@RequestHeader("Authorization") String headerAuth){
-            String token = headerAuth.substring(7);
+        String token = headerAuth.substring(7);
 
-            if(jwtUtil.validateJwtToken(token)){
-                String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+        if(jwtUtil.validateJwtToken(token)){
+            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
 
-                UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
-                List<String> roles = userDetails.getAuthorities().stream()
-                        .map(item -> item.getAuthority())
-                        .collect(Collectors.toList());
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-                JwtResponse response = new JwtResponse(token, userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getEmail(), userDetails.getCnp(), userDetails.getDateOfBirth(), userDetails.getUniversity(), userDetails.getFaculty(), roles);
-                return ResponseEntity.ok(response);
-            }
-            else
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            JwtResponse response = new JwtResponse(token, userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getEmail(), userDetails.getCnp(), userDetails.getDateOfBirth(), userDetails.getUniversity(), userDetails.getFaculty(), roles);
+            return ResponseEntity.ok(response);
+        }
+        else
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
     }
 
     @PostMapping("/update")
     public ResponseEntity<JwtResponse> updateUserProfile(@RequestBody UpdateProfileRequest updateRequest, @RequestHeader("Authorization") String headerAuth){
-            String token = headerAuth.substring(7);
-            if(jwtUtil.validateJwtToken(token)){
-                User currentUser;
-                String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                String tempKey = encryptException(registrationNumber);
-                Optional<User> userStudent = userRepository.findByRegNumber(registrationNumber);
-                Optional<User> userCrypt = userRepository.findByRegNumber(tempKey);
-                boolean isAdmin = false;
+        String token = headerAuth.substring(7);
+        if(jwtUtil.validateJwtToken(token)){
+            User currentUser;
+            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            String tempKey = encryptException(registrationNumber);
+            Optional<User> userStudent = userRepository.findByRegNumber(registrationNumber);
+            Optional<User> userCrypt = userRepository.findByRegNumber(tempKey);
+            boolean isAdmin = false;
 
-                if(userStudent.isEmpty() && userCrypt.isEmpty())
-                {
-                    return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-                }
-
-                if(userCrypt.isPresent())
-                    isAdmin = true;
-
-                if(isAdmin)
-                    currentUser = userCrypt.get();
-                else
-                    currentUser = userStudent.get();
-                currentUser.setCnp(updateRequest.getCnp());
-                currentUser.setFaculty(updateRequest.getFaculty());
-                currentUser.setUniversity(updateRequest.getUniversity());
-                currentUser.setDateOfBirth(updateRequest.getDateOfBirth());
-                userRepository.save(currentUser);
-                return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCESS));
+            if(userStudent.isEmpty() && userCrypt.isEmpty())
+            {
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
             }
-            else
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-    }
 
+            if(userCrypt.isPresent())
+                isAdmin = true;
+
+            if(isAdmin)
+                currentUser = userCrypt.get();
+            else
+                currentUser = userStudent.get();
+            currentUser.setCnp(updateRequest.getCnp());
+            currentUser.setFaculty(updateRequest.getFaculty());
+            currentUser.setUniversity(updateRequest.getUniversity());
+            currentUser.setDateOfBirth(updateRequest.getDateOfBirth());
+            userRepository.save(currentUser);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCES));
+        }
+        else
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+    }
+    @PostMapping("/delete-me")
+    public ResponseEntity<JwtResponse> deleteCurrentUser(@RequestHeader("Authorization") String headerAuth){
+        String token = headerAuth.substring(7);
+        if(jwtUtil.validateJwtToken(token)){
+            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            Optional<User> userStudent = userRepository.findByRegNumber(registrationNumber);
+            if(userStudent.isPresent())
+            {
+                userRepository.delete(userStudent.get());
+                return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
+            }
+
+
+        }
+        return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+
+    }
     private static String encryptException(String input){
         try{
             return encrypt(input);
