@@ -41,6 +41,7 @@ export class BoardAdminAddComponent{
         console.log('Add error:', err);
         this.errorMessage = err.error.message;
         this.isSuccessfulAdmin = false;
+        this.formAdmin.resetForm();
       }
     });
   }
@@ -58,6 +59,7 @@ export class BoardAdminAddComponent{
         console.log('Add error:', err);
         this.errorMessage = err.error.message;
         this.isSuccessfulSecretary = false;
+        this.formSecretary.resetForm();
       }
     });
   }
