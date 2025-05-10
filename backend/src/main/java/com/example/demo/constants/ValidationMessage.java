@@ -7,6 +7,7 @@ public class ValidationMessage {
     public static final String ACCOUNT_SUCCESS = "Account created successfully";
     public static final String LOGOUT_SUCCESS = "Logged out successfully";
     public static final String UPDATE_SUCCES = "Profile information updated successfully";
+    public static final String ACCOUNT_DELETED = "Account deleted successfully";
 
     private ValidationMessage(){}
 }

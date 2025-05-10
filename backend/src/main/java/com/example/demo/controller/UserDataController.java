@@ -93,7 +93,23 @@ public class UserDataController {
             else
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
     }
+    @PostMapping("/delete-me")
+    public ResponseEntity<JwtResponse> deleteCurrentUser(@RequestHeader("Authorization") String headerAuth){
+        String token = headerAuth.substring(7);
+        if(jwtUtil.validateJwtToken(token)){
+            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            Optional<User> userStudent = userRepository.findByRegNumber(registrationNumber);
+            if(userStudent.isPresent())
+            {
+                userRepository.delete(userStudent.get());
+                return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
+            }
 
+
+        }
+        return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+
+    }
     private static String encryptException(String input){
         try{
             return encrypt(input);
