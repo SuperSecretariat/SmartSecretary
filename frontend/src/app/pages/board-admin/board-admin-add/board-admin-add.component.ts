@@ -13,12 +13,12 @@ export class BoardAdminAddComponent{
   @ViewChild('formAdmin') formAdmin!: NgForm;
   @ViewChild('formSecretary') formSecretary!: NgForm;
   formAdminData: any = {
-    email: null,
-    authKey: null
+    emailAdmin: null,
+    authKeyAdmin: null
   };
   formSecretaryData: any = {
-    email: null,
-    authKey: null
+    emailSecretary: null,
+    authKeySecretary: null
   };
   content?: string;
   isSuccessfulAdmin = false;
