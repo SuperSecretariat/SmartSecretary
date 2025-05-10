@@ -8,24 +8,24 @@
         novalidate
       >
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="emailAdmin">Email</label>
           <input
             type="email"
             class="form-control"
-            name="email"
-            [(ngModel)]="formAdminData.email"
+            name="emailAdmin"
+            [(ngModel)]="formAdminData.emailAdmin"
             required
             email
-            #email="ngModel"
-            [ngClass]="{ 'is-invalid': formAdmin.submitted && email.errors }"
+            #emailAdmin="ngModel"
+            [ngClass]="{ 'is-invalid': formAdmin.submitted && emailAdmin.errors }"
           />
-          @if (email.errors && formAdmin.submitted) {
+          @if (emailAdmin.errors && formAdmin.submitted) {
             <br>
             <div class="invalid-feedback">
-              @if (email.errors['required']) {
+              @if (emailAdmin.errors['required']) {
                 <div>Email is required</div>
               }
-              @if (email.errors['email']) {
+              @if (emailAdmin.errors['email']) {
                 <div>Email must be a valid email address</div>
               }
             </div>
@@ -33,23 +33,24 @@
         </div>
         <br>
         <div class="form-group">
-          <label for="authKey">Auth Key</label>
+          <label for="authKeyAdmin">Auth Key</label>
           <input
+            type="text"
             class="form-control"
-            name="authKey"
-            [(ngModel)]="formAdminData.authKey"
+            name="authKeyAdmin"
+            [(ngModel)]="formAdminData.authKeyAdmin"
             required
             minlength="6"
-            #authKey="ngModel"
-            [ngClass]="{ 'is-invalid': formAdmin.submitted && authKey.errors }"
+            #authKeyAdmin="ngModel"
+            [ngClass]="{ 'is-invalid': formAdmin.submitted && authKeyAdmin.errors }"
           />
-          @if (authKey.errors && formAdmin.submitted) {
+          @if (authKeyAdmin.errors && formAdmin.submitted) {
             <br>
             <div class="invalid-feedback">
-              @if (authKey.errors['required']) {
+              @if (authKeyAdmin.errors['required']) {
                 <div>AuthKey is required</div>
               }
-              @if (authKey.errors['minlength']) {
+              @else if (authKeyAdmin.errors['minlength']) {
                 <div>AuthKey must be at least 6 characters</div>
               }
             </div>
@@ -85,24 +86,24 @@
         novalidate
       >
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="emailSecretary">Email</label>
           <input
             type="email"
             class="form-control"
-            name="email"
-            [(ngModel)]="formSecretaryData.email"
+            name="emailSecretary"
+            [(ngModel)]="formSecretaryData.emailSecretary"
             required
             email
-            #email="ngModel"
-            [ngClass]="{ 'is-invalid': formSecretary.submitted && email.errors }"
+            #emailSecretary="ngModel"
+            [ngClass]="{ 'is-invalid': formSecretary.submitted && emailSecretary.errors }"
           />
-          @if (email.errors && formSecretary.submitted) {
+          @if (emailSecretary.errors && formSecretary.submitted) {
             <br>
             <div class="invalid-feedback">
-              @if (email.errors['required']) {
+              @if (emailSecretary.errors['required']) {
                 <div>Email is required</div>
               }
-              @if (email.errors['email']) {
+              @if (emailSecretary.errors['email']) {
                 <div>Email must be a valid email address</div>
               }
             </div>
@@ -110,23 +111,24 @@
         </div>
         <br>
         <div class="form-group">
-          <label for="authKey">Auth Key</label>
+          <label for="authKeySecretary">Auth Key</label>
           <input
+            type="text"
             class="form-control"
-            name="authKey"
-            [(ngModel)]="formSecretaryData.authKey"
+            name="authKeySecretary"
+            [(ngModel)]="formSecretaryData.authKeySecretary"
             required
             minlength="6"
-            #authKey="ngModel"
-            [ngClass]="{ 'is-invalid': formSecretary.submitted && authKey.errors }"
+            #authKeySecretary="ngModel"
+            [ngClass]="{ 'is-invalid': formSecretary.submitted && authKeySecretary.errors }"
           />
-          @if (authKey.errors && formSecretary.submitted) {
+          @if (authKeySecretary.errors && formSecretary.submitted) {
             <br>
             <div class="invalid-feedback">
-              @if (authKey.errors['required']) {
+              @if (authKeySecretary.errors['required']) {
                 <div>AuthKey is required</div>
               }
-              @if (authKey.errors['minlength']) {
+              @if (authKeySecretary.errors['minlength']) {
                 <div>AuthKey must be at least 6 characters</div>
               }
             </div>

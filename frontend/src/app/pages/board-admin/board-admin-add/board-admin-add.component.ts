@@ -13,12 +13,12 @@ export class BoardAdminAddComponent{
   @ViewChild('formAdmin') formAdmin!: NgForm;
   @ViewChild('formSecretary') formSecretary!: NgForm;
   formAdminData: any = {
-    email: null,
-    authKey: null
+    emailAdmin: null,
+    authKeyAdmin: null
   };
   formSecretaryData: any = {
-    email: null,
-    authKey: null
+    emailSecretary: null,
+    authKeySecretary: null
   };
   content?: string;
   isSuccessfulAdmin = false;
@@ -28,10 +28,15 @@ export class BoardAdminAddComponent{
 
   constructor(private readonly userService: UserService, private readonly addService: AddService) { }
 
-  onSubmitAdmin(): void {
-    const { email, authKey } = this.formAdminData;
+  success():void{
+    this.isSuccessfulAdmin = false;
+    this.isSuccessfulSecretary = false;
+  }
 
-    this.addService.addAdmin(email, authKey).subscribe({
+  onSubmitAdmin(): void {
+    const { emailAdmin, authKeyAdmin } = this.formAdminData;
+
+    this.addService.addAdmin(emailAdmin, authKeyAdmin).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessfulAdmin = true;
@@ -43,12 +48,13 @@ export class BoardAdminAddComponent{
         this.isSuccessfulAdmin = false;
       }
     });
+
   }
 
   onSubmitSecretary(): void {
-    const { email, authKey } = this.formSecretaryData;
+    const { emailSecretary, authKeySecretary } = this.formSecretaryData;
 
-    this.addService.addSecretary(email, authKey).subscribe({
+    this.addService.addSecretary(emailSecretary, authKeySecretary).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessfulSecretary = true;
