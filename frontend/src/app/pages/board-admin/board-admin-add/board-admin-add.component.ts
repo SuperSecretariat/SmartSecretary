@@ -28,10 +28,15 @@ export class BoardAdminAddComponent{
 
   constructor(private readonly userService: UserService, private readonly addService: AddService) { }
 
-  onSubmitAdmin(): void {
-    const { email, authKey } = this.formAdminData;
+  success():void{
+    this.isSuccessfulAdmin = false;
+    this.isSuccessfulSecretary = false;
+  }
 
-    this.addService.addAdmin(email, authKey).subscribe({
+  onSubmitAdmin(): void {
+    const { emailAdmin, authKeyAdmin } = this.formAdminData;
+
+    this.addService.addAdmin(emailAdmin, authKeyAdmin).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessfulAdmin = true;
@@ -41,15 +46,15 @@ export class BoardAdminAddComponent{
         console.log('Add error:', err);
         this.errorMessage = err.error.message;
         this.isSuccessfulAdmin = false;
-        this.formAdmin.resetForm();
       }
     });
+
   }
 
   onSubmitSecretary(): void {
-    const { email, authKey } = this.formSecretaryData;
+    const { emailSecretary, authKeySecretary } = this.formSecretaryData;
 
-    this.addService.addSecretary(email, authKey).subscribe({
+    this.addService.addSecretary(emailSecretary, authKeySecretary).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessfulSecretary = true;
@@ -59,7 +64,6 @@ export class BoardAdminAddComponent{
         console.log('Add error:', err);
         this.errorMessage = err.error.message;
         this.isSuccessfulSecretary = false;
-        this.formSecretary.resetForm();
       }
     });
   }
