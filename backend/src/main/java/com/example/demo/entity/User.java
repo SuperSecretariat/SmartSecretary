@@ -46,12 +46,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @NotBlank
+
     @Size(max = 100)
     @Column(name = "university")
     private String university;
 
-    @NotBlank
+
     @Size(max = 100)
     @Column(name = "faculty")
     private String faculty;

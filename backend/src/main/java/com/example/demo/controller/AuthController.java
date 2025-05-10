@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import static com.example.demo.util.AESUtil.decrypt;
 import static com.example.demo.util.AESUtil.encrypt;
 
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -44,7 +43,7 @@ public class AuthController {
     private final SecretaryRepository secretaryRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private static final Logger loggerAuthController = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     public AuthController(
@@ -55,7 +54,7 @@ public class AuthController {
             AdminRepository adminRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil
-    ){
+    ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.studentRepository = studentRepository;
@@ -67,152 +66,159 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-            String tempKey = encryptException(loginRequest.getRegistrationNumber());
-            Optional<User> optionalUserCrypt = userRepository.findByRegNumber(tempKey);
-            Optional<User> optionalUserStudent = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
-            boolean isAdmin = true;
-            if (optionalUserCrypt.isEmpty() && optionalUserStudent.isEmpty())
-                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        // determine whether user is admin/secretary (encrypted regNumber) or student (plain regNumber)
+        String encryptedReg = safeEncrypt(loginRequest.getRegistrationNumber());
+        Optional<User> userOpt = userRepository.findByRegNumber(encryptedReg);
+        boolean isAdminOrSec = true;
 
-            if(!optionalUserStudent.isEmpty()) {
-                isAdmin = false;
-            }
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
+            isAdminOrSec = false;
+        }
 
-            User currentUser;
-            if(isAdmin)
-                currentUser = optionalUserCrypt.get();
-            else
-                currentUser = optionalUserStudent.get();
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        }
+        User user = userOpt.get();
 
-            Set<Role> userRole = currentUser.getRoles();
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INCORRECT_PASSWORD));
+        }
 
-            List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
-            if (passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
-                UserDetailsImpl userDetails = UserDetailsImpl.build(currentUser);
+        UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+        String token = jwtUtil.generateJwtToken(
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+        );
+        List<String> roles = user.getRoles().stream()
+                .map(r -> r.getName().toString())
+                .collect(Collectors.toList());
 
-                String token = jwtUtil.generateJwtToken(
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
-                );
-                return ResponseEntity.ok(new JwtResponse(token, currentUser.getId(), currentUser.getRegNumber(), roleNames));
-            } else
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INCORRECT_PASSWORD));
+        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getRegNumber(), roles));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest registerRequest) {
-        ERole newAccountRole = null;
-        String email = registerRequest.getEmail();
-        if(userRepository.existsByEmail(email))
-        {
+    public ResponseEntity<JwtResponse> register(@Valid @RequestBody RegisterRequest req) {
+        // check email uniqueness
+        if (userRepository.existsByEmail(req.getEmail())) {
             return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
         }
-        else{
 
-                String tempAuthKey = encryptException(registerRequest.getRegistrationNumber());
-                if(studentRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
-                    newAccountRole = ERole.ROLE_STUDENT;
-                else if(secretaryRepository.existsByAuthKey(tempAuthKey))
-                    newAccountRole = ERole.ROLE_SECRETARY;
-                else if(adminRepository.existsByAuthKey(tempAuthKey))
-                    newAccountRole = ERole.ROLE_ADMIN;
-                else
-                    return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+        // figure out role based on existing records
+        ERole role = resolveRole(req);
+        if (role == null) {
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.INVALID_DATA));
         }
-        if(validateData(registerRequest, newAccountRole)){
-            Optional<Role> accountRole = roleRepository.findByName(newAccountRole);
-            Set<Role> roles = new HashSet<>();
-            roles.add(accountRole.get());
-            String tempKey = registerRequest.getRegistrationNumber();
-            String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
-            if(newAccountRole.equals(ERole.ROLE_ADMIN) || newAccountRole.equals(ERole.ROLE_SECRETARY))
-            {
-                tempKey = encryptException(tempKey);
-            }
 
-            User newUser = new User(
-                    registerRequest.getLastName(),
-                    registerRequest.getFirstName(),
-                    tempKey,
-                    null,
-                    null,
-                    registerRequest.getEmail(),
-                    hashedPassword,
-                    null,
-                    null
-            );
-            newUser.setRoles(roles);
-            userRepository.save(newUser);
-            return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_SUCCESS));
-        }
-        else
+        // validate data against existing record
+        if (!validateData(req, role)) {
             return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+        }
+
+        // prepare user entity
+        Optional<Role> optRole = roleRepository.findByName(role);
+        if (optRole.isEmpty()) {
+            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.UNKNOWN_ERROR));
+        }
+        Set<Role> roles = Set.of(optRole.get());
+        String regNumToStore = role == ERole.ROLE_STUDENT ? req.getRegistrationNumber() : safeEncrypt(req.getRegistrationNumber());
+        String hashedPwd = passwordEncoder.encode(req.getPassword());
+
+        User newUser = new User(
+                req.getLastName(), req.getFirstName(),
+                regNumToStore, null, null,
+                req.getEmail(), hashedPwd, null, null
+        );
+        newUser.setRoles(roles);
+        userRepository.save(newUser);
+
+        return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_SUCCESS));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<JwtResponse> logout(HttpServletRequest request){
-        String headerAuth = request.getHeader("Authorization");
-        String token = null;
-
-        if(headerAuth != null && headerAuth.startsWith("Bearer ")){
-            token = headerAuth.substring(7);
-
+    public ResponseEntity<JwtResponse> logout(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
             jwtUtil.invalidateToken(token);
-
             return ResponseEntity.ok(new JwtResponse(ValidationMessage.LOGOUT_SUCCESS));
         }
         return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.UNKNOWN_ERROR));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<JwtResponse> getCurrentUser(Authentication authentication){
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        List<String> rolesName = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-
-        JwtResponse response = new JwtResponse(null, userDetails.getId(), userDetails.getUsername(), rolesName);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<JwtResponse> getCurrentUser(Authentication auth) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(a -> a.getAuthority())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new JwtResponse(null, userDetails.getId(), userDetails.getUsername(), roles));
     }
 
-    private boolean validateData(RegisterRequest registerRequest, ERole registerRole){
-        String tempAuthKey = encryptException(registerRequest.getRegistrationNumber());
-        switch(registerRole){
+    private ERole resolveRole(RegisterRequest req) {
+        String encrypted = safeEncrypt(req.getRegistrationNumber());
+        if (studentRepository.existsByRegNumber(req.getRegistrationNumber())) {
+            return ERole.ROLE_STUDENT;
+        } else if (secretaryRepository.existsByAuthKey(encrypted)) {
+            return ERole.ROLE_SECRETARY;
+        } else if (adminRepository.existsByAuthKey(encrypted)) {
+            return ERole.ROLE_ADMIN;
+        }
+        return null;
+    }
+
+    private boolean validateData(RegisterRequest req, ERole role) {
+        String rawReg = req.getRegistrationNumber();
+        String encrypted = safeEncrypt(rawReg);
+        switch (role) {
             case ROLE_STUDENT:
-                Student tempStudent = studentRepository.findByRegNumber(registerRequest.getRegistrationNumber()).get();
-                return tempStudent.getRegNumber().equals(registerRequest.getRegistrationNumber()) && tempStudent.getEmail().equals(registerRequest.getEmail());
+                return studentRepository.findByRegNumber(rawReg)
+                        .map(s -> rawReg.equals(s.getRegNumber()) && req.getEmail().equals(s.getEmail()))
+                        .orElse(false);
             case ROLE_SECRETARY:
-
-                Secretary tempSecretary = secretaryRepository.findByAuthKey(tempAuthKey).get();
-                    String tempSecretaryKey = decryptException(tempSecretary.getAuthKey());
-                    return tempSecretaryKey.equals(registerRequest.getRegistrationNumber()) && tempSecretary.getEmail().equals(registerRequest.getEmail());
-
-
+                return secretaryRepository.findByAuthKey(encrypted)
+                        .map(sec -> {
+                            String storedKey = sec.getAuthKey();
+                            if (storedKey == null) return false;
+                            String decrypted = safeDecrypt(storedKey);
+                            return rawReg.equals(decrypted) && req.getEmail().equals(sec.getEmail());
+                        })
+                        .orElse(false);
             case ROLE_ADMIN:
-                Admin tempAdmin = adminRepository.findByAuthKey(tempAuthKey).get();
-                    String tempAdminKey = decryptException(tempAdmin.getAuthKey());
-                    return tempAdminKey.equals(registerRequest.getRegistrationNumber()) && tempAdmin.getEmail().equals(registerRequest.getEmail());
+                return adminRepository.findByAuthKey(encrypted)
+                        .map(adm -> {
+                            String storedKey = adm.getAuthKey();
+                            if (storedKey == null) return false;
+                            String decrypted = safeDecrypt(storedKey);
+                            return rawReg.equals(decrypted) && req.getEmail().equals(adm.getEmail());
+                        })
+                        .orElse(false);
             default:
                 return false;
         }
     }
 
-    private static String encryptException(String input){
-        try{
+    /**
+     * Wraps AES encrypt and returns empty on failure
+     */
+    private String safeEncrypt(String input) {
+        try {
             return encrypt(input);
-        } catch (EncryptionException ex){
-            loggerAuthController.error(ex.getMessage());
-            return "";
+        } catch (EncryptionException ex) {
+            logger.error("Encryption failed for {}: {}", input, ex.getMessage());
+            return null;
         }
     }
 
-    private static String decryptException(String input) {
+    /**
+     * Wraps AES decrypt and returns empty on failure
+     */
+    private String safeDecrypt(String input) {
+        if (input == null) return null;
         try {
             return decrypt(input);
-        } catch (DecryptionException ex){
-            loggerAuthController.error(ex.getMessage());
-            return "";
+        } catch (DecryptionException ex) {
+            logger.error("Decryption failed for {}: {}", input, ex.getMessage());
+            return null;
         }
     }
-
-
 }
