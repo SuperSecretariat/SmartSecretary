@@ -20,6 +20,7 @@ public class JwtUtil {
     private final String jwtSecret;
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     private static final int JWT_EXPIRATION_MS = 86400000;
+    private static final int JWT_PASSWORD_EXPIRATION_MS = 600000;
     private final TokenBlacklistService tokenBlacklistService;
 
 
@@ -37,6 +38,15 @@ public class JwtUtil {
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + JWT_EXPIRATION_MS))
+                .signWith(key(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generatePasswordResetToken(String email){
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + JWT_PASSWORD_EXPIRATION_MS))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
