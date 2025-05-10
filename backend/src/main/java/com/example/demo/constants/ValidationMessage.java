@@ -6,7 +6,8 @@ public class ValidationMessage {
     public static final String SECRETARY_ADDED = "New Secretary added to the database";
     public static final String ACCOUNT_SUCCESS = "Account created successfully";
     public static final String LOGOUT_SUCCESS = "Logged out successfully";
-    public static final String UPDATE_SUCCES = "Profile information updated successfully";
+    public static final String UPDATE_SUCCESS = "Profile information updated successfully";
+    public static final String EMAIL_SUCCESS = "Email sent successfully";
 
     private ValidationMessage(){}
 }

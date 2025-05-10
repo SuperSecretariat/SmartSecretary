@@ -3,15 +3,20 @@ package com.example.demo.controller;
 import com.example.demo.constants.ErrorMessage;
 import com.example.demo.constants.ValidationMessage;
 import com.example.demo.exceptions.DecryptionException;
+import com.example.demo.exceptions.EmailSendingException;
 import com.example.demo.exceptions.EncryptionException;
 import com.example.demo.model.enums.ERole;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.request.ForgotPasswordRequest;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
+import com.example.demo.request.ResetPasswordRequest;
 import com.example.demo.response.JwtResponse;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.UserDetailsImpl;
 import com.example.demo.util.JwtUtil;
+import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -45,6 +50,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private static final Logger loggerAuthController = LoggerFactory.getLogger(AuthController.class);
+    private EmailService emailService;
 
     @Autowired
     public AuthController(
@@ -54,7 +60,8 @@ public class AuthController {
             SecretaryRepository secretaryRepository,
             AdminRepository adminRepository,
             PasswordEncoder passwordEncoder,
-            JwtUtil jwtUtil
+            JwtUtil jwtUtil,
+            EmailService emailService
     ){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -63,6 +70,7 @@ public class AuthController {
         this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.emailService = emailService;
     }
 
     @PostMapping("/login")
@@ -161,6 +169,55 @@ public class AuthController {
             return ResponseEntity.ok(new JwtResponse(ValidationMessage.LOGOUT_SUCCESS));
         }
         return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.UNKNOWN_ERROR));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<JwtResponse> forgotPassword(@RequestBody ForgotPasswordRequest request){
+        String email = request.getEmail();
+        Optional<User> temporaryUser = userRepository.findByEmail(email);
+        if(temporaryUser.isEmpty()){
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        }
+
+        User user = temporaryUser.get();
+        String resetPasswordToken = jwtUtil.generatePasswordResetToken(user.getEmail());
+        String resetLink = "http://localhost:8080/reset-password?token=" + resetPasswordToken;
+
+        String subject = "Reset your password";
+        String content = "Link to reset your accounts password: " + resetLink;
+        try{
+            emailService.sendEmail(user.getEmail(), subject, content);
+        } catch (EmailSendingException e) {
+            loggerAuthController.error("Error while sending the email");
+        }
+
+        return ResponseEntity.ok(new JwtResponse(ValidationMessage.EMAIL_SUCCESS));
+
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<JwtResponse> resetPassword(@RequestBody ResetPasswordRequest request){
+        String token = request.getToken();
+        String newPassword = request.getNewPassword();
+
+        if(!jwtUtil.validateJwtToken(token)){
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+        }
+
+        String email = jwtUtil.getRegistrationNumberFromJwtToken(token);
+        Optional<User> tempUser = userRepository.findByEmail(email);
+
+        if(tempUser.isEmpty()){
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        }
+
+        User user = tempUser.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        jwtUtil.invalidateToken(token);
+
+        return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCESS));
     }
 
     @GetMapping("/me")
