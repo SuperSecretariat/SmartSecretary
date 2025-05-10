@@ -19,15 +19,16 @@
             <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
               <div class="form-group mb-3">
                 <label for="university">University</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="university"
-                  [(ngModel)]="additionalForm.university"
-                  required
-                  #university="ngModel"
-                  [ngClass]="{ 'is-invalid': f.submitted && university.errors }"
-                />
+                  <select
+                    class="form-control"
+                    name="university"
+                    [(ngModel)]="additionalForm.university"
+                    required
+                    #university="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && university.errors }"
+                  >
+                    <option value="UAIC">UAIC</option>
+                  </select>
                 @if (university.errors && f.submitted) {
                   <div class="invalid-feedback">
                     <div>University is required</div>
@@ -37,7 +38,7 @@
 
               <div class="form-group mb-3">
                 <label for="faculty">Faculty</label>
-                <input
+                <!-- <input
                   type="text"
                   class="form-control"
                   name="faculty"
@@ -45,7 +46,32 @@
                   required
                   #faculty="ngModel"
                   [ngClass]="{ 'is-invalid': f.submitted && faculty.errors }"
-                />
+                /> -->
+
+                <select
+                  class="form-control"
+                  name="faculty"
+                  [(ngModel)]="additionalForm.faculty"
+                  required
+                  #faculty="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && faculty.errors }"
+                >
+                  <option value="Biology">Biology</option>
+                  <option value="Chemistry">Chemistry</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Economics and Business Administration">Economics and Business Administration</option>
+                  <option value="Geography and Geology">Geography and Geology</option>
+                  <option value="History">History</option>
+                  <option value="Law">Law</option>
+                  <option value="Letters">Letters</option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Orthodox Theology">Orthodox Theology</option>
+                  <option value="Philosophy and Social-Political Sciences">Philosophy and Social-Political Sciences</option>
+                  <option value="Physical Education and Sports">Physical Education and Sports</option>
+                  <option value="Physics">Physics</option>
+                  <option value="Psychology and Education Sciences">Psychology and Education Sciences</option>
+                  <option value="Roman-Catholic Theology">Roman-Catholic Theology</option>
+                </select>
                 @if (faculty.errors && f.submitted) {
                   <div class="invalid-feedback">
                     <div>Faculty is required</div>
