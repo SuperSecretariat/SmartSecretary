@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Create Ticket</h3>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="addTicket()" #f="ngForm" novalidate>
+            <div class="form-group mb-3">
+              <label for="ticketType">Select a Ticket Type</label>
+              <select
+                id="ticketType"
+                class="form-control custom-select"
+                name="ticketType"
+                [(ngModel)]="selectedTicket"
+                required
+                #ticketType="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && ticketType.invalid }"
+              >
+                <option value="" disabled selected>Select a ticket type</option>
+                <option *ngFor="let type of ticketTypes" [value]="type">{{ type }}</option>
+              </select>
+              <div class="form-group mb-3">
+                <label for="ticketMessage">Ticket Message</label>
+                <textarea
+                  id="ticketMessage"
+                  class="form-control"
+                  name="ticketMessage"
+                  [(ngModel)]="ticketMessage"
+                  rows="4"
+                  placeholder="Enter a description or message for your ticket"
+                  required
+                  #ticketMessageRef="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && ticketMessageRef.invalid }"
+                ></textarea>
+                <div *ngIf="ticketMessageRef.errors && f.submitted" class="invalid-feedback">
+                  Ticket message is required
+                </div>
+              </div>
+
+              <div *ngIf="ticketType.errors && f.submitted" class="invalid-feedback">
+                <div>Ticket type is required</div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <button class="btn btn-primary" [disabled]="!selectedTicket">
+                Add Ticket
+              </button>
+            </div>
+          </form>
+
+          <h3>Your Tickets</h3>
+          <ul class="request-list">
+            <li *ngFor="let ticket of tickets" class="request-item">
+              <div class="request-details">
+                <span><strong>ID:</strong> {{ ticket.id }}</span>
+                <span><strong>Type:</strong> {{ ticket.ticketType }}</span>
+                <span><strong>Status:</strong> {{ ticket.status }}</span>
+                <span><strong>Message:</strong> {{ ticket.message }}</span>
+                <input
+                  type="checkbox"
+                  (change)="toggleTicketSelection(ticket)"
+                  [checked]="selectedTickets.includes(ticket)"
+                />
+              </div>
+            </li>
+          </ul>
+
+          <div class="form-group mb-3">
+            <button
+              class="btn btn-secondary"
+              (click)="submitTickets()"
+              [disabled]="selectedTickets.length === 0"
+            >
+              Submit Selected Tickets
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

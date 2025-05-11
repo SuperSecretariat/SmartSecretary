@@ -26,6 +26,7 @@ import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
     SecretaryNavBarComponent,
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
-    BoardSecretaryAddComponent
+    BoardSecretaryAddComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,8 +55,9 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
     FooterComponent,
     CreateFormComponent,
     SubmittedFormsComponent,
-    NewsfeedComponent
-],
+    NewsfeedComponent,
+    TicketStudentComponent
+  ],
   providers: [
     httpInterceptorProviders,
     provideHttpClient(withInterceptorsFromDi())
