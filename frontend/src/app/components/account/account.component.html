@@ -113,6 +113,9 @@
                     @if (cnp.errors['minlength'] || cnp.errors['maxlength'] || cnp.errors['pattern']) {
                       <div>CNP must be exactly 13 digits</div>
                     }
+                    @if (cnp.errors['invalidCnp']) {
+                      <div>{{ cnp.errors['invalidCnp'] }}</div>
+                    }
                   </div>
                 }
               </div>
