@@ -88,7 +88,7 @@ public class UserDataController {
             currentUser.setUniversity(updateRequest.getUniversity());
             currentUser.setDateOfBirth(updateRequest.getDateOfBirth());
             userRepository.save(currentUser);
-            return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCES));
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCESS));
         }
         else
             return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
