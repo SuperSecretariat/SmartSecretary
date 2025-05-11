@@ -75,23 +75,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-            String tempKey = encryptException(loginRequest.getRegistrationNumber());
-            Optional<User> optionalUserCrypt = userRepository.findByRegNumber(tempKey);
-            Optional<User> optionalUserStudent = userRepository.findByRegNumber(loginRequest.getRegistrationNumber());
-            boolean isAdmin = true;
-            if (optionalUserCrypt.isEmpty() && optionalUserStudent.isEmpty())
+            User currentUser = findUserByIdentifier(loginRequest.getRegistrationNumber());
+
+            if (currentUser == null){
                 return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-
-            if(!optionalUserStudent.isEmpty()) {
-                isAdmin = false;
             }
-
-            User currentUser;
-            if(isAdmin)
-                currentUser = optionalUserCrypt.get();
-            else
-                currentUser = optionalUserStudent.get();
-
             Set<Role> userRole = currentUser.getRoles();
 
             List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
@@ -251,6 +239,28 @@ public class AuthController {
             default:
                 return false;
         }
+    }
+
+    public User findUserByIdentifier(String identifier){
+        String tempKey = encryptException(identifier);
+        Optional<User> optionalUserCrypt = userRepository.findByRegNumber(tempKey);
+        Optional<User> optionalUserStudent = userRepository.findByRegNumber(identifier);
+        boolean isAdmin = true;
+        Optional<User> emailUser = userRepository.findByEmail(identifier);
+        if(emailUser.isPresent()){
+            return emailUser.get();
+        }
+        if (optionalUserCrypt.isEmpty() && optionalUserStudent.isEmpty())
+            return null;
+
+        if(!optionalUserStudent.isEmpty()) {
+            isAdmin = false;
+        }
+
+        if(isAdmin)
+            return optionalUserCrypt.get();
+        else
+            return optionalUserStudent.get();
     }
 
     private static String encryptException(String input){
