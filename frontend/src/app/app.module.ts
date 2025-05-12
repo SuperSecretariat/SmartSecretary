@@ -15,6 +15,7 @@ import { SubmittedFormsComponent } from './components/submitted-forms/submitted-
 import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 
+import { RouterModule } from '@angular/router';
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { HeaderComponent } from "./components/header/header.component";
@@ -34,7 +35,6 @@ import { TicketStudentComponent } from './components/ticket-student/ticket-stude
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
     BoardSecretaryComponent,
@@ -57,7 +57,11 @@ import { TicketStudentComponent } from './components/ticket-student/ticket-stude
     SubmittedFormsComponent,
     NewsfeedComponent,
     TicketStudentComponent
-  ],
+    CommonModule,
+    HomeComponent,
+    AccountComponent, 
+    RouterModule
+],
   providers: [
     httpInterceptorProviders,
     provideHttpClient(withInterceptorsFromDi())

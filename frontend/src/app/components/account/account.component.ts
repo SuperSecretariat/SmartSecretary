@@ -3,10 +3,11 @@ import { StorageService } from '../_services/storage.service';
 import { CnpValidatorService } from '../_services/cnp-validator.service';
 
 @Component({
+  standalone: true,
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrl: './account.component.css',
-  standalone: false
+  styleUrls: ['./account.component.css'],
+  imports: [CommonModule, FormsModule]
 })
 export class AccountComponent implements OnInit{
   currentUser: any;
