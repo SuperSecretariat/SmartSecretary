@@ -15,7 +15,6 @@ import { SubmittedFormsComponent } from './components/submitted-forms/submitted-
 import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 
-import { RouterModule } from '@angular/router';
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { HeaderComponent } from "./components/header/header.component";
@@ -27,6 +26,7 @@ import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
 
 
 @NgModule({
@@ -34,6 +34,7 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
     BoardSecretaryComponent,
@@ -55,11 +56,8 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
     CreateFormComponent,
     SubmittedFormsComponent,
     NewsfeedComponent,
-    CommonModule,
-    HomeComponent,
-    AccountComponent, 
-    RouterModule
-],
+    TicketStudentComponent
+  ],
   providers: [
     httpInterceptorProviders,
     provideHttpClient(withInterceptorsFromDi())

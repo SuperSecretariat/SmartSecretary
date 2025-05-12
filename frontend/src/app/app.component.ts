@@ -10,6 +10,9 @@ import { NavBarVisibilityService } from './components/_services/navbarVisibility
   standalone: false
 })
 export class AppComponent {
+  title(title: any) {
+      throw new Error('Method not implemented.');
+  }
   private roles: string[] = [];
   isLoggedIn = false;
   showAdminBoard = false;
@@ -21,7 +24,7 @@ export class AppComponent {
   constructor(
     private readonly storageService: StorageService,
     private readonly authService: AuthService,
-    private readonly navBarVisibilityService: NavBarVisibilityService) 
+    private readonly navBarVisibilityService: NavBarVisibilityService)
     { this.navBarVisibilityService.getVisibility().subscribe(value => {
       this.isNavBarVisible = value;});
     }

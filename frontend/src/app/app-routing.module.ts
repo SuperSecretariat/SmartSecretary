@@ -10,11 +10,10 @@ import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 import { AuthGuard } from './components/_helpers/auth.guard';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/board-admin-add.component';
-import {
-  BoardAdminShowAuthKeyComponent
-} from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
+import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -29,6 +28,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'ticket-student' , component: TicketStudentComponent},
     ]
   },
   {
