@@ -1,18 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.model.FormRequest;
+import com.example.demo.request.FormRequestRequest;
 import com.example.demo.service.FormRequestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/form-requests")
 public class FormRequestsController {
-
+    private final Logger logger = LoggerFactory.getLogger(FormRequestsController.class);
     private final FormRequestService formRequestService;
 
     public FormRequestsController(FormRequestService formRequestService) {
@@ -20,8 +24,24 @@ public class FormRequestsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FormRequest>> getAllFormsForUserWithId(long userId/*session token*/) {
+    public ResponseEntity<List<FormRequest>> getAllFormsForUserWithId(String sessionToken) {
         // Logic to retrieve all forms
-        return ResponseEntity.ok(formRequestService.getFormRequestsByUserId(userId/*session token*/));
+        return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(sessionToken));
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createFormRequest(@RequestBody FormRequestRequest formRequestRequest) {
+        try {
+            FormRequest formRequest = this.formRequestService.createFormRequest(formRequestRequest);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(formRequest.getId())
+                    .toUri();
+            return ResponseEntity.created(location).build();
+        }
+        catch (FormRequestFieldDataException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().body("The number of fields in the form request does not match the number of fields in the form template.");
+        }
     }
 }

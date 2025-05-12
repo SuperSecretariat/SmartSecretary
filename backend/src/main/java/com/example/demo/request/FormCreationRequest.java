@@ -1,8 +1,8 @@
 package com.example.demo.request;
 
 public class FormCreationRequest {
-    private String title;
-    private boolean isActive;
+    private final String title;
+    private final boolean isActive;
 
     FormCreationRequest(String title, boolean isActive) {
         this.title = title;

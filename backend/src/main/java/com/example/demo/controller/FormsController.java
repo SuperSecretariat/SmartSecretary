@@ -4,10 +4,11 @@ import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
 import com.example.demo.model.Form;
-import com.example.demo.model.FormField;
-import com.example.demo.model.FormFieldJsonObject;
+import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.request.FormCreationRequest;
 import com.example.demo.service.FormService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/forms")
 public class FormsController {
+    private final Logger logger = LoggerFactory.getLogger(FormsController.class);
 
     private final FormService formService;
 
@@ -41,19 +43,19 @@ public class FormsController {
             return ResponseEntity.ok(form);
         }
         catch (InvalidFormIdException e) {
-            System.err.println(e.getMessage());
+            this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("{id}/fields")
-    public ResponseEntity<List<FormFieldJsonObject>> getFormFieldsOfFormWIthId(@PathVariable Long id) {
+    public ResponseEntity<FormFieldsProjection> getFormFieldsOfFormWIthId(@PathVariable Long id) {
         try {
-            List<FormFieldJsonObject> formFields = formService.getFormFieldsOfFormWithId(id);
+            FormFieldsProjection formFields = formService.getFormFieldsOfFormWithId(id);
             return ResponseEntity.ok(formFields);
         }
         catch (InvalidFormIdException | NoFormFieldsFoundException e) {
-            System.err.println(e.getMessage());
+            this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
@@ -69,7 +71,7 @@ public class FormsController {
             return ResponseEntity.created(location).build();
         }
         catch (IOException | InterruptedException | FormCreationException e) {
-            System.err.println(e.getMessage());
+            this.logger.error(e.getMessage());
             return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
         }
     }
@@ -83,7 +85,7 @@ public class FormsController {
             return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
         }
         catch (IOException | InvalidFormIdException e){
-            System.err.println(e.getMessage());
+            this.logger.error(e.getMessage());
             return ResponseEntity.status(503).body("Unable to load form. Please try again later.");
         }
     }
