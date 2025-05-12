@@ -15,7 +15,6 @@ describe('CreateFormComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -38,7 +37,7 @@ describe('CreateFormComponent', () => {
     fixture.detectChanges();
 
     const formItem = fixture.debugElement.query(By.css('.form-list li')).nativeElement;
-    formItem.click(); 
+    formItem.click();
     fixture.detectChanges();
 
     const addButton = fixture.debugElement.query(By.css('button')).nativeElement;
@@ -54,7 +53,7 @@ describe('CreateFormComponent', () => {
     component.requests = [
       { id: 1, formName: 'Formular1', status: 'În așteptare' }
     ];
-    spyOn(localStorage, 'setItem'); 
+    spyOn(localStorage, 'setItem');
 
     const submitButton = fixture.debugElement.query(By.css('button')).nativeElement;
     submitButton.click();
