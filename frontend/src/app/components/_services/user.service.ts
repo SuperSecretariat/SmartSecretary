@@ -8,7 +8,7 @@ const API_URL = 'http://localhost:8081/api/test/'; //De modificat dupa ce face V
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getPublicContent(): Observable<any> {
     return this.http.get(API_URL + 'all', { responseType: 'text' });

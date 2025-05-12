@@ -1,29 +1,35 @@
 package com.example.demo.config;
 
 import com.example.demo.model.enums.ERole;
-import com.example.demo.modelDB.Role;
+import com.example.demo.entity.Role;
 import com.example.demo.repository.RoleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RoleInitializer implements CommandLineRunner {
+    private static final Logger loggerRoleInitializer = LoggerFactory.getLogger(RoleInitializer.class);
+    private final RoleRepository roleRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    public RoleInitializer(RoleRepository roleRepository){
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public void run(String... args) {
-        System.out.println("Running RoleInitializer...");
+        loggerRoleInitializer.info("Running RoleInitializer...");
 
         for (ERole role : ERole.values()) {
             boolean exists = roleRepository.findByName(role).isPresent();
             if (!exists) {
                 roleRepository.save(new Role(role));
-                System.out.println("Saved missing role: " + role);
+                loggerRoleInitializer.info("Saved missing role: {}", role);
             } else {
-                System.out.println("Role already exists: " + role);
+                loggerRoleInitializer.info("Role already exists: {}", role);
             }
         }
     }

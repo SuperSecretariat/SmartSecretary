@@ -11,7 +11,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class StorageService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   clean(): void {
     window.sessionStorage.clear();
@@ -40,14 +40,14 @@ export class StorageService {
     return false;
   }
 
-  private profileUrl = 'http://localhost:8081/api/user/profile';
+  private readonly profileUrl = 'http://localhost:8081/api/user/profile';
   getUserProfile(): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(this.profileUrl, { headers });
   }
 
-  private updateProfileUrl = 'http://localhost:8081/api/user/update';
+  private readonly updateProfileUrl = 'http://localhost:8081/api/user/update';
   updateUserProfile(university: string, faculty: string, dateOfBirth: string, cnp: string): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);

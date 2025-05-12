@@ -5,7 +5,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
 import { NavBarVisibilityService } from '../_services/navbarVisibility.service';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
@@ -33,10 +32,10 @@ export class HeaderComponent implements OnInit {
   currentTitle: string = 'SmartSecretary';
 
   constructor(
-    private navBarVisibilityServiceParam: NavBarVisibilityService,
-    private authService: AuthService,
-    private storageService: StorageService,
-    private router: Router
+    navBarVisibilityServiceParam: NavBarVisibilityService,
+    private readonly authService: AuthService,
+    private readonly storageService: StorageService,
+    private readonly router: Router
   ) {
     this.navBarVisibilityService = navBarVisibilityServiceParam;
   }
@@ -66,10 +65,22 @@ export class HeaderComponent implements OnInit {
     this.navBarVisibilityService.switchVisibility();
   }
 
-  logout(): void { 
-    this.storageService.clean();
-    this.router.navigate(['/home']).then(() => {
-      window.location.reload();
-    });
-  }
+  logout(): void {
+  this.authService.logout().subscribe({
+    next: response => {
+      console.log('Logout successful:', response);
+      this.storageService.clean();
+      this.router.navigate(['/home']).then(() => {
+        window.location.reload();
+      });
+    },
+    error: err => {
+      console.error('Logout error:', err);
+      this.storageService.clean();
+      this.router.navigate(['/home']).then(() => {
+        window.location.reload();
+      });
+    }
+  });
+}
 }

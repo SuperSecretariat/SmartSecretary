@@ -60,7 +60,7 @@ export class CreateFormComponent {
   }
 
   goToHome(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/submitted-forms']);
   }
 
   toggleRequestSelection(request: { id: number; formName: string; status: string }): void {
@@ -85,3 +85,4 @@ export class CreateFormComponent {
     alert('The selected requests have been submitted!');
   }
 }
+

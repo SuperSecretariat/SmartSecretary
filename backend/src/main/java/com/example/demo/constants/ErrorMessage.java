@@ -12,5 +12,12 @@ public class ErrorMessage {
     public static final String MISSING_DATE_OF_BIRTH = "Date of birth is missing";
     public static final String MISSING_CNP = "CNP is missing";
     public static final String MISSING_AUTHKEY = "AuthKey is missing";
-    public static final String MISSING_ID = "Id for the Database is missing";
+    public static final String REG_NUMBER_IN_USE = "Registration number already in use";
+    public static final String AUTH_KEY_IN_USE = "Authentication key already in use";
+    public static final String UNKNOWN_ERROR = "An unknown error has occurred";
+    public static final String NON_EXISTENT_USER = "User doesn't exist";
+    public static final String INCORRECT_PASSWORD = "The password is incorrect";
+    public static final String INVALID_DATA = "Data provided is invalid";
+
+    private ErrorMessage(){}
 }
