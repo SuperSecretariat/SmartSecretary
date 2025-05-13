@@ -169,7 +169,7 @@ public class AuthController {
 
         User user = temporaryUser.get();
         String resetPasswordToken = jwtUtil.generatePasswordResetToken(user.getEmail());
-        String resetLink = "http://localhost:8080/reset-password?token=" + resetPasswordToken;
+        String resetLink = "http://localhost:4200/reset-password?token=" + resetPasswordToken;
 
         String subject = "Reset your password";
         String content = "Link to reset your accounts password: " + resetLink;
