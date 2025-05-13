@@ -22,6 +22,22 @@
                 <option *ngFor="let type of ticketTypes" [value]="type">{{ type }}</option>
               </select>
               <div class="form-group mb-3">
+                <label for="ticketSubject">Ticket Subject</label>
+                <input
+                  id="ticketSubject"
+                  class="form-control"
+                  name="ticketSubject"
+                  [(ngModel)]="ticketSubject"
+                  placeholder="Enter a subject for your ticket"
+                  required
+                  #ticketSubjectRef="ngModel"
+                  [ngClass]="{ 'is-invalid': f.submitted && ticketSubjectRef.invalid }"
+                />
+                <div *ngIf="ticketSubjectRef.errors && f.submitted" class="invalid-feedback">
+                  Ticket Subject is required
+                </div>
+              </div>
+              <div class="form-group mb-3">
                 <label for="ticketMessage">Ticket Message</label>
                 <textarea
                   id="ticketMessage"

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StorageService } from '../_services/storage.service';
+import { TicketService } from '../_services/ticket.service';
 
 @Component({
   standalone: true,
@@ -13,13 +15,17 @@ import { FormsModule } from '@angular/forms';
 export class TicketStudentComponent {
   ticketTypes = ['Bug Report', 'Support Request', 'Feature Request', 'Other'];
   selectedTicket: string | null = null;
-  submittedTickets: { id: number; ticketType: string; status: string }[] = [];
+  submittedTickets: { id: number; ticketType: string; subject: string; status: string }[] = [];
   currentUserId: string = '';
+  ticketSubject: string = '';
   ticketMessage: string = '';
-  tickets: { id: number; ticketType: string; message: string; status: string }[] = [];
-  selectedTickets: { id: number; ticketType: string; message: string; status: string }[] = [];
-  constructor(private router: Router) {
-    this.currentUserId = this.getLoggedInUserId();
+  errorMessage: string = '';
+  tickets: { id: number; ticketType: string; subject: string; message: string; status: string }[] = [];
+  selectedTickets: { id: number; ticketType: string; subject: string, message: string; status: string }[] = [];
+  constructor(private router: Router,
+              private storageService: StorageService,
+              private ticketService: TicketService) {
+    this.currentUserId = storageService.getRegistrationNumber();
 
     const storedTickets = localStorage.getItem(`tickets_${this.currentUserId}`);
     if (storedTickets) {
@@ -30,10 +36,6 @@ export class TicketStudentComponent {
     if (storedSubmittedTickets) {
       this.submittedTickets = JSON.parse(storedSubmittedTickets);
     }
-  }
-
-  getLoggedInUserId(): string {
-    return 'user123';
   }
 
   selectTicket(ticket: string): void {
@@ -48,6 +50,7 @@ export class TicketStudentComponent {
       const newTicket = {
         id: maxId + 1,
         ticketType: this.selectedTicket,
+        subject: this.ticketSubject.trim(),
         message: this.ticketMessage.trim(),
         status: 'Pending'
       };
@@ -55,7 +58,7 @@ export class TicketStudentComponent {
       this.tickets.push(newTicket);
       localStorage.setItem(`tickets_${this.currentUserId}`, JSON.stringify(this.tickets));
 
-      alert(`Your ticket for "${this.selectedTicket}" has been created with ID ${newTicket.id}.`);
+      alert(`Your ticket for "${this.selectedTicket}" has been created.`);
       this.selectedTicket = null;
       this.ticketMessage = '';
     }
@@ -66,7 +69,7 @@ export class TicketStudentComponent {
     this.router.navigate(['/submitted-tickets']); // Adjust route if needed
   }
 
-  toggleTicketSelection(ticket: { id: number; ticketType: string; message : string ; status: string }): void {
+  toggleTicketSelection(ticket: { id: number; ticketType: string; subject : string; message : string ; status: string }): void {
     const index = this.selectedTickets.findIndex(t => t.id === ticket.id);
     if (index === -1) {
       this.selectedTickets.push(ticket);
@@ -79,6 +82,18 @@ export class TicketStudentComponent {
     this.selectedTickets.forEach(ticket => {
       ticket.status = 'Submitted';
       this.submittedTickets.push(ticket);
+      this.ticketService.sendTicket(ticket.subject,
+                                    ticket.message,
+                                    ticket.ticketType,
+                                    ticket.status,
+                                    this.currentUserId).subscribe({
+        next: data => {
+          console.log(data);
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
     });
 
     localStorage.setItem(`submitted_tickets_${this.currentUserId}`, JSON.stringify(this.submittedTickets));

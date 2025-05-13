@@ -28,7 +28,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
-      { path: 'ticket-student' , component: TicketStudentComponent},
+      { path: 'ticket-student' , component: TicketStudentComponent },
     ]
   },
   {

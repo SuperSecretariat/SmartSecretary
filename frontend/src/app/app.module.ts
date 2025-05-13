@@ -42,7 +42,7 @@ import { TicketStudentComponent } from './components/ticket-student/ticket-stude
     SecretaryNavBarComponent,
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
-    BoardSecretaryAddComponent
+    BoardSecretaryAddComponent,
   ],
   imports: [
     BrowserModule,
