@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.constants.ErrorMessage;
 import com.example.demo.constants.ValidationMessage;
-import com.example.demo.exceptions.EncryptionException;
+import com.example.demo.exceptions.DecryptionException;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.UpdateProfileRequest;
@@ -13,14 +13,16 @@ import com.example.demo.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static com.example.demo.util.AESUtil.encrypt;
+import static com.example.demo.util.AESUtil.decrypt;
 
 @RestController
 @RequestMapping("/api/user")
@@ -51,7 +53,7 @@ public class UserDataController {
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority())
-                    .collect(Collectors.toList());
+                    .toList();
 
             JwtResponse response = new JwtResponse(token, userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getEmail(), userDetails.getCnp(), userDetails.getDateOfBirth(), userDetails.getUniversity(), userDetails.getFaculty(), roles);
             return ResponseEntity.ok(response);
@@ -64,25 +66,9 @@ public class UserDataController {
     public ResponseEntity<JwtResponse> updateUserProfile(@RequestBody UpdateProfileRequest updateRequest, @RequestHeader("Authorization") String headerAuth){
         String token = headerAuth.substring(7);
         if(jwtUtil.validateJwtToken(token)){
-            User currentUser;
+
             String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-            String tempKey = encryptException(registrationNumber);
-            Optional<User> userStudent = userRepository.findByRegNumber(registrationNumber);
-            Optional<User> userCrypt = userRepository.findByRegNumber(tempKey);
-            boolean isAdmin = false;
-
-            if(userStudent.isEmpty() && userCrypt.isEmpty())
-            {
-                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-            }
-
-            if(userCrypt.isPresent())
-                isAdmin = true;
-
-            if(isAdmin)
-                currentUser = userCrypt.get();
-            else
-                currentUser = userStudent.get();
+            User currentUser = findUserByDecryptedAuthKeyPaginated(registrationNumber);
             currentUser.setCnp(updateRequest.getCnp());
             currentUser.setFaculty(updateRequest.getFaculty());
             currentUser.setUniversity(updateRequest.getUniversity());
@@ -110,12 +96,61 @@ public class UserDataController {
         return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
 
     }
-    private static String encryptException(String input){
-        try{
-            return encrypt(input);
-        } catch (EncryptionException e) {
-            loggerUserDataController.error(e.getMessage());
-            return "";
+
+    public User findUserByDecryptedAuthKeyPaginated(String decryptedAuthKey) {
+        final int PAGE_SIZE = 100;
+        int pageNumber = 0;
+        boolean hasMore = true;
+
+        while (hasMore) {
+            Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            Page<User> userPage = userRepository.findAll(pageable);
+
+            if (userPage.isEmpty()) {
+                hasMore = false;
+                continue;
+            }
+            for (User user : userPage.getContent()) {
+                String regNumber = user.getRegNumber();
+                try {
+                    if (regNumber == null) {
+                        continue;
+                    }
+                    String decryptedRegNumber = decrypt(regNumber);
+                    if (decryptedRegNumber.equals(decryptedAuthKey)) {
+                        return user;
+                    }
+                } catch (DecryptionException e) {
+                    loggerUserDataController.debug("Failed to decrypt registration number for user ID {}: {}", user.getId(), e.getMessage());
+                    if (regNumber.equals(decryptedAuthKey)) {
+                        return user;
+                    }
+                }
+            }
+            pageNumber++;
+            hasMore = userPage.hasNext();
         }
+
+        pageNumber = 0;
+        hasMore = true;
+
+        while (hasMore) {
+            Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            Page<User> userPage = userRepository.findAll(pageable);
+
+            if (userPage.isEmpty()) {
+                hasMore = false;
+                continue;
+            }
+            for (User user : userPage.getContent()) {
+                String regNumber = user.getRegNumber();
+                if(regNumber.equals(decryptedAuthKey)){
+                    return user;
+                }
+            }
+            pageNumber++;
+            hasMore = userPage.hasNext();
+        }
+        return null;
     }
 }

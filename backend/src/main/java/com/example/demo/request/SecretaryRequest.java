@@ -18,12 +18,7 @@ public class SecretaryRequest {
             @JsonProperty("email") String email,
             @JsonProperty("authKey") String authKey){
         this.email = email;
-        try{
-            this.authKey = encrypt(authKey);
-        }
-        catch (Exception e){
-            throw new IllegalStateException("Encryption failed",e);
-        }
+        this.authKey = authKey;
     }
 
     public String getAuthKey() {

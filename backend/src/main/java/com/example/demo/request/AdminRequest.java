@@ -18,14 +18,7 @@ public class AdminRequest {
             @JsonProperty("email") String email,
             @JsonProperty("authKey") String authKey){
         this.email = email;
-        try{
-            String key = authKey;
-            String encrypteddKey = encrypt(key);
-            this.authKey = encrypteddKey;
-        }
-        catch (Exception e){
-            throw new IllegalStateException("Encryption failed",e);
-        }
+        this.authKey = authKey;
     }
 
     public String getAuthKey() {
