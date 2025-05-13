@@ -10,9 +10,6 @@ public class FormField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "form_id")
-    private long formId;
-
     @NotBlank
     private String page;
 
@@ -31,8 +28,7 @@ public class FormField {
 
     public FormField() {}
 
-    public FormField(long formId, String page, String top, String left, String width, String height) {
-        this.formId = formId;
+    public FormField(String page, String top, String left, String width, String height) {
         this.page = page;
         this.top = top;
         this.left = left;
@@ -44,7 +40,6 @@ public class FormField {
     public String toString() {
         return "FormField{" +
                 "id=" + id +
-                ", formId=" + formId +
                 ", page='" + page + '\'' +
                 ", top='" + top + '\'' +
                 ", left='" + left + '\'' +
