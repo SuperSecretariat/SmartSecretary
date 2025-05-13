@@ -14,6 +14,9 @@ import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
+import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
+import { SentTicketsSecretaryComponent } from './pages/board-secretary/board-secretary-add/sent-tickets-secretary/sent-tickets.component';
+
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -51,6 +54,8 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
+      { path: 'dashboard/viewTickets', component: ViewTicketsSecretaryComponent },
+      { path: 'dashboard/sentTickets', component: SentTicketsSecretaryComponent }
     ]
   },
   //{ path: 'home', component: HomeComponent },

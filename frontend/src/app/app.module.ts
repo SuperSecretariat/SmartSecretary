@@ -27,6 +27,8 @@ import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
+import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
+import { SentTicketsSecretaryComponent } from './pages/board-secretary/board-secretary-add/sent-tickets-secretary/sent-tickets.component';
 
 
 @NgModule({
@@ -43,6 +45,8 @@ import { TicketStudentComponent } from './components/ticket-student/ticket-stude
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
     BoardSecretaryAddComponent,
+    ViewTicketsSecretaryComponent,
+    SentTicketsSecretaryComponent,
   ],
   imports: [
     BrowserModule,

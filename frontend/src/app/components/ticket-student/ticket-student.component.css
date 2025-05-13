@@ -2,6 +2,8 @@
   margin-top: 40px;
   display: flex;
   justify-content: center;
+  max-width: none;
+  width: 100%;
 }
 
 .card {

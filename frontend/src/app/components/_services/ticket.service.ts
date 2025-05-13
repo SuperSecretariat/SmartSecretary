@@ -31,4 +31,39 @@ export class TicketService {
       }
     );
   }
+
+  getTickets(){
+    return this.http.get<string>(
+      TICKET_API,
+      {
+        headers: httpOptions.headers,
+      }
+    );
+  }
+
+  finishTicket(ticketId: number){
+    return this.http.post(
+      TICKET_API + "/finish",
+      {
+        "ticketId" : ticketId
+      },
+      {
+        headers: httpOptions.headers,
+        responseType: 'text'
+      }
+    );
+  }
+
+  closeTicket(ticketId: number){
+    return this.http.post(
+      TICKET_API + "/close",
+      {
+        "ticketId" : ticketId
+      },
+      {
+        headers: httpOptions.headers,
+        responseType: 'text'
+      }
+    );
+  }
 }

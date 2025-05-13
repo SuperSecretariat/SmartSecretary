@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const AUTH_API = 'http://localhost:8081/api/add/';
+const ADD_API = 'http://localhost:8081/api/add/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export class AddService {
 
   addAdmin(email: string ,authKey: string): Observable<any> {
     return this.http.post(
-      AUTH_API + 'admin',
+      ADD_API + 'admin',
       {
         email,
         authKey,
@@ -31,7 +31,7 @@ export class AddService {
 
   addSecretary(email: string ,authKey: string): Observable<any> {
     return this.http.post(
-      AUTH_API + 'secretary',
+      ADD_API + 'secretary',
       {
         email,
         authKey,
@@ -45,7 +45,7 @@ export class AddService {
 
   addStudent(registrationNumber: string, email: string){
     return this.http.post(
-      AUTH_API + 'student',
+      ADD_API + 'student',
       {
         registrationNumber,
         email,

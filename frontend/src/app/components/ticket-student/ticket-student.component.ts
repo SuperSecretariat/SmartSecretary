@@ -80,7 +80,7 @@ export class TicketStudentComponent {
 
   submitTickets(): void {
     this.selectedTickets.forEach(ticket => {
-      ticket.status = 'Submitted';
+      ticket.status = 'SUBMITTED';
       this.submittedTickets.push(ticket);
       this.ticketService.sendTicket(ticket.subject,
                                     ticket.message,
