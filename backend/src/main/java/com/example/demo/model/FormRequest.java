@@ -13,7 +13,7 @@ public class FormRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Positive
+    @Positive()
     private long formId;
 
     @Positive
@@ -67,4 +67,15 @@ public class FormRequest {
     public void generatePdf() {}
 
     public void saveAsDraft(){}
+
+    @Override
+    public String toString() {
+        return "FormRequest{" +
+                "id=" + id +
+                ", formId=" + formId +
+                ", userRegistrationNumber='" + userRegistrationNumber + '\'' +
+                ", status=" + status +
+                ", fields=" + fields +
+                '}';
+    }
 }

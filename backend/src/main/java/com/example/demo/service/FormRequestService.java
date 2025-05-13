@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.exceptions.FormRequestFieldDataException;
+import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.model.FormRequest;
 import com.example.demo.model.enums.FormRequestStatus;
 import com.example.demo.repository.FormRepository;
@@ -10,6 +11,7 @@ import com.example.demo.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FormRequestService {
@@ -68,4 +70,14 @@ public class FormRequestService {
         // secretary page
     }
 
+    public FormRequest getFormRequestById(Long id) throws InvalidFormRequestIdException {
+        Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
+        if (formRequest.isPresent()) {
+            System.out.println(formRequest.get());
+            return formRequest.get();
+        }
+        else{
+            throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
+        }
+    }
 }

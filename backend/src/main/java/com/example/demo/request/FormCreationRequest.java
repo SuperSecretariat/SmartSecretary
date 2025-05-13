@@ -1,7 +1,13 @@
 package com.example.demo.request;
 
+import com.example.demo.constants.ErrorMessage;
+import jakarta.validation.constraints.NotBlank;
+
 public class FormCreationRequest {
+
+    @NotBlank(message = ErrorMessage.MISSING_EMAIL)
     private final String title;
+
     private final boolean isActive;
 
     FormCreationRequest(String title, boolean isActive) {

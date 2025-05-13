@@ -1,12 +1,18 @@
 package com.example.demo.request;
 
+import com.example.demo.constants.ErrorMessage;
 import com.example.demo.model.FormRequestField;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
 public class FormRequestRequest {
+
+    @NotBlank(message = ErrorMessage.MISSING_JWT_TOKEN)
     String jwtToken;
+
     long formId;
+
     List<FormRequestField> fields;
 
     public FormRequestRequest(String jwtToken, long formId, List<FormRequestField> fields) {

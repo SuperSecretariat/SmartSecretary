@@ -23,6 +23,14 @@ public class FormRequestField {
         this.data = data;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public String getData() {
+        return data;
+    }
+
     @Override
     public String toString() {
         return "FormRequestField{" +

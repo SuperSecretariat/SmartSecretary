@@ -7,6 +7,7 @@ import com.example.demo.model.Form;
 import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.request.FormCreationRequest;
 import com.example.demo.service.FormService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -61,7 +62,7 @@ public class FormsController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createForm(@RequestBody FormCreationRequest formCreationRequest) {
+    public ResponseEntity<String> createForm(@Valid @RequestBody FormCreationRequest formCreationRequest) {
         try{
             Form form = formService.createForm(formCreationRequest);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -77,7 +78,7 @@ public class FormsController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<?> getFormImage(@PathVariable Long id) {
+    public ResponseEntity<byte[]> getFormImage(@PathVariable Long id) {
         try{
             byte[] imageBytes = formService.getFormImage(id);
             HttpHeaders headers = new HttpHeaders();
@@ -86,7 +87,7 @@ public class FormsController {
         }
         catch (IOException | InvalidFormIdException e){
             this.logger.error(e.getMessage());
-            return ResponseEntity.status(503).body("Unable to load form. Please try again later.");
+            return ResponseEntity.status(500).build();
         }
     }
 }

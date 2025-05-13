@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.exceptions.FormRequestFieldDataException;
+import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.model.FormRequest;
 import com.example.demo.request.FormRequestRequest;
 import com.example.demo.service.FormRequestService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +31,21 @@ public class FormRequestsController {
         return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(sessionToken));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FormRequest> getFormRequestById(@PathVariable Long id) {
+        try {
+            FormRequest formRequest = this.formRequestService.getFormRequestById(id);
+            System.out.println(formRequest);
+            return ResponseEntity.ok(formRequest);
+        }
+        catch (InvalidFormRequestIdException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PostMapping
-    public ResponseEntity<String> createFormRequest(@RequestBody FormRequestRequest formRequestRequest) {
+    public ResponseEntity<String> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest) {
         try {
             FormRequest formRequest = this.formRequestService.createFormRequest(formRequestRequest);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
