@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FormsService } from '../_services/forms.service';
+import { Form } from '../models/form.model';
 
 @Component({
   standalone: true,
@@ -10,15 +12,16 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./create-form.component.css'],
   imports: [CommonModule, FormsModule]
 })
-export class CreateFormComponent {
-  forms = ['Form1', 'Form2', 'Form3']; 
+export class CreateFormComponent implements OnInit {
+  forms: Form[] = [];
+
   selectedForm: string | null = null; 
   requests: { id: number; formName: string; status: string }[] = [];
   submittedRequests: { id: number; formName: string; status: string }[] = []; 
   currentUserId: string = ''; 
   selectedRequests: { id: number; formName: string; status: string }[] = [];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private formsService: FormsService) {
     this.currentUserId = this.getLoggedInUserId();
 
     const storedRequests = localStorage.getItem(`requests_${this.currentUserId}`);
@@ -30,6 +33,22 @@ export class CreateFormComponent {
     if (storedSubmittedRequests) {
       this.submittedRequests = JSON.parse(storedSubmittedRequests);
     }
+  }
+
+  ngOnInit(): void {
+    this.fetchForms();
+  }
+
+  fetchForms(): void {
+    this.formsService.getAllForms().subscribe(
+      (data: Form[]) => {
+        this.forms = data;
+        console.log('Forms fetched successfully:', this.forms);
+      },
+      (error) => {
+        console.error('Error fetching forms:', error);
+      }
+    );
   }
 
   getLoggedInUserId(): string {
