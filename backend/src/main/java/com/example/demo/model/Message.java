@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import com.example.demo.modelDB.User;
+import com.example.demo.entity.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
