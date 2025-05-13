@@ -61,12 +61,18 @@ export class CreateFormComponent implements OnInit {
 
   addRequest(): void {
     if (this.selectedForm) {
+      const selectedFormObject = this.forms.find(form => form.title === this.selectedForm);
+      if(!selectedFormObject) {
+        alert('Form not found!');
+        return;
+      }
+
       const allRequests = [...this.requests, ...this.submittedRequests];
       const maxId = allRequests.length > 0 ? Math.max(...allRequests.map(r => r.id)) : 0;
 
       const newRequest = {
         id: maxId + 1,
-        formName: this.selectedForm,
+        formName: selectedFormObject.title,
         status: 'Sent'
       };
 

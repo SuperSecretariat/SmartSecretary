@@ -19,7 +19,7 @@
                     [ngClass]="{ 'is-invalid': f.submitted && formName.invalid }"
 >
                     <option value="" disabled selected>Select a form</option>
-                    <option *ngFor="let form of forms" [value]="form">{{ form }}</option>
+                    <option *ngFor="let form of forms" [value]="form">{{ form.title }}</option>
                 </select>
                 <div *ngIf="formName.errors && f.submitted" class="invalid-feedback">
                   <div>Form selection is required</div>
