@@ -4,8 +4,6 @@ import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
-import static com.example.demo.util.AESUtil.encrypt;
-
 public class AdminRequest {
 
     @NotBlank(message = ErrorMessage.MISSING_EMAIL)

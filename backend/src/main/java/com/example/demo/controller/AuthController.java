@@ -17,15 +17,11 @@ import com.example.demo.service.EmailService;
 import com.example.demo.service.UserDetailsImpl;
 import com.example.demo.util.AESUtil;
 import com.example.demo.util.JwtUtil;
-import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,7 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.example.demo.util.AESUtil.decrypt;
 import static com.example.demo.util.AESUtil.encrypt;
@@ -102,7 +97,8 @@ public class AuthController {
     public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest registerRequest) throws DecryptionException {
         ERole newAccountRole = null;
         String email = registerRequest.getEmail();
-        if(userRepository.existsByEmail(email))
+        boolean emailExists = userRepository.existsByEmail(email);
+        if(emailExists)
         {
             return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
         }
@@ -116,11 +112,11 @@ public class AuthController {
                 else
                     return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.INVALID_DATA));
         }
-        System.out.println(newAccountRole);
         if(validateData(registerRequest, newAccountRole)){
             Optional<Role> accountRole = roleRepository.findByName(newAccountRole);
             Set<Role> roles = new HashSet<>();
-            roles.add(accountRole.get());
+            if(accountRole.isPresent())
+                roles.add(accountRole.get());
             String tempKey = registerRequest.getRegistrationNumber();
             String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
             if(newAccountRole.equals(ERole.ROLE_ADMIN) || newAccountRole.equals(ERole.ROLE_SECRETARY))
@@ -215,7 +211,7 @@ public class AuthController {
     public ResponseEntity<JwtResponse> getCurrentUser(Authentication authentication){
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        List<String> rolesName = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        List<String> rolesName = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).toList();
 
         JwtResponse response = new JwtResponse(null, userDetails.getId(), userDetails.getUsername(), rolesName);
 
@@ -226,7 +222,6 @@ public class AuthController {
     private boolean validateData(RegisterRequest registerRequest, ERole registerRole) {
         String regNumber = registerRequest.getRegistrationNumber();
         String email = registerRequest.getEmail();
-        String encryptedRegNumber = encryptException(regNumber);
 
         switch(registerRole) {
             case ROLE_STUDENT:
@@ -237,84 +232,51 @@ public class AuthController {
                 Student tempStudent = studentOpt.get();
                 return tempStudent.getRegNumber().equals(regNumber) &&
                         tempStudent.getEmail().equals(email);
-
             case ROLE_SECRETARY:
-                Optional<Secretary> secOpt = secretaryRepository.findByAuthKey(encryptedRegNumber);
-
-                if (secOpt.isEmpty()) {
                     List<Secretary> allSecretaries = secretaryRepository.findAll();
                     for (Secretary sec : allSecretaries) {
-                        try {
                             String decryptedKey = decryptException(sec.getAuthKey());
                             if (decryptedKey.equals(regNumber)) {
                                 return sec.getEmail().equals(email);
                             }
-                        } catch (Exception e) {
-                            loggerAuthController.debug("Failed to decrypt secretary auth key: {}", e.getMessage());
-                        }
                     }
                     return false;
-                }
-
-                Secretary tempSecretary = secOpt.get();
-                String decryptedSecKey = decryptException(tempSecretary.getAuthKey());
-                return decryptedSecKey.equals(regNumber) &&
-                        tempSecretary.getEmail().equals(email);
-
             case ROLE_ADMIN:
-                Optional<Admin> adminOpt = adminRepository.findByAuthKey(encryptedRegNumber);
-
-                if (adminOpt.isEmpty()) {
-                    List<Admin> allAdmins = adminRepository.findAll();
-                    for (Admin admin : allAdmins) {
-                        try {
+                    for (Admin admin : adminRepository.findAll()) {
                             String decryptedKey = decryptException(admin.getAuthKey());
                             if (decryptedKey.equals(regNumber)) {
                                 return admin.getEmail().equals(email);
                             }
-                        } catch (Exception e) {
-                            loggerAuthController.debug("Failed to decrypt admin auth key: {}", e.getMessage());
-                        }
                     }
                     return false;
-                }
-
-                Admin tempAdmin = adminOpt.get();
-                String decryptedAdminKey = decryptException(tempAdmin.getAuthKey());
-                return decryptedAdminKey.equals(regNumber) &&
-                        tempAdmin.getEmail().equals(email);
-
             default:
                 return false;
         }
     }
 
     public User findUserByIdentifier(String identifier){
-        if(userRepository.existsByEmail(identifier)){
-            return userRepository.findByEmail(identifier).get();
-        }
-        else {
-            try{
-                for(User user : userRepository.findAll()){
-                    System.out.println(user.getEmail());
+        boolean emailExists = userRepository.existsByEmail(identifier);
+        if(emailExists){
+                Optional<User> userOptional = userRepository.findByEmail(identifier);
+                if(userOptional.isPresent()){
+                    return userOptional.get();
                 }
-                for(User user : userRepository.findAll()){
-                    System.out.println("from table: " + user.getRegNumber());
-                    if(findStudent(user.getRegNumber())){
-                        if(user.getRegNumber().equals(identifier))
-                            return user;
+        }
+        try{
+            for(User user : userRepository.findAll()){
+                if(findStudent(user.getRegNumber())){
+                    if(user.getRegNumber().equals(identifier))
+                        return user;
                     }
-                    else{
+                else{
 
                         String decrypted = decrypt(user.getRegNumber());
-                        System.out.println("decrypted: " + decrypted);
                         if(decrypted.equals(identifier))
                             return user;
                     }
-                }
-            }catch(DecryptionException ex){
-                loggerAuthController.error(ex.getMessage());
             }
+        }catch(DecryptionException ex){
+            loggerAuthController.error(ex.getMessage());
         }
        return null;
     }
