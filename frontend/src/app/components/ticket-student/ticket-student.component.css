@@ -1,0 +1,125 @@
+.container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  max-width: none;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 650px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #007bff;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: rgb(21, 96, 189);
+  color: white;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 25px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-control,
+.custom-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  background-color: white;
+}
+
+.form-control:focus,
+.custom-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.request-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 25px;
+}
+
+.request-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.request-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 15px;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: rgb(26, 113, 219);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: rgb(21, 96, 189);
+}
+
+.btn-secondary {
+  background-color: rgb(26, 113, 219);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: rgb(21, 96, 189);
+}
+
+.btn:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
