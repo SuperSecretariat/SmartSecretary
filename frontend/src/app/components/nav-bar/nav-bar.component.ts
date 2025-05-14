@@ -51,13 +51,14 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('Account Manager', `/${rolePrefix}/account`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
       ];
-    else
+    else // STUDENT
       this.navBarItems = [
         new NavBarItem('Home', `/${rolePrefix}/home`),
         new NavBarItem('Create form', `/${rolePrefix}/create-form`),
         new NavBarItem('Submitted forms', `/${rolePrefix}/submitted-forms`),
         new NavBarItem('Account Manager', `/${rolePrefix}/account`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
+        new NavBarItem('Create Ticket', `/${rolePrefix}/ticket-student`),
       ];
 
     if (this.isLoggedIn) {

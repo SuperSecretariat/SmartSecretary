@@ -31,6 +31,10 @@ export class StorageService {
     return {};
   }
 
+   public getRegistrationNumber(): string{
+    return this.getUser().registrationNumber.toString();
+  }
+
   public isLoggedIn(): boolean {
     const user = window.sessionStorage.getItem(USER_KEY);
     if (user) {

@@ -16,6 +16,9 @@ import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretar
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
+import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
+import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +35,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'ticket-student' , component: TicketStudentComponent },
     ]
   },
   {
@@ -54,6 +58,8 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
+      { path: 'dashboard/viewTickets', component: ViewTicketsSecretaryComponent },
+      { path: 'dashboard/sentTickets', component: SentTicketsComponent }
     ]
   },
   //{ path: 'home', component: HomeComponent },

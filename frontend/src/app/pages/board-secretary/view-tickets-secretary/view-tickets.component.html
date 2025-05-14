@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Review Tickets</h3>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li *ngFor="let ticket of tickets" class="ticket-item mb-4">
+              <div class="items">
+                <span><strong>ID:</strong> {{ ticket.id }}</span>
+                <span><strong>Type:</strong> {{ ticket.ticketType }}</span>
+                <span><strong>Status:</strong> {{ ticket.status }}</span>
+                <button (click)="toggleTicket(ticket.id)" class="button review">Review</button>
+              </div>
+              <div *ngIf="expandedTicketId === ticket.id" class="ticket-details">
+                <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+                <p><strong>Message:</strong> {{ ticket.message }}</p>
+                <div class="buttons">
+                  <button (click)="finishTicket(ticket.id)" class="button done">Done</button>
+                  <button (click)="respondToTicket(ticket.id)" class="button respond">Respond</button>
+                  <button (click)="closeTicket(ticket.id)" class="close button">Close Ticket</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

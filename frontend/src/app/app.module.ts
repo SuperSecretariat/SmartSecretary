@@ -28,6 +28,10 @@ import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secreta
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
+import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
+import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
+import { TicketModalComponent } from './components/ticket-modal/ticket-modal.component';
 
 
 @NgModule({
@@ -45,7 +49,10 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     BoardAdminShowAuthKeyComponent,
     BoardSecretaryAddComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ViewTicketsSecretaryComponent,
+    SentTicketsComponent,
+    TicketModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,7 +65,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     FooterComponent,
     CreateFormComponent,
     SubmittedFormsComponent,
-    NewsfeedComponent
+    NewsfeedComponent,
+    TicketStudentComponent,
 ],
   providers: [
     httpInterceptorProviders,
