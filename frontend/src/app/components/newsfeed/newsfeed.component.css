@@ -1,0 +1,80 @@
+.request-list {
+    list-style: none;
+    padding: 0.5;
+    margin-top: 2px;
+}
+
+.card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(21, 96, 189);
+    color: white;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 5px 5px 0 0;
+}
+
+.card-header h3 {
+    margin: 0;
+}
+
+.request-id {
+    flex: 1;
+    text-align: left;
+}
+
+.request-form {
+    flex: 1;
+    text-align: center;
+}
+
+.request-status {
+    flex: 1;
+    text-align: right;
+}
+
+.request-id,
+.request-form,
+.request-status {
+    margin-right: 20px;
+}
+
+.no-requests {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+    margin-top: 20px;
+}
+
+.form-container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+    top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #007bff;
+    max-width: 100%;
+}
+
