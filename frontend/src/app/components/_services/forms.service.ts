@@ -20,4 +20,18 @@ export class FormsService {
             responseType: "json",
         });
     }
+
+    getFormFieldsById(id: number): Observable<any> {
+        return this.http.get(`${FORMS_API}/${id}/fields`, {
+            headers: httpOptions.headers,
+            responseType: "json",
+        });
+    }
+
+    // getFormImage(id: number): Observable<Blob> {
+    //     return this.http.get(`${FORMS_API}/${id}/image`, {
+    //         headers: httpOptions.headers,
+    //         responseType: "blob",
+    //     });
+    // }
 }

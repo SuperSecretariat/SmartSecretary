@@ -6,29 +6,20 @@
             <h3>Create Form</h3>
           </div>
           <div class="card-body">
-            <form (ngSubmit)="addRequest()" #f="ngForm" novalidate>
+            <form (ngSubmit)="completeRequest()" #f="ngForm" novalidate>
               <div class="form-group mb-3">
-                <label for="formName">Select a Form</label>
-                <select
-                    id="formName"
-                    class="form-control custom-select"
-                    name="formName"
-                    [(ngModel)]="selectedForm"
-                    required
-                    #formName="ngModel"
-                    [ngClass]="{ 'is-invalid': f.submitted && formName.invalid }"
->
-                    <option value="" disabled selected>Select a form</option>
-                    <option *ngFor="let form of forms" [value]="form">{{ form.title }}</option>
-                </select>
-                <div *ngIf="formName.errors && f.submitted" class="invalid-feedback">
-                  <div>Form selection is required</div>
-                </div>
+                  <select
+                      class="form-control custom-select"
+                      [(ngModel)]="selectedFormId"
+                      name="selectedFormId"
+                  >
+                  <option *ngFor="let form of forms" [value]="form.id">{{ form.title }}</option>
+                  </select>
               </div>
   
               <div class="form-group mb-3">
-                <button class="btn btn-primary" [disabled]="!selectedForm">
-                  Add Request
+                <button class="btn btn-primary" [disabled]="!selectedFormId">
+                  Complete Your Request
                 </button>
               </div>
             </form>
@@ -63,4 +54,3 @@
       </div>
     </div>
   </div>
-  

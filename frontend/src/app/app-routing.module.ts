@@ -16,6 +16,7 @@ import {
 } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
+import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'complete-form/:id', component: CompleteFormComponent },
     ]
   },
   {

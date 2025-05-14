@@ -1,0 +1,15 @@
+<div *ngIf="imageUrl" class="image-container">
+  <img [src]="imageUrl" alt="Form Image" />
+    <input *ngFor="let formField of formFields" 
+      type="text" 
+      [placeholder]="'Enter value'" 
+      [style.position]="'absolute'"
+      [style.top]="formField.top"
+      [style.left]="formField.left"
+      [style.width]="formField.width"
+      [style.height]="formField.height"
+    />
+</div>
+<div *ngIf="!imageUrl">
+  <p>Loading image...</p>
+</div>

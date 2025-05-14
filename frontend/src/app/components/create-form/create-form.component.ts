@@ -15,7 +15,7 @@ import { Form } from '../models/form.model';
 export class CreateFormComponent implements OnInit {
   forms: Form[] = [];
 
-  selectedForm: string | null = null; 
+  selectedFormId: number | null = null; 
   requests: { id: number; formName: string; status: string }[] = [];
   submittedRequests: { id: number; formName: string; status: string }[] = []; 
   currentUserId: string = ''; 
@@ -43,7 +43,7 @@ export class CreateFormComponent implements OnInit {
     this.formsService.getAllForms().subscribe(
       (data: Form[]) => {
         this.forms = data;
-        console.log('Forms fetched successfully:', this.forms);
+        //console.log('Forms fetched successfully:', this.forms);
       },
       (error) => {
         console.error('Error fetching forms:', error);
@@ -55,38 +55,39 @@ export class CreateFormComponent implements OnInit {
     return 'user123';
   }
 
-  selectForm(form: string): void {
-    this.selectedForm = form;
+  completeRequest(): void {
+    if (this.selectedFormId === null) {
+      alert('No form selected!');
+      return;
+    }      
+    const selectedFormObject = this.forms.find(form => form.id === this.selectedFormId);
+
+    // if (!selectedFormObject) {
+    //   alert('Form not found!');
+    //   return;
+    // }
+
+    // const allRequests = [...this.requests, ...this.submittedRequests];
+    // const maxId = allRequests.length > 0 ? Math.max(...allRequests.map(r => r.id)) : 0;
+
+    // const newRequest = {
+    //   id: maxId + 1,
+    //   formName: selectedFormObject.title, 
+    //   status: 'Sent'
+    // };
+
+      // this.requests.push(newRequest);
+      // localStorage.setItem(`requests_${this.currentUserId}`, JSON.stringify(this.requests));
+
+      // alert(`The request for "${selectedFormObject.title}" has been added with the number ${newRequest.id}!`);
+
+      this.router.navigate([`/student/complete-form/${this.selectedFormId}`]);
+      this.selectedFormId = null;
   }
 
-  addRequest(): void {
-    if (this.selectedForm) {
-      const selectedFormObject = this.forms.find(form => form.title === this.selectedForm);
-      if(!selectedFormObject) {
-        alert('Form not found!');
-        return;
-      }
-
-      const allRequests = [...this.requests, ...this.submittedRequests];
-      const maxId = allRequests.length > 0 ? Math.max(...allRequests.map(r => r.id)) : 0;
-
-      const newRequest = {
-        id: maxId + 1,
-        formName: selectedFormObject.title,
-        status: 'Sent'
-      };
-
-      this.requests.push(newRequest);
-      localStorage.setItem(`requests_${this.currentUserId}`, JSON.stringify(this.requests));
-
-      alert(`The request for ${this.selectedForm} has been added with the number ${newRequest.id}!`);
-      this.selectedForm = null;
-    }
-  }
-
-  goToHome(): void {
-    this.router.navigate(['/submitted-forms']);
-  }
+  // goToHome(): void {
+  //   this.router.navigate(['/submitted-forms']);
+  // }
 
   toggleRequestSelection(request: { id: number; formName: string; status: string }): void {
     const index = this.selectedRequests.findIndex(r => r.id === request.id);
@@ -102,12 +103,12 @@ export class CreateFormComponent implements OnInit {
       request.status = 'Sent';
       this.submittedRequests.push(request);
     });
-
-    localStorage.setItem(`submitted_requests_${this.currentUserId}`, JSON.stringify(this.submittedRequests));
-    this.requests = this.requests.filter(request => !this.selectedRequests.includes(request));
-    this.selectedRequests = [];
-    localStorage.setItem(`requests_${this.currentUserId}`, JSON.stringify(this.requests));
-    alert('The selected requests have been submitted!');
   }
+  //   localStorage.setItem(`submitted_requests_${this.currentUserId}`, JSON.stringify(this.submittedRequests));
+  //   this.requests = this.requests.filter(request => !this.selectedRequests.includes(request));
+  //   this.selectedRequests = [];
+  //   localStorage.setItem(`requests_${this.currentUserId}`, JSON.stringify(this.requests));
+  //   alert('The selected requests have been submitted!');
+  // }
 }
 

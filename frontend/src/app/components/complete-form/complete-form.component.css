@@ -1,0 +1,75 @@
+/* Stil pentru containerul imaginii */
+.image-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Ajustează dimensiunea maximă a imaginii */
+  height: 100%; /* Înălțimea completă a containerului */
+  margin: 0 auto; /* Centrează containerul pe pagină */
+  border: 1px solid #ccc; /* Linie de contur pentru container */
+  background-color: #f9f9f9; /* Fundal deschis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Umbră subtilă */
+  overflow-y: auto; /* Permite scroll doar pe axa verticală */
+  overflow-x: hidden; /* Ascunde scroll-ul orizontal */
+}
+
+/* Stil pentru imagine */
+.image-container img {
+  display: block;
+  width: 100%;
+  height: auto; /* Păstrează proporțiile imaginii */
+  border: 1px solid #ddd; /* Linie de contur pentru imagine */
+  border-radius: 4px; /* Colțuri rotunjite */
+}
+
+/* Stil pentru inputurile dinamice */
+.image-container input {
+  border: 1px solid #007bff; /* Linie de contur albastră */
+  border-radius: 4px; /* Colțuri rotunjite */
+  padding: 5px;
+  font-size: 14px;
+  box-sizing: border-box; /* Asigură că padding-ul nu afectează dimensiunea */
+  background-color: rgba(255, 255, 255, 0.8); /* Fundal semi-transparent */
+  color: #333; /* Culoare text */
+  outline: none; /* Elimină conturul implicit */
+  transition: box-shadow 0.3s ease; /* Tranziție pentru focus */
+}
+
+/* Stil pentru inputurile la focus */
+.image-container input:focus {
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Umbră albastră la focus */
+  border-color: #0056b3; /* Linie de contur mai închisă */
+}
+
+/* Stil pentru mesajul de încărcare */
+div p {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-top: 20px;
+}
+
+/* Fixarea layout-ului principal */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Elimină scroll-ul global */
+  height: 100vh; /* Înălțimea completă a ferestrei */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container principal pentru document */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Elimină scroll-ul global */
+  height: 100vh; /* Înălțimea completă a ferestrei */
+}
+
+/* Scroll doar pentru document */
+.image-container {
+  height: 90vh; /* Ajustează înălțimea pentru a lăsa spațiu pentru alte elemente */
+  overflow-y: auto; /* Scroll vertical */
+}
