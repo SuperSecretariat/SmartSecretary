@@ -1,9 +1,8 @@
 /* Stil pentru containerul imaginii */
 .image-container {
   position: relative;
-  width: 100%;
-  max-width: 800px; /* Ajustează dimensiunea maximă a imaginii */
-  height: 100%; /* Înălțimea completă a containerului */
+  width: 70%;
+  height: 180%; /* Înălțimea containerului */
   margin: 0 auto; /* Centrează containerul pe pagină */
   border: 1px solid #ccc; /* Linie de contur pentru container */
   background-color: #f9f9f9; /* Fundal deschis */
@@ -14,18 +13,21 @@
 
 /* Stil pentru imagine */
 .image-container img {
+  position: absolute;
   display: block;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto; /* Păstrează proporțiile imaginii */
+  height: 100%; /* Păstrează proporțiile imaginii */
   border: 1px solid #ddd; /* Linie de contur pentru imagine */
   border-radius: 4px; /* Colțuri rotunjite */
 }
 
 /* Stil pentru inputurile dinamice */
 .image-container input {
+  position: absolute;
   border: 1px solid #007bff; /* Linie de contur albastră */
   border-radius: 4px; /* Colțuri rotunjite */
-  padding: 5px;
   font-size: 14px;
   box-sizing: border-box; /* Asigură că padding-ul nu afectează dimensiunea */
   background-color: rgba(255, 255, 255, 0.8); /* Fundal semi-transparent */
@@ -48,28 +50,3 @@ div p {
   margin-top: 20px;
 }
 
-/* Fixarea layout-ului principal */
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Elimină scroll-ul global */
-  height: 100vh; /* Înălțimea completă a ferestrei */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Container principal pentru document */
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* Elimină scroll-ul global */
-  height: 100vh; /* Înălțimea completă a ferestrei */
-}
-
-/* Scroll doar pentru document */
-.image-container {
-  height: 90vh; /* Ajustează înălțimea pentru a lăsa spațiu pentru alte elemente */
-  overflow-y: auto; /* Scroll vertical */
-}
