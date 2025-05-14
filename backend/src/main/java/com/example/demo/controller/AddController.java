@@ -50,7 +50,7 @@ public class AddController {
         if(isEmailUsed(studentRequest.getEmail())){
             return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.EMAIL_IN_USE));
         }
-        if(isAuthKeyUsed(studentRequest.getRegistrationNumber()))
+        if(!isAuthKeyUsed(studentRequest.getRegistrationNumber()))
         {
             Student newStudent = new Student(studentRequest.getRegistrationNumber(), studentRequest.getEmail());
             studentRepository.save(newStudent);
@@ -63,7 +63,7 @@ public class AddController {
 
     @PostMapping("/secretary")
     public ResponseEntity<JwtResponse> addSecretary(@RequestBody SecretaryRequest secretaryRequest) throws EncryptionException {
-        if(isAuthKeyUsed(secretaryRequest.getAuthKey())){
+        if(!isAuthKeyUsed(secretaryRequest.getAuthKey())){
             Secretary newSecretary = new Secretary(encrypt(secretaryRequest.getAuthKey()), secretaryRequest.getEmail());
             secretaryRepository.save(newSecretary);
             return ResponseEntity.ok(new JwtResponse(ValidationMessage.SECRETARY_ADDED));
@@ -75,7 +75,7 @@ public class AddController {
 
     @PostMapping("/admin")
     public ResponseEntity<JwtResponse> addAdmin(@RequestBody AdminRequest adminRequest) throws EncryptionException{
-        if(isAuthKeyUsed(adminRequest.getAuthKey()))
+        if(!isAuthKeyUsed(adminRequest.getAuthKey()))
         {
             Admin newAdmin = new Admin(encrypt(adminRequest.getAuthKey()), adminRequest.getEmail());
             adminRepository.save(newAdmin);
@@ -96,6 +96,7 @@ public class AddController {
                 }
             } catch (DecryptionException e) {
                 loggerAddController.error(e.getMessage());
+                return false;
             }
         }
 
@@ -107,12 +108,16 @@ public class AddController {
                 }
             } catch (DecryptionException e) {
                 loggerAddController.error(e.getMessage());
+                return false;
             }
         }
 
         for(Student student : studentRepository.findAll()){
             if(student.getRegNumber().equals(decryptAuthKey))
+            {
                 return true;
+            }
+
         }
 
         return false;
