@@ -16,6 +16,7 @@ import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretar
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'pubble', component: PubbleChatComponent }
     ]
   },
   {

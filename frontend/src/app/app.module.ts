@@ -28,6 +28,7 @@ import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secreta
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     BoardAdminShowAuthKeyComponent,
     BoardSecretaryAddComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    PubbleChatComponent
   ],
   imports: [
     BrowserModule,
