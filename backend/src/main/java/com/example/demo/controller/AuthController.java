@@ -15,8 +15,8 @@ import com.example.demo.request.ResetPasswordRequest;
 import com.example.demo.response.JwtResponse;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.UserDetailsImpl;
+import com.example.demo.util.AESUtil;
 import com.example.demo.util.JwtUtil;
-import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -32,11 +32,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.example.demo.util.AESUtil.decrypt;
 import static com.example.demo.util.AESUtil.encrypt;
-
 
 @RestController
 @RequestMapping("/api/auth")
@@ -61,7 +59,8 @@ public class AuthController {
             AdminRepository adminRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
-            EmailService emailService
+            EmailService emailService,
+            AESUtil aesUtil
     ){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -95,21 +94,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest registerRequest) throws DecryptionException {
         ERole newAccountRole = null;
         String email = registerRequest.getEmail();
-        if(userRepository.existsByEmail(email))
+        boolean emailExists = userRepository.existsByEmail(email);
+        if(emailExists)
         {
             return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
         }
         else{
-
-                String tempAuthKey = encryptException(registerRequest.getRegistrationNumber());
-                if(studentRepository.existsByRegNumber(registerRequest.getRegistrationNumber()))
+                if(findStudent(registerRequest.getRegistrationNumber()))
                     newAccountRole = ERole.ROLE_STUDENT;
-                else if(secretaryRepository.existsByAuthKey(tempAuthKey))
+                else if(findSecretary(registerRequest.getRegistrationNumber()))
                     newAccountRole = ERole.ROLE_SECRETARY;
-                else if(adminRepository.existsByAuthKey(tempAuthKey))
+                else if(findAdmin(registerRequest.getRegistrationNumber()))
                     newAccountRole = ERole.ROLE_ADMIN;
                 else
                     return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.INVALID_DATA));
@@ -117,7 +115,8 @@ public class AuthController {
         if(validateData(registerRequest, newAccountRole)){
             Optional<Role> accountRole = roleRepository.findByName(newAccountRole);
             Set<Role> roles = new HashSet<>();
-            roles.add(accountRole.get());
+            if(accountRole.isPresent())
+                roles.add(accountRole.get());
             String tempKey = registerRequest.getRegistrationNumber();
             String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
             if(newAccountRole.equals(ERole.ROLE_ADMIN) || newAccountRole.equals(ERole.ROLE_SECRETARY))
@@ -169,7 +168,7 @@ public class AuthController {
 
         User user = temporaryUser.get();
         String resetPasswordToken = jwtUtil.generatePasswordResetToken(user.getEmail());
-        String resetLink = "http://localhost:8080/reset-password?token=" + resetPasswordToken;
+        String resetLink = "http://localhost:4200/reset-password?token=" + resetPasswordToken;
 
         String subject = "Reset your password";
         String content = "Link to reset your accounts password: " + resetLink;
@@ -212,55 +211,74 @@ public class AuthController {
     public ResponseEntity<JwtResponse> getCurrentUser(Authentication authentication){
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        List<String> rolesName = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        List<String> rolesName = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).toList();
 
         JwtResponse response = new JwtResponse(null, userDetails.getId(), userDetails.getUsername(), rolesName);
 
         return ResponseEntity.ok(response);
     }
 
-    private boolean validateData(RegisterRequest registerRequest, ERole registerRole){
-        String tempAuthKey = encryptException(registerRequest.getRegistrationNumber());
-        switch(registerRole){
+
+    private boolean validateData(RegisterRequest registerRequest, ERole registerRole) {
+        String regNumber = registerRequest.getRegistrationNumber();
+        String email = registerRequest.getEmail();
+
+        switch(registerRole) {
             case ROLE_STUDENT:
-                Student tempStudent = studentRepository.findByRegNumber(registerRequest.getRegistrationNumber()).get();
-                return tempStudent.getRegNumber().equals(registerRequest.getRegistrationNumber()) && tempStudent.getEmail().equals(registerRequest.getEmail());
+                Optional<Student> studentOpt = studentRepository.findByRegNumber(regNumber);
+                if (studentOpt.isEmpty()) {
+                    return false;
+                }
+                Student tempStudent = studentOpt.get();
+                return tempStudent.getRegNumber().equals(regNumber) &&
+                        tempStudent.getEmail().equals(email);
             case ROLE_SECRETARY:
-
-                Secretary tempSecretary = secretaryRepository.findByAuthKey(tempAuthKey).get();
-                    String tempSecretaryKey = decryptException(tempSecretary.getAuthKey());
-                    return tempSecretaryKey.equals(registerRequest.getRegistrationNumber()) && tempSecretary.getEmail().equals(registerRequest.getEmail());
-
-
+                    List<Secretary> allSecretaries = secretaryRepository.findAll();
+                    for (Secretary sec : allSecretaries) {
+                            String decryptedKey = decryptException(sec.getAuthKey());
+                            if (decryptedKey.equals(regNumber)) {
+                                return sec.getEmail().equals(email);
+                            }
+                    }
+                    return false;
             case ROLE_ADMIN:
-                Admin tempAdmin = adminRepository.findByAuthKey(tempAuthKey).get();
-                    String tempAdminKey = decryptException(tempAdmin.getAuthKey());
-                    return tempAdminKey.equals(registerRequest.getRegistrationNumber()) && tempAdmin.getEmail().equals(registerRequest.getEmail());
+                    for (Admin admin : adminRepository.findAll()) {
+                            String decryptedKey = decryptException(admin.getAuthKey());
+                            if (decryptedKey.equals(regNumber)) {
+                                return admin.getEmail().equals(email);
+                            }
+                    }
+                    return false;
             default:
                 return false;
         }
     }
 
     public User findUserByIdentifier(String identifier){
-        String tempKey = encryptException(identifier);
-        Optional<User> optionalUserCrypt = userRepository.findByRegNumber(tempKey);
-        Optional<User> optionalUserStudent = userRepository.findByRegNumber(identifier);
-        boolean isAdmin = true;
-        Optional<User> emailUser = userRepository.findByEmail(identifier);
-        if(emailUser.isPresent()){
-            return emailUser.get();
+        boolean emailExists = userRepository.existsByEmail(identifier);
+        if(emailExists){
+                Optional<User> userOptional = userRepository.findByEmail(identifier);
+                if(userOptional.isPresent()){
+                    return userOptional.get();
+                }
         }
-        if (optionalUserCrypt.isEmpty() && optionalUserStudent.isEmpty())
-            return null;
+        try{
+            for(User user : userRepository.findAll()){
+                if(findStudent(user.getRegNumber())){
+                    if(user.getRegNumber().equals(identifier))
+                        return user;
+                    }
+                else{
 
-        if(!optionalUserStudent.isEmpty()) {
-            isAdmin = false;
+                        String decrypted = decrypt(user.getRegNumber());
+                        if(decrypted.equals(identifier))
+                            return user;
+                    }
+            }
+        }catch(DecryptionException ex){
+            loggerAuthController.error(ex.getMessage());
         }
-
-        if(isAdmin)
-            return optionalUserCrypt.get();
-        else
-            return optionalUserStudent.get();
+       return null;
     }
 
     private static String encryptException(String input){
@@ -281,5 +299,40 @@ public class AuthController {
         }
     }
 
+    private boolean findAdmin(String decryptAuthKey) throws DecryptionException{
+        for(Admin admin : adminRepository.findAll()){
+            try{
+                String tempAuthKey = decrypt(admin.getAuthKey());
+                if(tempAuthKey.equals(decryptAuthKey)){
+                    return true;
+                }
+            } catch (DecryptionException e) {
+                loggerAuthController.error(e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    private boolean findSecretary(String decryptAuthKey) throws DecryptionException{
+        for(Secretary secretary : secretaryRepository.findAll()){
+            try{
+                String tempAuthKey = decrypt(secretary.getAuthKey());
+                if(tempAuthKey.equals(decryptAuthKey)){
+                    return true;
+                }
+            } catch (DecryptionException e) {
+                loggerAuthController.error(e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    private boolean findStudent(String decryptAuthKey){
+        for(Student student : studentRepository.findAll()){
+            if(student.getRegNumber().equals(decryptAuthKey))
+                return true;
+        }
+        return false;
+    }
 
 }

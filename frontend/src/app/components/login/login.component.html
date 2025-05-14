@@ -7,7 +7,7 @@
         #f="ngForm"
         novalidate
       >
-        <div class="form-group">
+        <div class="form-group spacing-top">
           <label for="registrationNumber">Registration number / Email</label>
           <input
             type="text"
@@ -19,10 +19,10 @@
             [ngClass]="{ 'is-invalid': f.submitted && registrationNumber.errors }"
           />
           @if (registrationNumber.errors && f.submitted) {
-          <div class="invalid-feedback">Registration Number is required!</div>
+          <div class="invalid-feedback">Registration Number or Email is required!</div>
           }
         </div>
-        <div class="form-group">
+        <div class="form-group spacing-top">
           <label for="password">Password</label>
           <input
             type="password"
@@ -45,12 +45,15 @@
           </div>
           }
         </div>
-        <div class="form-group">
+        <div class="form-group spacing-top">
           <button class="btn btn-primary btn-block">Login</button>
+        </div>
+        <div class="form-group mt-2 text-center">
+          <a routerLink="/forgot-password">Forgot password?</a>
         </div>
         <div class="form-group">
           @if (f.submitted && isLoginFailed) {
-          <div class="alert alert-danger" role="alert">
+          <div class="alert-errorsent" role="alert">
             Login failed {{ errorMessage }}
           </div>
           }
