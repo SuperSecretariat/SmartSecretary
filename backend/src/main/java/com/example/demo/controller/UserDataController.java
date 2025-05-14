@@ -12,6 +12,8 @@ import com.example.demo.response.JwtResponse;
 import com.example.demo.service.UserDetailsImpl;
 import com.example.demo.service.UserDetailsServiceImpl;
 import com.example.demo.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ public class UserDataController {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
+    private static final Logger loggerUserDataController = LoggerFactory.getLogger(UserDataController.class);
 
 
     @Autowired
@@ -79,6 +82,7 @@ public class UserDataController {
         else
             return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
     }
+
     @PostMapping("/delete-me")
     public ResponseEntity<JwtResponse> deleteCurrentUser(@RequestHeader("Authorization") String headerAuth){
         String token = headerAuth.substring(7);
@@ -90,11 +94,29 @@ public class UserDataController {
                 userRepository.delete(userStudent.get());
                 return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
             }
+            else
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        }
+        else
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+    }
 
+    @PostMapping("/delete-user")
+    public ResponseEntity<JwtResponse> deleteUser(@RequestHeader("Authorization") String headerAuth, String identifier){
+        String token = headerAuth.substring(7);
+        if(jwtUtil.validateJwtToken(token)){
+            User userToDelete = findUserByIdentifier(identifier);
+            if(userToDelete == null){
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+            }
+            else{
+                userRepository.delete(userToDelete);
+                return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
+            }
 
         }
-        return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-
+        else
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
     }
 
     public User findUserByDecryptedAuthKey(String decryptedAuthKey) throws DecryptionException {
@@ -119,6 +141,33 @@ public class UserDataController {
                 return true;
         }
         return false;
+    }
+
+    public User findUserByIdentifier(String identifier){
+        boolean emailExists = userRepository.existsByEmail(identifier);
+        if(emailExists){
+            Optional<User> userOptional = userRepository.findByEmail(identifier);
+            if(userOptional.isPresent()){
+                return userOptional.get();
+            }
+        }
+        try{
+            for(User user : userRepository.findAll()){
+                if(findStudent(user.getRegNumber())){
+                    if(user.getRegNumber().equals(identifier))
+                        return user;
+                }
+                else{
+
+                    String decrypted = decrypt(user.getRegNumber());
+                    if(decrypted.equals(identifier))
+                        return user;
+                }
+            }
+        }catch(DecryptionException ex){
+            loggerUserDataController.error(ex.getMessage());
+        }
+        return null;
     }
 
 }
