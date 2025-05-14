@@ -14,6 +14,7 @@ import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/boar
 import {BoardAdminShowAuthKeyComponent} from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
+import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'complete-form/:id', component: CompleteFormComponent },
     ]
   },
   {
