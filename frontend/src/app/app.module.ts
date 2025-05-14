@@ -27,6 +27,8 @@ import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 
 @NgModule({
@@ -43,7 +45,9 @@ import { CompleteFormComponent } from './components/complete-form/complete-form.
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
     BoardSecretaryAddComponent,
-    CompleteFormComponent
+    CompleteFormComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

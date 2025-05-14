@@ -18,6 +18,7 @@ public class ErrorMessage {
     public static final String NON_EXISTENT_USER = "User doesn't exist";
     public static final String INCORRECT_PASSWORD = "The password is incorrect";
     public static final String INVALID_DATA = "Data provided is invalid";
+    public static final String EMAIL_IN_USE = "The email provided is alreayd in use";
 
     //Form & FormRequest error messages
     public static final String MISSING_FORM_TITLE = "Title is missing or empty";

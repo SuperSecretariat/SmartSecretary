@@ -1,10 +1,6 @@
 package com.example.demo.response;
 
-import com.example.demo.constants.ErrorMessage;
-import com.example.demo.constants.ValidationMessage;
-
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 public class JwtResponse {

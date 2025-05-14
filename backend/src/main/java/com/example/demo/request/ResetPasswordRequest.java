@@ -1,12 +1,12 @@
 package com.example.demo.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class ResetPasswordRequest {
     private String token;
     private String newPassword;
 
-    public ResetPasswordRequest(){}
+    public ResetPasswordRequest(){
+        //SonarQube comment: constructor needed for JSON parsing
+    }
 
     public String getToken() {
         return token;

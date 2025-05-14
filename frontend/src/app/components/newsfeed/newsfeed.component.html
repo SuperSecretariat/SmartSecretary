@@ -1,1 +1,22 @@
-<h1>newsfeed</h1>
+<div class="container card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>News Feed</h3>
+    <app-search (filtersApplied)="onFiltersApplied($event)"></app-search>
+  </div>
+
+  <ul class="request-list">
+    <div *ngIf="filteredNews.length > 0" class="submitted-requests">
+      <app-news-item
+        *ngFor="let item of filteredNews"
+        [id]="item.id"
+        [formName]="item.title"
+        [status]="item.status"
+        [message]="getMessage(item.status)">
+      </app-news-item>
+    </div>
+  </ul>
+
+  <div *ngIf="filteredNews.length === 0" class="no-requests">
+    <p>No news items found.</p>
+  </div>
+</div>
