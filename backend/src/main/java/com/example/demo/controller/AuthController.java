@@ -220,23 +220,21 @@ public class AuthController {
 
 
     private boolean validateData(RegisterRequest registerRequest, ERole registerRole) {
-        String regNumber = registerRequest.getRegistrationNumber();
         String email = registerRequest.getEmail();
 
         switch(registerRole) {
             case ROLE_STUDENT:
-                Optional<Student> studentOpt = studentRepository.findByRegNumber(regNumber);
-                if (studentOpt.isEmpty()) {
+                for(Student student : studentRepository.findAll())
+                    if(student.getRegNumber().equals(registerRequest.getRegistrationNumber())){
+                        return student.getRegNumber().equals(registerRequest.getRegistrationNumber()) &&
+                                student.getEmail().equals(email);
+                    }
                     return false;
-                }
-                Student tempStudent = studentOpt.get();
-                return tempStudent.getRegNumber().equals(regNumber) &&
-                        tempStudent.getEmail().equals(email);
             case ROLE_SECRETARY:
                     List<Secretary> allSecretaries = secretaryRepository.findAll();
                     for (Secretary sec : allSecretaries) {
                             String decryptedKey = decryptException(sec.getAuthKey());
-                            if (decryptedKey.equals(regNumber)) {
+                            if (decryptedKey.equals(registerRequest.getRegistrationNumber())) {
                                 return sec.getEmail().equals(email);
                             }
                     }
@@ -244,7 +242,7 @@ public class AuthController {
             case ROLE_ADMIN:
                     for (Admin admin : adminRepository.findAll()) {
                             String decryptedKey = decryptException(admin.getAuthKey());
-                            if (decryptedKey.equals(regNumber)) {
+                            if (decryptedKey.equals(registerRequest.getRegistrationNumber())) {
                                 return admin.getEmail().equals(email);
                             }
                     }
