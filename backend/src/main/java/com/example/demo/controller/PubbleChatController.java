@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ChatRequest;
-import com.example.demo.dto.ChatResponse;
+import com.example.demo.response.ChatResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;

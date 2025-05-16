@@ -1,7 +1,7 @@
-package com.example.demo.request;
+package com.example.demo.dto;
 
 import com.example.demo.constants.ErrorMessage;
-import com.example.demo.model.FormRequestField;
+import com.example.demo.entity.FormRequestField;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
