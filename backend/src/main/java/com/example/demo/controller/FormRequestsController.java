@@ -2,8 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
-import com.example.demo.model.FormRequest;
-import com.example.demo.request.FormRequestRequest;
+import com.example.demo.entity.FormRequest;
+import com.example.demo.dto.FormRequestRequest;
 import com.example.demo.service.FormRequestService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

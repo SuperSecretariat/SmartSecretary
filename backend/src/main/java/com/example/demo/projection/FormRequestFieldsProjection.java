@@ -1,6 +1,6 @@
 package com.example.demo.projection;
 
-import com.example.demo.model.FormRequestField;
+import com.example.demo.entity.FormRequestField;
 
 import java.util.List;
 

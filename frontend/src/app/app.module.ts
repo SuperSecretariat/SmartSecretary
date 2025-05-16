@@ -29,6 +29,7 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     BoardSecretaryAddComponent,
     CompleteFormComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    PubbleChatComponent
   ],
   imports: [
     BrowserModule,

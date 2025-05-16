@@ -2,11 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
-import com.example.demo.model.FormRequest;
+import com.example.demo.entity.FormRequest;
 import com.example.demo.model.enums.FormRequestStatus;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.repository.FormRequestRepository;
-import com.example.demo.request.FormRequestRequest;
+import com.example.demo.dto.FormRequestRequest;
 import com.example.demo.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
