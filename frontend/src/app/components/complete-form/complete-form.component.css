@@ -1,0 +1,52 @@
+/* Stil pentru containerul imaginii */
+.image-container {
+  position: relative;
+  width: 70%;
+  height: 180%; /* Înălțimea containerului */
+  margin: 0 auto; /* Centrează containerul pe pagină */
+  border: 1px solid #ccc; /* Linie de contur pentru container */
+  background-color: #f9f9f9; /* Fundal deschis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Umbră subtilă */
+  overflow-y: auto; /* Permite scroll doar pe axa verticală */
+  overflow-x: hidden; /* Ascunde scroll-ul orizontal */
+}
+
+/* Stil pentru imagine */
+.image-container img {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Păstrează proporțiile imaginii */
+  border: 1px solid #ddd; /* Linie de contur pentru imagine */
+  border-radius: 4px; /* Colțuri rotunjite */
+}
+
+/* Stil pentru inputurile dinamice */
+.image-container input {
+  position: absolute;
+  border: 1px solid #007bff; /* Linie de contur albastră */
+  border-radius: 4px; /* Colțuri rotunjite */
+  font-size: 14px;
+  box-sizing: border-box; /* Asigură că padding-ul nu afectează dimensiunea */
+  background-color: rgba(255, 255, 255, 0.8); /* Fundal semi-transparent */
+  color: #333; /* Culoare text */
+  outline: none; /* Elimină conturul implicit */
+  transition: box-shadow 0.3s ease; /* Tranziție pentru focus */
+}
+
+/* Stil pentru inputurile la focus */
+.image-container input:focus {
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Umbră albastră la focus */
+  border-color: #0056b3; /* Linie de contur mai închisă */
+}
+
+/* Stil pentru mesajul de încărcare */
+div p {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-top: 20px;
+}
+

@@ -87,7 +87,7 @@ public class FormService {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
-        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
+        Path path = Paths.get("backend/src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
         this.logger.info("Getting image from path: {}", path);
         return Files.readAllBytes(path);
     }
