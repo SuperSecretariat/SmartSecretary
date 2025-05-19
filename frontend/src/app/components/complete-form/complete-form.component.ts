@@ -45,4 +45,24 @@ export class CompleteFormComponent {
   getFormFields(): FormField[] {
     return this.formFields;
   }
+
+  saveFormFields() {
+  // Get only the values entered by the user (not the whole field object)
+  const values = this.formFields
+    .filter(field => field.value && field.value.trim() !== '')
+    .map((field, index) => ({
+      id: 0,
+      data: field.value
+    }));
+  console.log('User inputted values:', values);
+  // Now you have an array of just the inputted values
+  this.formsService.submitFormData('123', this.selectedFormId!, values).subscribe(
+    (response) => {
+      console.log('Form submitted successfully:', response);
+    },
+    (error) => {
+      console.error('Error submitting form:', error);
+    }
+  );
+}
 }

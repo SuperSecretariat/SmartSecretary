@@ -1,14 +1,19 @@
 <div *ngIf="imageUrl" class="image-container">
   <img [src]="imageUrl" alt="Form Image" />
-    <input *ngFor="let formField of formFields" 
-      type="text" 
-      [placeholder]="'Enter value'" 
-      [style.position]="'absolute'"
-      [style.top]="formField.top"
-      [style.left]="formField.left"
-      [style.width]="formField.width"
-      [style.height]="formField.height"
-    />
+  <input *ngFor="let formField of formFields; let i = index"
+    type="text"
+    [placeholder]="'Enter value'"
+    [style.position]="'absolute'"
+    [style.top]="formField.top"
+    [style.left]="formField.left"
+    [style.width]="formField.width"
+    [style.height]="formField.height"
+    [(ngModel)]="formFields[i].value"
+    name="field{{i}}"
+  />
+</div>
+<div class="submit_button_container">
+  <button class="submit_button" (click)="saveFormFields()" style="position:relative; margin-top: 20px;">Save</button>
 </div>
 <div *ngIf="!imageUrl">
   <p>Loading image...</p>

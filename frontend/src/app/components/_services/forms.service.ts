@@ -34,4 +34,16 @@ export class FormsService {
     //         responseType: "blob",
     //     });
     // }
+    submitFormData(jwtToken: string, formId: number, fields: { id: number, data: string }[]): Observable<any> {
+    const payload = {
+        jwtToken,
+        formId,
+        fields
+    };
+    console.log("Payload to be sent:", payload); // Log the payload to check its structure
+    return this.http.post("http://localhost:8081/api/form-requests", payload, {
+        headers: httpOptions.headers,
+        responseType: "json",
+    });
+}
 }

@@ -50,3 +50,7 @@ div p {
   margin-top: 20px;
 }
 
+.submit_button_container{
+  display: flex;
+  justify-content: center;
+}
