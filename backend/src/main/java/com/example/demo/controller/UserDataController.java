@@ -92,7 +92,7 @@ public class UserDataController {
             if(jwtUtil.validateJwtToken(token)){
 
                 String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                User currentUser = validationService.findUserByIdentifier(registrationNumber);
+                User currentUser = userRepository.findByRegNumber(registrationNumber).get();
                 currentUser.setCnp(encrypt(updateRequest.getCnp()));
                 currentUser.setFaculty(updateRequest.getFaculty());
                 currentUser.setUniversity(updateRequest.getUniversity());

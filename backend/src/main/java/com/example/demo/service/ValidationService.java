@@ -112,6 +112,7 @@ public class ValidationService {
                 }
                 else{
                     String decrypted = decrypt(user.getRegNumber());
+                    System.out.println(decrypted);
                     if(decrypted.equals(identifier)){
                         return user;
                     }
