@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsService } from '../_services/forms.service';
 import { FormField } from '../models/form.model';
 import { StorageService } from '../_services/storage.service';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-complete-form',
@@ -16,7 +17,7 @@ export class CompleteFormComponent {
   warningMessage: string = '';
 
   constructor(private route: ActivatedRoute, private formsService: FormsService) {}
-  imageUrl = `http://localhost:8082/api/forms`;
+  imageUrl = `${environment.backendUrl}/api/forms`;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
