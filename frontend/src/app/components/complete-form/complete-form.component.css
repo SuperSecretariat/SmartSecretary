@@ -129,3 +129,10 @@ button span {
     0 1px 1px rgba(0,0,0,0.08);
   transition: text-shadow 0.3s;
 }
+
+.warning-message {
+  color: #d32f2f;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+}

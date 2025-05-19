@@ -13,6 +13,7 @@ import { StorageService } from '../_services/storage.service';
 export class CompleteFormComponent {
   selectedFormId: number | null = null;
   formFields: FormField[] = [];
+  warningMessage: string = '';
 
   constructor(private route: ActivatedRoute, private formsService: FormsService) {}
   imageUrl = `http://localhost:8082/api/forms`;
@@ -47,20 +48,29 @@ export class CompleteFormComponent {
     return this.formFields;
   }
 
-   saveFormFields() {
-  // Get only the values entered by the user (not the whole field object)
-  const values = this.formFields
-    .filter(field => field.value && field.value.trim() !== '')
-    .map(field => field.value);
-  console.log('User inputted values:', values);
-  // Now you have an array of just the inputted values
-  this.formsService.submitFormData('123', this.selectedFormId!, values).subscribe(
-    (response) => {
-      console.log('Form submitted successfully:', response);
-    },
-    (error) => {
-      console.error('Error submitting form:', error);
+  saveFormFields() {
+    if (!this.allFieldsCompleted()) {
+      this.warningMessage = 'Te rugăm să completezi toate câmpurile!';
+      return;
     }
-  );
-}
+    this.warningMessage = '';
+    // Get only the values entered by the user (not the whole field object)
+    const values = this.formFields
+      .filter(field => field.value && field.value.trim() !== '')
+      .map(field => field.value);
+    console.log('User inputted values:', values);
+    // Now you have an array of just the inputted values
+    this.formsService.submitFormData('123', this.selectedFormId!, values).subscribe(
+      (response) => {
+        console.log('Form submitted successfully:', response);
+      },
+      (error) => {
+        console.error('Error submitting form:', error);
+      }
+    );
+  }
+
+  allFieldsCompleted(): boolean {
+    return this.formFields.every(field => field.value && field.value.trim() !== '');
+  }
 }
