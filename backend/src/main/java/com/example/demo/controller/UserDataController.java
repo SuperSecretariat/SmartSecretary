@@ -54,6 +54,7 @@ public class UserDataController {
             String token = headerAuth.substring(7);
 
             if(jwtUtil.validateJwtToken(token)){
+                System.out.println("nigga1");
                 String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
 
                 UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
@@ -61,20 +62,43 @@ public class UserDataController {
                         .map(item -> item.getAuthority())
                         .toList();
 
-                UserProfileData profileData = new UserProfileData(
-                        token,
-                        userDetails.getUsername(),
-                        userDetails.getFirstName(),
-                        userDetails.getLastName(),
-                        userDetails.getEmail(),
-                        decrypt(userDetails.getCnp()),
-                        userDetails.getDateOfBirth(),
-                        userDetails.getUniversity(),
-                        userDetails.getFaculty(),
-                        roles
-                );
+                System.out.println("nigga2");
+                UserProfileData profileData;
+                if(userDetails.getCnp() == null)
+                {
+                    profileData = new UserProfileData(
+                            token,
+                            userDetails.getUsername(),
+                            userDetails.getFirstName(),
+                            userDetails.getLastName(),
+                            userDetails.getEmail(),
+                            null,
+                            userDetails.getDateOfBirth(),
+                            userDetails.getUniversity(),
+                            userDetails.getFaculty(),
+                            roles
+                    );
+                }
+                else
+                {
+                    profileData = new UserProfileData(
+                            token,
+                            userDetails.getUsername(),
+                            userDetails.getFirstName(),
+                            userDetails.getLastName(),
+                            userDetails.getEmail(),
+                            decrypt(userDetails.getCnp()),
+                            userDetails.getDateOfBirth(),
+                            userDetails.getUniversity(),
+                            userDetails.getFaculty(),
+                            roles
+                    );
+                }
+
+                System.out.println("nigga3");
 
                 JwtResponse response = new JwtResponse(profileData);
+                System.out.println("nigga4");
                 return ResponseEntity.ok(response);
             }
             else
