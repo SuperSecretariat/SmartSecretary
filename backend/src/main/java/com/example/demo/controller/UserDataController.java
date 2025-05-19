@@ -54,7 +54,6 @@ public class UserDataController {
             String token = headerAuth.substring(7);
 
             if(jwtUtil.validateJwtToken(token)){
-                System.out.println("nigga1");
                 String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
 
                 UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
@@ -62,7 +61,6 @@ public class UserDataController {
                         .map(item -> item.getAuthority())
                         .toList();
 
-                System.out.println("nigga2");
                 UserProfileData profileData;
                 if(userDetails.getCnp() == null)
                 {
@@ -95,10 +93,7 @@ public class UserDataController {
                     );
                 }
 
-                System.out.println("nigga3");
-
                 JwtResponse response = new JwtResponse(profileData);
-                System.out.println("nigga4");
                 return ResponseEntity.ok(response);
             }
             else
