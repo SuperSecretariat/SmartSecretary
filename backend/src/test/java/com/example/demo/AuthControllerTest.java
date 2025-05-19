@@ -60,6 +60,7 @@ public class AuthControllerTest {
                 .standaloneSetup(authController)
                 .build();
 
+
         studentUser = new User();
         studentUser.setId(1L);
         studentUser.setRegNumber("S123");
