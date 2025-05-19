@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsService } from '../_services/forms.service';
 import { FormField } from '../models/form.model';
+import { StorageService } from '../_services/storage.service';
 
 @Component({
   selector: 'app-complete-form',
@@ -14,7 +15,7 @@ export class CompleteFormComponent {
   formFields: FormField[] = [];
 
   constructor(private route: ActivatedRoute, private formsService: FormsService) {}
-  imageUrl = `http://localhost:8081/api/forms`;
+  imageUrl = `http://localhost:8082/api/forms`;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -29,8 +30,8 @@ export class CompleteFormComponent {
   if (id) {
     this.formsService.getFormFieldsById(id).subscribe(
       (data: any) => {
-        console.log('Form fields:', data); // Verifică structura datelor
-        this.formFields = data.fields; // Accesează direct proprietatea `fields`
+        // console.log('Form fields:', data);
+        this.formFields = data.fields;
       },
       (error) => {
         console.error('Error fetching form:', error);
@@ -45,4 +46,21 @@ export class CompleteFormComponent {
   getFormFields(): FormField[] {
     return this.formFields;
   }
+
+   saveFormFields() {
+  // Get only the values entered by the user (not the whole field object)
+  const values = this.formFields
+    .filter(field => field.value && field.value.trim() !== '')
+    .map(field => field.value);
+  console.log('User inputted values:', values);
+  // Now you have an array of just the inputted values
+  this.formsService.submitFormData('123', this.selectedFormId!, values).subscribe(
+    (response) => {
+      console.log('Form submitted successfully:', response);
+    },
+    (error) => {
+      console.error('Error submitting form:', error);
+    }
+  );
+}
 }

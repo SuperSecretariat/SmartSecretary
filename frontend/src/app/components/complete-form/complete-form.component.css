@@ -50,3 +50,82 @@ div p {
   margin-top: 20px;
 }
 
+.submit_button_container{
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+button {
+  background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  box-shadow: 0 6px 24px rgba(0, 114, 255, 0.18), 0 1.5px 4px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: 
+
+    box-shadow 0.3s,
+    transform 0.2s;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 100%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  z-index: 0;
+}
+
+button:hover::after, .button:focus::after {
+  width: 250%;
+  height: 700%;
+}
+
+button:hover, .button:focus {
+  background: linear-gradient(90deg, #0072ff 0%, #00c6ff 100%);
+  box-shadow: 0 12px 32px rgba(0, 114, 255, 0.25), 0 2px 8px rgba(0,0,0,0.10);
+  transform: translateY(-2px) scale(1.04);
+}
+
+button:active {
+  background: #0072ff;
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 114, 255, 0.10);
+}
+
+button span {
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin: 32px 0 28px 0;
+  background: linear-gradient(90deg, #0072ff 0%, #00c6ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* Umbre multiple pentru efect modern */
+  text-shadow:
+    0 4px 16px rgba(0, 114, 255, 0.18),
+    0 2px 8px rgba(0, 0, 0, 0.10),
+    0 1px 1px rgba(0,0,0,0.08);
+  transition: text-shadow 0.3s;
+}

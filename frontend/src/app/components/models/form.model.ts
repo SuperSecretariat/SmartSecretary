@@ -4,6 +4,7 @@ export interface FormField {
   left: string;
   width: string;
   height: string;
+  value: string;
 }
 
 export interface Form {
