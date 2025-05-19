@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environments';
 
 const USER_KEY = 'auth-user';
 const httpOptions = {
@@ -40,14 +41,14 @@ export class StorageService {
     return false;
   }
 
-  private readonly profileUrl = 'http://localhost:8081/api/user/profile';
+  private readonly profileUrl = `${environment.backendUrl}/api/user/profile`;
   getUserProfile(): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(this.profileUrl, { headers });
   }
 
-  private readonly updateProfileUrl = 'http://localhost:8081/api/user/update';
+  private readonly updateProfileUrl = `${environment.backendUrl}/api/user/update`;
   updateUserProfile(university: string, faculty: string, dateOfBirth: string, cnp: string): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);

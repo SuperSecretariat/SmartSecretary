@@ -1,4 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-chat',
@@ -26,7 +27,7 @@ export class PubbleChatComponent implements AfterViewInit {
     chatBox.scrollTop = chatBox.scrollHeight;
 
     try {
-      const response = await fetch('http://localhost:8081/api/pubble/chat', {
+      const response = await fetch(`${environment.backendUrl}/api/pubble/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: trimmed, provider })

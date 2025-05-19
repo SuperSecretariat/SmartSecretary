@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { environment } from "../../../environments/environments";
 
-const FORMS_API_CONTROLLER = "http://localhost:8081/api/forms";
-const FORMS_API_REQUESTS = "http://localhost:8081/api/forms-requests"
+const FORMS_API_CONTROLLER = `${environment.backendUrl}/api/forms`;
+const FORMS_API_REQUESTS = `${environment.backendUrl}/api/forms-requests`
 
 const httpOptions = {
   headers: new HttpHeaders({ "Content-Type": "application/json" }),
