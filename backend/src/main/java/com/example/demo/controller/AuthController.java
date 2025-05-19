@@ -66,9 +66,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
             User currentUser = validationService.findUserByIdentifier(loginRequest.getRegistrationNumber());
-
             if (currentUser == null){
                 return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
             }
