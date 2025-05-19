@@ -26,6 +26,8 @@ public class ErrorMessage {
     //Form & FormRequest error messages
     public static final String MISSING_FORM_TITLE = "Title is missing or empty";
     public static final String MISSING_JWT_TOKEN = "JWT token is missing or empty";
+    public static final String MISSING_FORM_ID = "Form id is missing or empty";
+    public static final String MISSING_NUMBER_OF_INPUT_FIELDS = "Number of Input Fields is missing or empty";
 
     private ErrorMessage(){}
 }

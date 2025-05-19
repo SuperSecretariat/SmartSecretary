@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
@@ -33,14 +34,14 @@ public class FormsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Form>> getActiveForms() {
+    public ResponseEntity<List<FormResponse>> getActiveForms() {
         return ResponseEntity.ok(formService.getAllActiveForms());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Form> getFormById(@PathVariable Long id) {
+    public ResponseEntity<FormResponse> getFormById(@PathVariable Long id) {
         try {
-            Form form = formService.getFormById(id);
+            FormResponse form = formService.getFormById(id);
             return ResponseEntity.ok(form);
         }
         catch (InvalidFormIdException e) {

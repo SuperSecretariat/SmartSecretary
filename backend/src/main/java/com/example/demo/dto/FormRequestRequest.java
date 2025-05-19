@@ -13,12 +13,12 @@ public class FormRequestRequest {
 
     long formId;
 
-    List<FormRequestField> fields;
+    List<String> fieldsData;
 
-    public FormRequestRequest(String jwtToken, long formId, List<FormRequestField> fields) {
+    public FormRequestRequest(String jwtToken, long formId, List<String> fields) {
         this.jwtToken = jwtToken;
         this.formId = formId;
-        this.fields = fields;
+        this.fieldsData = fields;
     }
 
     public String getJwtToken() {
@@ -29,8 +29,8 @@ public class FormRequestRequest {
         return formId;
     }
 
-    public List<FormRequestField> getFields() {
-        return fields;
+    public List<String> getFieldsData() {
+        return fieldsData;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class FormRequestRequest {
         return "FormRequestRequest{" +
                 "jwtToken='" + jwtToken + '\'' +
                 ", formId=" + formId +
-                ", fields=" + fields +
+                ", fieldsData=" + fieldsData +
                 '}';
     }
 }

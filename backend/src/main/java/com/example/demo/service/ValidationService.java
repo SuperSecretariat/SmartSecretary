@@ -106,14 +106,14 @@ public class ValidationService {
         try{
             for(User user : userRepository.findAll()){
                 if(findStudent(user.getRegNumber()) != null){
-                    if(user.getRegNumber().equals(identifier))
+                    if(user.getRegNumber().equals(identifier)){
                         return user;
+                    }
                 }
                 else{
-
                     String decrypted = decrypt(user.getRegNumber());
-                    String decryptedIdentifier = decrypt(identifier);
-                    if(decrypted.equals(identifier) || decrypted.equals(decryptedIdentifier)){
+                    System.out.println(decrypted);
+                    if(decrypted.equals(identifier)){
                         return user;
                     }
 

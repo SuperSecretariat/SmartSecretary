@@ -110,7 +110,6 @@ public class AddController {
                                                 @RequestBody AdminRequest adminRequest) {
         try {
             String token = headerAuth.substring(7);
-
             if (jwtUtil.validateJwtToken(token)) {
                 String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
                 Admin admin = validationService.findAdmin(decrypt(authKey));
@@ -132,5 +131,23 @@ public class AddController {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
 
+    }
+
+    @PostMapping("/admin/test")
+    public ResponseEntity<JwtResponse> addAdminDirect(@RequestBody AdminRequest adminRequest) {
+        try {
+            System.out.println(adminRequest.getAuthKey() + " " + adminRequest.getEmail());
+
+            if (!validationService.isAuthKeyUsed(adminRequest.getAuthKey())) {
+                Admin newAdmin = new Admin(encrypt(adminRequest.getAuthKey()), adminRequest.getEmail());
+                adminRepository.save(newAdmin);
+                return ResponseEntity.ok(new JwtResponse(ValidationMessage.ADMIN_ADDED));
+            } else {
+                return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
+            }
+
+        } catch (EncryptionException ex) {
+            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
+        }
     }
 }
