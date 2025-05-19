@@ -100,6 +100,12 @@
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.30</version>
 		</dependency>
+		<!--dependency for unit testing-->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
