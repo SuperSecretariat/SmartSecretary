@@ -61,18 +61,37 @@ public class UserDataController {
                         .map(item -> item.getAuthority())
                         .toList();
 
-                UserProfileData profileData = new UserProfileData(
-                        token,
-                        userDetails.getUsername(),
-                        userDetails.getFirstName(),
-                        userDetails.getLastName(),
-                        userDetails.getEmail(),
-                        decrypt(userDetails.getCnp()),
-                        userDetails.getDateOfBirth(),
-                        userDetails.getUniversity(),
-                        userDetails.getFaculty(),
-                        roles
-                );
+                UserProfileData profileData;
+                if(userDetails.getCnp() == null)
+                {
+                    profileData = new UserProfileData(
+                            token,
+                            userDetails.getUsername(),
+                            userDetails.getFirstName(),
+                            userDetails.getLastName(),
+                            userDetails.getEmail(),
+                            null,
+                            userDetails.getDateOfBirth(),
+                            userDetails.getUniversity(),
+                            userDetails.getFaculty(),
+                            roles
+                    );
+                }
+                else
+                {
+                    profileData = new UserProfileData(
+                            token,
+                            userDetails.getUsername(),
+                            userDetails.getFirstName(),
+                            userDetails.getLastName(),
+                            userDetails.getEmail(),
+                            decrypt(userDetails.getCnp()),
+                            userDetails.getDateOfBirth(),
+                            userDetails.getUniversity(),
+                            userDetails.getFaculty(),
+                            roles
+                    );
+                }
 
                 JwtResponse response = new JwtResponse(profileData);
                 return ResponseEntity.ok(response);
@@ -92,7 +111,7 @@ public class UserDataController {
             if(jwtUtil.validateJwtToken(token)){
 
                 String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                User currentUser = validationService.findUserByIdentifier(registrationNumber);
+                User currentUser = userRepository.findByRegNumber(registrationNumber).get();
                 currentUser.setCnp(encrypt(updateRequest.getCnp()));
                 currentUser.setFaculty(updateRequest.getFaculty());
                 currentUser.setUniversity(updateRequest.getUniversity());
