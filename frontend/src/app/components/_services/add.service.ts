@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { StorageService } from '../_services/storage.service';
 
 const AUTH_API = 'http://localhost:8081/api/add/';
 
@@ -13,9 +14,12 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class AddService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly storageService: StorageService) {}
 
   addAdmin(email: string ,authKey: string): Observable<any> {
+    const token = this.storageService.getUser().token;
+    console.log(token);
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(
       AUTH_API + 'admin',
       {
@@ -23,13 +27,15 @@ export class AddService {
         authKey,
       },
       {
-        headers: httpOptions.headers,
+        headers: headers,
         responseType: 'text'
       }
     );
   }
 
   addSecretary(email: string ,authKey: string): Observable<any> {
+    const token = this.storageService.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(
       AUTH_API + 'secretary',
       {
@@ -37,13 +43,15 @@ export class AddService {
         authKey,
       },
       {
-        headers: httpOptions.headers,
+        headers: headers,
         responseType: 'text'
       }
     );
   }
 
   addStudent(registrationNumber: string, email: string){
+    const token = this.storageService.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(
       AUTH_API + 'student',
       {
@@ -51,7 +59,7 @@ export class AddService {
         email,
       },
       {
-        headers: httpOptions.headers,
+        headers: headers,
         responseType: 'text'
       }
     )
