@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -67,16 +69,21 @@ public class FormService {
         //store the file name, number of input fields, ?size of the pdf file in the database
     }
 
-    public List<Form> getAllActiveForms() {
-        return this.formRepository.findByActive(true);
+    public List<FormResponse> getAllActiveForms() {
+        List<Form> activeForms = this.formRepository.findByActive(true);
+        List<FormResponse> formsResponse = new ArrayList<>();
+        for (Form form : activeForms) {
+            formsResponse.add(new FormResponse(form.getId(), form.getTitle(), form.getNumberOfInputFields()));
+        }
+        return formsResponse;
     }
 
-    public Form getFormById(Long id) throws InvalidFormIdException {
+    public FormResponse getFormById(Long id) throws InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
         if (form.isEmpty()) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
-        return form.get();
+        return new FormResponse(form.get().getId(), form.get().getTitle(), form.get().getNumberOfInputFields());
     }
 
 //    public void validateFormRequest(FormRequest formRequest) {}

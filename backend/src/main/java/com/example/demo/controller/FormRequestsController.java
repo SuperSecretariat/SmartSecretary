@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FormRequestResponse;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.entity.FormRequest;
@@ -26,7 +27,7 @@ public class FormRequestsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FormRequest>> getAllFormsForUserWithId(String sessionToken) {
+    public ResponseEntity<List<FormRequestResponse>> getAllFormsForUserWithId(String sessionToken) {
         // Logic to retrieve all forms
         return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(sessionToken));
     }
