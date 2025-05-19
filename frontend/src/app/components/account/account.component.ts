@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../_services/storage.service';
 import { CnpValidatorService } from '../_services/cnp-validator.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -14,7 +15,10 @@ export class AccountComponent implements OnInit{
   isFormSubmitting = false;
   isUpdateSuccessful = false;
   errorMessage = '';
-  isEditMode = false; // New property to track edit mode
+  isEditMode = false;
+
+  showDeleteModal = false;
+  isDeletingAccount = false;
 
   additionalForm: any = {
     university: null,
@@ -25,7 +29,8 @@ export class AccountComponent implements OnInit{
   
   constructor(
     private readonly storageService: StorageService,
-    private readonly cnpValidator: CnpValidatorService
+    private readonly cnpValidator: CnpValidatorService,
+    private readonly router: Router
   ) { }
   
   ngOnInit(): void {
@@ -112,36 +117,62 @@ export class AccountComponent implements OnInit{
     this.isUpdateSuccessful = false;
   }
   
-  /**
-   * Helper method that can be used to suggest a partial CNP based on date of birth
-   */
   onDateOfBirthChange(): void {
     if (!this.additionalForm.dateOfBirth) return;
     
     const birthDate = new Date(this.additionalForm.dateOfBirth);
     const year = birthDate.getFullYear();
-    const month = birthDate.getMonth() + 1; // JavaScript months are 0-indexed
+    const month = birthDate.getMonth() + 1; 
     const day = birthDate.getDate();
     
-    // Determine gender digit (1 for male or 2 for female born before 2000, 5 or 6 for 2000+)
     let genderDigit: number;
     if (year < 2000) {
-      genderDigit = 1; // Default to male, user can change later if needed
+      genderDigit = 1;
     } else {
-      genderDigit = 5; // Default to male born after 2000
+      genderDigit = 5;
     }
     
-    // Format year to get last 2 digits
     const yearStr = (year % 100).toString().padStart(2, '0');
     const monthStr = month.toString().padStart(2, '0');
     const dayStr = day.toString().padStart(2, '0');
-    
-    // Generate partial CNP (first 7 digits), leave the rest for user to complete
+
     const partialCnp = `${genderDigit}${yearStr}${monthStr}${dayStr}`;
     
-    // Only set the CNP if it's not already set or if user agrees to overwrite
     if (!this.additionalForm.cnp || this.additionalForm.cnp.length !== 13) {
       this.additionalForm.cnp = partialCnp;
     }
+  }
+
+  showDeleteConfirmation(): void {
+    this.showDeleteModal = true;
+    document.body.classList.add('modal-open');
+  }
+
+  hideDeleteConfirmation(): void {
+    this.showDeleteModal = false;
+    document.body.classList.remove('modal-open');
+  }
+
+  deleteAccount(): void {
+    this.isDeletingAccount = true;
+    this.errorMessage = '';
+
+    this.storageService.deleteAccount().subscribe({
+      next: () => {
+        this.storageService.clean();
+        this.isDeletingAccount = false;
+        this.hideDeleteConfirmation();
+        this.router.navigate(['/login'], { 
+          queryParams: { 
+            deleted: 'true' 
+          }
+        });
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message ?? 'Error deleting account';
+        this.isDeletingAccount = false;
+        this.hideDeleteConfirmation();
+      }
+    });
   }
 }
