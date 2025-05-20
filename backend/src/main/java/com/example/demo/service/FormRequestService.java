@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.FormRequestResponse;
+import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequestField;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
@@ -63,13 +63,11 @@ public class FormRequestService {
 
     // Used to get all requests for a specific user
     // Can be used to display active formRequests in the dashboard
-    public List<FormRequestResponse> getFormRequestsByUserRegistrationNumber(String sessionToken) {
-        // Uncomment the following line when the frontend is implemented
-//        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(sessionToken);
+    public List<FormRequestResponse> getFormRequestsByUserRegistrationNumber(String jwtToken) {
+        //String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(jwtToken);
+        String userRegistrationNumber = jwtToken;
         List<FormRequest> formRequests = formRequestRepository.findByUserRegistrationNumber(
-        // Uncomment the following line when the frontend is implemented
-//                userRegistrationNumber
-                sessionToken //only for testing, remove when frontend is done
+                userRegistrationNumber
         );
 
         List<FormRequestResponse> formRequestsResponse = new ArrayList<>();

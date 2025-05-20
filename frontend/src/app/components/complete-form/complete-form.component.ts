@@ -61,7 +61,7 @@ export class CompleteFormComponent {
       .map(field => field.value);
     console.log('User inputted values:', values);
     // Now you have an array of just the inputted values
-    this.formsService.submitFormData('123', this.selectedFormId!, values).subscribe(
+    this.formsService.submitFormData(this.selectedFormId!, values).subscribe(
       (response) => {
         console.log('Form submitted successfully:', response);
       },

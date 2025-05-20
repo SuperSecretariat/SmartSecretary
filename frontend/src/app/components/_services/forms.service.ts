@@ -2,9 +2,10 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environments";
+import { StorageService } from "./storage.service";
 
 const FORMS_API_CONTROLLER = `${environment.backendUrl}/api/forms`;
-const FORMS_API_REQUESTS = `${environment.backendUrl}/api/forms-requests`
+const FORMS_API_REQUESTS = `${environment.backendUrl}/api/form-requests`
 
 const httpOptions = {
   headers: new HttpHeaders({ "Content-Type": "application/json" }),
@@ -14,20 +15,26 @@ const httpOptions = {
   providedIn: "root",
 })
 export class FormsService {
-    constructor(private readonly http: HttpClient) {}
+    constructor(private readonly http: HttpClient, private readonly storageService: StorageService) {}
 
     getAllForms(): Observable<any> {
-        return this.http.get(FORMS_API_CONTROLLER, {
-            headers: httpOptions.headers,
-            responseType: "json",
-        });
+        return this.http.get(
+            FORMS_API_CONTROLLER, 
+            {
+                headers: httpOptions.headers,
+                responseType: "json",
+            }
+        );
     }
 
     getFormFieldsById(id: number): Observable<any> {
-        return this.http.get(`${FORMS_API_CONTROLLER}/${id}/fields`, {
-            headers: httpOptions.headers,
-            responseType: "json",
-        });
+        return this.http.get(
+            `${FORMS_API_CONTROLLER}/${id}/fields`, 
+            {
+                headers: httpOptions.headers,
+                responseType: "json",
+            }
+        );
     }
 
     // getFormImage(id: number): Observable<Blob> {
@@ -37,16 +44,34 @@ export class FormsService {
     //     });
     // }
 
-    submitFormData(jwtToken: string, formId: number, fields: string[]): Observable<any> {
-    const payload = {
-        jwtToken,
-        formId,
-        fields
-    };
-    console.log("Payload to be sent:", payload); // Log the payload to check its structure
-    return this.http.post(`${FORMS_API_REQUESTS}`, payload, {
-        headers: httpOptions.headers,
-        responseType: "json",
-    });
-}
+    submitFormData(formId: number, fields: string[]): Observable<any> {
+        const jwtToken = this.storageService.getUser().token;
+        const payload = {
+            jwtToken,
+            formId,
+            fields
+        };
+        console.log("Payload to be sent:", payload); // Log the payload to check its structure
+        return this.http.post(
+            `${FORMS_API_REQUESTS}/create`, 
+            payload, 
+            {
+                headers: httpOptions.headers,
+                responseType: "json",
+            }
+        );
+    }
+
+    getSubmittedRequests() : Observable<any> {
+        const jwtToken = this.storageService.getUser().token;
+        console.log("JWT Token:", jwtToken); // Log the JWT token to check its value
+        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + jwtToken);
+        return this.http.get(
+            `${FORMS_API_REQUESTS}/submitted`, 
+            {
+                headers: headers,
+                responseType: "json",
+            }
+        );
+    }
 }

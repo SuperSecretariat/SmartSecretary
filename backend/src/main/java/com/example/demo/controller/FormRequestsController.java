@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FormRequestResponse;
+import com.example.demo.exceptions.InvalidHeaderException;
+import com.example.demo.response.FormRequestResponse;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.entity.FormRequest;
@@ -9,6 +10,7 @@ import com.example.demo.service.FormRequestService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,10 +28,19 @@ public class FormRequestsController {
         this.formRequestService = formRequestService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<FormRequestResponse>> getAllFormsForUserWithId(String sessionToken) {
+    @GetMapping("/submitted")
+    public ResponseEntity<List<FormRequestResponse>> getAllFormsForUserWithId(@RequestHeader("Authorization") String authorizationHeader) {
         // Logic to retrieve all forms
-        return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(sessionToken));
+        try{
+            if (!authorizationHeader.startsWith("Bearer ")) {
+                throw new InvalidHeaderException("No authorization header containing Bearer was received");
+            }
+            return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(authorizationHeader.substring(7)));
+        }
+        catch (InvalidHeaderException e){
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -45,7 +56,7 @@ public class FormRequestsController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest) {
         try {
             FormRequest formRequest = this.formRequestService.createFormRequest(formRequestRequest);

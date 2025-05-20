@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.response;
 
 import com.example.demo.model.enums.FormRequestStatus;
 

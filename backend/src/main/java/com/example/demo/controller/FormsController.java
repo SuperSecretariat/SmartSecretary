@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FormResponse;
+import com.example.demo.response.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
