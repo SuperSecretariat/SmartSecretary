@@ -18,6 +18,7 @@ import { CompleteFormComponent } from './components/complete-form/complete-form.
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
+import {BoardAdminLlmFilesComponent} from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -48,6 +49,7 @@ const routes: Routes = [
       { path: 'dashboard/add', component: BoardAdminAddComponent },
       // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
       { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent },
+      { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent},
     ]
   },
   {
