@@ -50,6 +50,7 @@ const routes: Routes = [
       // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
       { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent },
       { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent },
+      { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent},
     ]
   },
   {
