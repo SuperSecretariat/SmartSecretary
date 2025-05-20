@@ -23,6 +23,7 @@ import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { AdminNavBarComponent } from "./components/admin-nav-bar/admin-nav-bar.component";
 import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board-admin-add.component";
+import { BoardAdminDeleteUserComponent} from "./pages/board-admin/board-admin-delete-user/board-admin-delete-user.component";
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
@@ -45,6 +46,7 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
     SecretaryNavBarComponent,
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
+    BoardAdminDeleteUserComponent,
     BoardSecretaryAddComponent,
     CompleteFormComponent,
     ForgotPasswordComponent,

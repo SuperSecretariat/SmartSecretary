@@ -76,4 +76,17 @@ export class StorageService {
         responseType: 'text'
       });
   }
+
+  private readonly DELETEUSER_API = 'http://localhost:8081/api/user/delete-user';
+  deleteUserAccount(registrationNumber: string): Observable<any> {
+    const token = this.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(
+      `${this.DELETEUSER_API}?identifier=${encodeURIComponent(registrationNumber)}`, 
+      {},
+      {
+        headers: headers,
+        responseType: 'text'
+      });
+    }
 }
