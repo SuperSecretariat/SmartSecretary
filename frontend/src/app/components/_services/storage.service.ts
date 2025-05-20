@@ -65,4 +65,15 @@ export class StorageService {
       }
     );
   }
+
+  private readonly DELETE_API = 'http://localhost:8081/api/user/delete-me';
+  deleteAccount(): Observable<any> {
+    const token = this.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(this.DELETE_API, { }, 
+      {
+        headers: headers,
+        responseType: 'text'
+      });
+  }
 }
