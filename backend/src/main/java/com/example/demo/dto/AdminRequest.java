@@ -1,4 +1,4 @@
-package com.example.demo.request;
+package com.example.demo.dto;
 
 import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;

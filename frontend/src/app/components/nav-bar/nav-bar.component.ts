@@ -59,6 +59,7 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('Account Manager', `/${rolePrefix}/account`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
         new NavBarItem('Create Ticket', `/${rolePrefix}/ticket-student`),
+        new NavBarItem('Pubble AI', `/${rolePrefix}/pubble`)
       ];
 
     if (this.isLoggedIn) {

@@ -69,13 +69,14 @@
   }
 
   .card {
-    margin-bottom: 5px;
+    margin-bottom: 20px;
     top: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-color: #007bff;
     margin-right: 20px;
+    max-width: 100%;
   }
 
 

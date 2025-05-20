@@ -1,6 +1,6 @@
 package com.example.demo.projection;
 
-import com.example.demo.model.FormField;
+import com.example.demo.entity.FormField;
 
 import java.util.List;
 

@@ -14,11 +14,13 @@ import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/boar
 import {BoardAdminShowAuthKeyComponent} from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
+import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
 import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
 import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -36,6 +38,8 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'ticket-student' , component: TicketStudentComponent },
+      { path: 'complete-form/:id', component: CompleteFormComponent },
+      { path: 'pubble', component: PubbleChatComponent }
     ]
   },
   {

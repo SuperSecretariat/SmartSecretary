@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.FormRequest;
+import com.example.demo.entity.FormRequest;
 import com.example.demo.projection.FormRequestFieldsProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 

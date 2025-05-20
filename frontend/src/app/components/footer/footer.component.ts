@@ -28,18 +28,18 @@ export class FooterComponent implements OnInit {
       // Add breakpoints as you need so you can handle more screen sizes
       if (breakpoints[Breakpoints.WebLandscape]) {
         this.isGdprVisible = true;
-        console.log('Web Landscape');
+        // console.log('Web Landscape');
       } else if (breakpoints[Breakpoints.WebPortrait]) {
         this.isGdprVisible = true;
-        console.log('Web Portrait');
+        // console.log('Web Portrait');
       } else if (breakpoints[Breakpoints.HandsetLandscape]) {
         this.isGdprVisible = true;
-        console.log('Handset Landscape');
+        // console.log('Handset Landscape');
       } else if (breakpoints[Breakpoints.HandsetPortrait]) {
         this.isGdprVisible = false;
-        console.log('Handset Portrait');
+        // console.log('Handset Portrait');
       }
     });
-    console.log('Footer component initialized');
+    // console.log('Footer component initialized');
   }
 }

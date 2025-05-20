@@ -3,12 +3,12 @@ package com.example.demo.service;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
-import com.example.demo.model.Form;
-import com.example.demo.model.FormField;
-import com.example.demo.model.FormFieldJsonObject;
+import com.example.demo.entity.Form;
+import com.example.demo.entity.FormField;
+import com.example.demo.dto.FormFieldJsonObject;
 import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.repository.FormRepository;
-import com.example.demo.request.FormCreationRequest;
+import com.example.demo.dto.FormCreationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
@@ -87,7 +87,7 @@ public class FormService {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
-        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
+        Path path = Paths.get("backend/src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
         this.logger.info("Getting image from path: {}", path);
         return Files.readAllBytes(path);
     }

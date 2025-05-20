@@ -26,12 +26,14 @@ import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
 import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
 import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
 import { TicketModalComponent } from './components/ticket-modal/ticket-modal.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 
 
 @NgModule({
@@ -48,11 +50,13 @@ import { TicketModalComponent } from './components/ticket-modal/ticket-modal.com
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
     BoardSecretaryAddComponent,
+    CompleteFormComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
     ViewTicketsSecretaryComponent,
     SentTicketsComponent,
-    TicketModalComponent,
+    TicketModalComponent,,
+    PubbleChatComponent
   ],
   imports: [
     BrowserModule,
