@@ -1,10 +1,8 @@
-package com.example.demo.request;
+package com.example.demo.dto;
 
 import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-
-import java.time.LocalDate;
 
 public class StudentRequest {
 

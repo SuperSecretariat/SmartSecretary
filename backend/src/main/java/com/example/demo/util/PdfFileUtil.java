@@ -8,9 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class PdfFileUtil {
+    private PdfFileUtil() {
+        // Private constructor to prevent instantiation
+    }
     public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException {
-        Path pdfFilePath = Paths.get("src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf");
-        String pythonScriptPath = "src/main/resources/scripts/convert_points_to_percentages.py";
+        Path pdfFilePath = Paths.get("backend/src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf");
+        String pythonScriptPath = "backend/src/main/resources/scripts/convert_points_to_percentages.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath.toString());
         Process process = processBuilder.start();
         int exitCode = process.waitFor();

@@ -1,10 +1,7 @@
-package com.example.demo.request;
+package com.example.demo.dto;
 
 import com.example.demo.constants.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
-
-import java.sql.Date;
-import java.time.LocalDate;
 
 public class RegisterRequest {
 

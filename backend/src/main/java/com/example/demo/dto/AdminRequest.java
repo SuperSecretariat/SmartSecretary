@@ -1,10 +1,8 @@
-package com.example.demo.request;
+package com.example.demo.dto;
 
 import com.example.demo.constants.ErrorMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-
-import static com.example.demo.util.AESUtil.encrypt;
 
 public class AdminRequest {
 
@@ -18,14 +16,7 @@ public class AdminRequest {
             @JsonProperty("email") String email,
             @JsonProperty("authKey") String authKey){
         this.email = email;
-        try{
-            String key = authKey;
-            String encrypteddKey = encrypt(key);
-            this.authKey = encrypteddKey;
-        }
-        catch (Exception e){
-            throw new IllegalStateException("Encryption failed",e);
-        }
+        this.authKey = authKey;
     }
 
     public String getAuthKey() {

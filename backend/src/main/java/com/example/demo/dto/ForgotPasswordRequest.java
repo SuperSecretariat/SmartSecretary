@@ -1,11 +1,11 @@
-package com.example.demo.request;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.example.demo.dto;
 
 public class ForgotPasswordRequest {
     private String email;
 
-    public ForgotPasswordRequest(){}
+    public ForgotPasswordRequest(){
+           // SonarQube comment: constructor needed for JSON parsing
+    }
 
     public String getEmail() {
         return email;

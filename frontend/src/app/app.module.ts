@@ -26,6 +26,10 @@ import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+import { CompleteFormComponent } from './components/complete-form/complete-form.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 
 
 @NgModule({
@@ -41,7 +45,11 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
     SecretaryNavBarComponent,
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
-    BoardSecretaryAddComponent
+    BoardSecretaryAddComponent,
+    CompleteFormComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    PubbleChatComponent
   ],
   imports: [
     BrowserModule,

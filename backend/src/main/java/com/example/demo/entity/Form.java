@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,8 @@ public class Form {
     @JoinColumn(name = "form_id")
     private List<FormField> fields = new ArrayList<>();
 
-    public Form(){}
+
+    public Form(){ /* Constructor used by Spring Data JPA */ }
 
     public void setTitle(String title) {
         this.title = title;
@@ -49,6 +50,14 @@ public class Form {
 
     public boolean isActive() {
         return active;
+    }
+
+    public List<FormField> getFields() {
+        return fields;
+    }
+
+    public void addFields(List<FormField> fields) {
+        this.fields.addAll(fields);
     }
 
     public int getNumberOfInputFields() {

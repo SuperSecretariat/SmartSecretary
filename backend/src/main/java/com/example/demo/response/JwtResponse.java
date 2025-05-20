@@ -1,10 +1,8 @@
 package com.example.demo.response;
 
-import com.example.demo.constants.ErrorMessage;
-import com.example.demo.constants.ValidationMessage;
+import com.example.demo.dto.UserProfileData;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 public class JwtResponse {
@@ -29,28 +27,17 @@ public class JwtResponse {
         this.roles = roles;
     }
 
-    public JwtResponse(
-            String token,
-            String registrationNumber,
-            String firstName,
-            String lastName,
-            String email,
-            String cnp,
-            Date dateOfBirth,
-            String university,
-            String faculty,
-            List<String> roles){
-        this.token = token;
-        this.registrationNumber = registrationNumber;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.cnp = cnp;
-        this.dateOfBirth = dateOfBirth;
-        this.university = university;
-        this.faculty = faculty;
-        this.roles = roles;
-
+    public JwtResponse(UserProfileData profileData) {
+        this.token = profileData.token();
+        this.registrationNumber = profileData.registrationNumber();
+        this.email = profileData.email();
+        this.firstName = profileData.firstName();
+        this.lastName = profileData.lastName();
+        this.cnp = profileData.cnp();
+        this.dateOfBirth = profileData.dateOfBirth();
+        this.university = profileData.university();
+        this.faculty = profileData.faculty();
+        this.roles = profileData.roles();
     }
 
     public JwtResponse(String message){
