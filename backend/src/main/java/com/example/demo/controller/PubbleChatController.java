@@ -4,6 +4,7 @@ import com.example.demo.dto.ChatRequest;
 import com.example.demo.response.ChatResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+
+import static com.example.demo.constants.LLMUrl.*;
 
 /*
  Copy pasted from the LLM team's repo: https://github.com/AndreiBalan98/ArtificialGeneralIntelligence/tree/main
@@ -36,23 +39,20 @@ public class PubbleChatController {
     public ChatResponse chat(@RequestBody ChatRequest request) {
         String userPrompt = request.getMessage();
         String provider = request.getProvider();
-        String augmentUrl = "http://localhost:8000/rag";
-        String ollamaUrl = "http://localhost:11434/api/generate";
-        String microsoftUrl = "https://openrouter.ai/api/v1/chat/completions";
-        String openRouterApiKey = "not_used";
 
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            String augmentPayload = String.format("{\"prompt\": \"%s\"}", escapeJson(userPrompt));
-            HttpEntity<String> augmentRequest = new HttpEntity<>(augmentPayload, headers);
+            ObjectNode augmentPayload = mapper.createObjectNode();
+            augmentPayload.put("prompt", userPrompt);
+            HttpEntity<String> augmentRequest = new HttpEntity<>(mapper.writeValueAsString(augmentPayload), headers);
 
             ResponseEntity<String> augmentResponse = restTemplate.postForEntity(augmentUrl, augmentRequest, String.class);
             JsonNode augmentJson = mapper.readTree(augmentResponse.getBody());
 
             if (augmentJson.has("error")) {
-                return new ChatResponse("Eroare de la serviciul RAG: " + augmentJson.get("error").asText(), Collections.emptyList(), Collections.emptyList());
+                return new ChatResponse("RAG service error: " + augmentJson.get("error").asText(), Collections.emptyList(), Collections.emptyList());
             }
 
             String augmentedPrompt = augmentJson.get("augmented_prompt").asText();
@@ -65,23 +65,35 @@ public class PubbleChatController {
             if (provider.equals("microsoft")) {
                 headers.setBearerAuth(openRouterApiKey);
 
-                String openRouterPayload = String.format(
-                        "{\"model\": \"microsoft/mai-ds-r1:free\", \"temperature\": 0.7, \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}",
-                        escapeJson(augmentedPrompt)
-                );
-                HttpEntity<String> openRouterRequest = new HttpEntity<>(openRouterPayload, headers);
+                ObjectNode openRouterPayload = mapper.createObjectNode();
+                openRouterPayload.put("model", "microsoft/mai-ds-r1:free");
+                openRouterPayload.put("temperature", 0.7);
+
+                ObjectNode message = mapper.createObjectNode();
+                message.put("role", "user");
+                message.put("content", augmentedPrompt);
+
+                openRouterPayload.putArray("messages").add(message);
+
+                HttpEntity<String> openRouterRequest = new HttpEntity<>(mapper.writeValueAsString(openRouterPayload), headers);
+
 
                 ResponseEntity<String> openRouterResponse = restTemplate.postForEntity(microsoftUrl, openRouterRequest, String.class);
                 JsonNode openRouterJson = mapper.readTree(openRouterResponse.getBody());
 
                 JsonNode microsoftAnswerNode = openRouterJson.at("/choices/0/message/content");
-                String microsoftAnswer = microsoftAnswerNode.isTextual() ? microsoftAnswerNode.asText() : "Răspuns invalid de la OpenRouter.";
+                String microsoftAnswer = microsoftAnswerNode.isTextual() ? microsoftAnswerNode.asText() : "Invalid response from OpenRouter";
 
                 return new ChatResponse(microsoftAnswer, chunks, sources);
 
             } else if (provider.equals("mistral")) {
-                String ollamaPayload = String.format("{\"model\": \"mistral\", \"prompt\": \"%s\", \"stream\": false}", escapeJson(augmentedPrompt));
-                HttpEntity<String> ollamaRequest = new HttpEntity<>(ollamaPayload, headers);
+                ObjectNode ollamaPayload = mapper.createObjectNode();
+                ollamaPayload.put("model", "mistral");
+                ollamaPayload.put("prompt", augmentedPrompt);
+                ollamaPayload.put("stream", false);
+
+                HttpEntity<String> ollamaRequest = new HttpEntity<>(mapper.writeValueAsString(ollamaPayload), headers);
+
 
                 ResponseEntity<String> ollamaResponse = restTemplate.postForEntity(ollamaUrl, ollamaRequest, String.class);
                 JsonNode ollamaJson = mapper.readTree(ollamaResponse.getBody());
@@ -90,20 +102,12 @@ public class PubbleChatController {
                 return new ChatResponse(ollamaAnswer, chunks, sources);
             }
             else {
-                return new ChatResponse("Nici un provider selectat", Collections.emptyList(), Collections.emptyList());
+                return new ChatResponse("No provider selected", Collections.emptyList(), Collections.emptyList());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ChatResponse("Eroare la procesarea mesajului: " + e.getMessage(), Collections.emptyList(), Collections.emptyList());
+            return new ChatResponse("Error when processing message: " + e.getMessage(), Collections.emptyList(), Collections.emptyList());
         }
-    }
-
-    private String escapeJson(String text) {
-        return text
-                .replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r");
     }
 }
