@@ -2,34 +2,58 @@
     list-style: none;
     padding: 0.5;
     margin-top: 2px;
-  }
-  
-  .card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 15px; 
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
+    margin-left: -50px;
+    margin-right: 724px;
   }
 
-  .card-header {
+  .container
+{
     display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    background-color: rgb(21, 96, 189);
+    justify-content: center;
+    height: 100vh;
+    margin-top: 23px;
+}
+
+.card
+{
+    margin: 30px auto;
+    margin-left: 57px;
+    margin-right: -20px;
+    width: 250%;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    border-color: rgb(2, 73, 160);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.187), 0 6px 20px 0 rgba(0, 0, 0, 0.466);
+}
+
+  
+
+  .card-header 
+{
+    background-color: rgb(2, 73, 160);
     color: white;
     padding: 15px;
-    border-bottom: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
-  }
+    border-radius: 9px 9px 0 0;
+    border-bottom: 1px solid rgb(2, 73, 160);
+    display: flex;
+    margin: -5px;
+    margin-bottom: 5px;
+    margin-top: -276px;
+}
 
-  .card-header h3 {
-    margin: 0;
-  }
+.card-header h3 
+{
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.441);
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.card-body
+{
+    justify-content: space-between;
+}
+
   
   .request-id {
     flex: 1;
@@ -46,10 +70,45 @@
     text-align: right;
   }
 
-  .request-id,
+ .request-id,
 .request-form,
 .request-status {
   margin-right: 20px; 
+}
+
+.request-item
+{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 17px ;
+}
+  
+  .request-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /*.request-status 
+  {
+  }*/
+  
+  .request-status.pending {
+    color: orange;
+  }
+  
+  .request-status.approved {
+    color: green;
+  }
+  
+  .request-status.rejected {
+    color: red;
+  }
+  
+  .request-actions {
+    display: flex;
+    gap: 10px;
 }
   
   .no-requests {
@@ -64,20 +123,8 @@
     border-radius: 5px;
     padding: 5px;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
   }
 
-  .card {
-    margin-bottom: 20px;
-    top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-    margin-right: 20px;
-    max-width: 100%;
-  }
 
 
   

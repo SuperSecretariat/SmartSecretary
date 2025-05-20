@@ -19,7 +19,7 @@
 }
 
 .dashboard-NavBarVisible {
-    background-color: rgb(232, 223, 255);
+    background-color: rgb(255, 255, 255);
     color: white;
     width: 80%;
     height: 100%; /* Fixează înălțimea la containerul părinte */
@@ -28,7 +28,7 @@
 }
 
 .dashboard-NavBarNotVisible {
-    background-color: rgb(232, 223, 255);
+    background-color: rgb(255, 255, 255);
     color: white;
     width: 100%;
     height: 100%; /* Fixează înălțimea la containerul părinte */

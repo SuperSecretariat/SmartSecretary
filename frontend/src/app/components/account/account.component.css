@@ -1,0 +1,110 @@
+.container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin-top: 23px;
+}
+
+
+.card
+{
+    margin: 20px auto;
+    margin-left: -230px;
+    width: 250%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    border-color: rgb(2, 73, 160);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.187), 0 6px 20px 0 rgba(0, 0, 0, 0.466);
+}
+
+.card-header 
+{
+    background-color: rgb(2, 73, 160);
+    color: white;
+    padding: 15px;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px solid rgb(21, 96, 189);
+    align-items: center; 
+    display: flex;
+    justify-content: space-between;
+    margin: -20px;
+    margin-bottom: 10px;
+}
+
+.card-header h3 
+{
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.441);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.alert-info 
+{
+    background-color: #d0f4fc;
+    color: #055160;
+    border-left: 6px solid #055160;
+    padding: 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    margin-right: 10px;
+    align-items: center;
+}
+
+
+.form-group
+{
+    margin-bottom: 5px;
+    margin-top: -15px;
+    padding: 5px;
+    font-size: 15px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.027);
+    margin-left: 50px;  
+    margin-right: 50px;
+}
+
+
+.form-control
+{
+    margin-top: -1px;
+    width: 100%;
+    padding: 12x;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    height: 40px;
+    font-size: 16px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.13);
+}
+
+.form-control:hover
+{
+    border-color: #007bff; 
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.btn-primary
+{
+    color: white;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.285);
+    background-color: rgb(21, 96, 189);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.027);
+}
+
+.btn-primary:hover
+{
+    background-color: rgb(2, 73, 160);
+}
+
+.row
+{
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.066);
+}
