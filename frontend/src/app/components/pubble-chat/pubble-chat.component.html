@@ -1,15 +1,19 @@
 <div class="chat-wrapper">
   <div class="chat-container">
+    <div id="chat-header" class="chat-header">
+      Chat with Pubble AI
+    </div>
+
     <div id="chat-box" class="chat-box"></div>
     <div class="input-area">
       <input
         type="text"
         id="user-input"
         [(ngModel)]="message"
-        placeholder="Scrie un mesaj..."
+        placeholder="Write a message..."
         (keydown.enter)="sendMessage()"
       />
-      <button (click)="sendMessage()">Trimite</button>
+      <button (click)="sendMessage()">Send</button>
     </div>
   </div>
 </div>

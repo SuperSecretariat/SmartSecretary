@@ -22,11 +22,13 @@
     left: 50%;
     transform: translateX(-50%);
     transition: font-size 0.2s ease;
+    color: white;
 }
 
 .gdpr-text{
     margin-right: 1vh;
     transition: font-size 0.2s ease;
+  color: white;
 }
 
 .logo-text:hover,.gdpr-text:hover{

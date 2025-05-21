@@ -21,7 +21,7 @@ export class PubbleChatComponent implements AfterViewInit {
     const provider = 'mistral';
     const chatBox = document.getElementById('chat-box') as HTMLElement;
 
-    chatBox.innerHTML += `<div class="message user"><strong>Tu:</strong> ${trimmed}</div>`;
+    chatBox.innerHTML += `<div id="message-user" class="message-user"><strong>You:</strong> ${trimmed}</div>`;
     this.message = '';
     chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -34,25 +34,11 @@ export class PubbleChatComponent implements AfterViewInit {
 
       const data = await response.json();
 
-      chatBox.innerHTML += `<div class="message bot"><strong>Model:</strong> ${data.answer}</div>`;
-
-      // if (data.chunks?.length) {
-      //   chatBox.innerHTML += `<div class="message bot"><strong>Surse:</strong></div>`;
-      //   data.chunks.forEach((chunk: string, index: number) => {
-      //     chatBox.innerHTML += `<div class="message bot">(${index + 1}) ${chunk}</div>`;
-      //   });
-      // }
-
-      // if (data.sources?.length) {
-      //   chatBox.innerHTML += `<div class="message bot"><strong>Chunks:</strong></div>`;
-      //   data.sources.forEach((source: string, index: number) => {
-      //     chatBox.innerHTML += `<div class="message bot">(${index + 1}) ${source}</div>`;
-      //   });
-      // }
+      chatBox.innerHTML += `<div class="message-bot"><strong>Model:</strong> ${data.answer}</div>`;
 
       chatBox.scrollTop = chatBox.scrollHeight;
     } catch (err) {
-      chatBox.innerHTML += `<div class="message bot"><strong>Model:</strong> Eroare la comunicare cu serverul.</div>`;
+      chatBox.innerHTML += `<div class="message-bot"><strong>Model:</strong> Error when communicating with server</div>`;
     }
   }
 }
