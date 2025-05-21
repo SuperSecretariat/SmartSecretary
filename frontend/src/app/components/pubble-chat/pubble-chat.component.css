@@ -108,7 +108,15 @@ button:hover {
   background-color: #5a6268;
 }
 
-/* Spinner styling */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffffff;
+  border-top: none;
+}
+
 .spinner {
   align-self: center;
   margin: 10px;

@@ -11,9 +11,12 @@
         class="message"
       >
         <strong>{{ msg.sender === 'user' ? 'You:' : 'Model:' }}</strong>
-        {{ msg.sender === 'user' ? msg.displayed : msg.displayed }}
+        {{ msg.displayed }}
       </div>
-      <div *ngIf="isLoading" class="spinner"></div>
+    </div>
+
+    <div *ngIf="isLoading" class="spinner-container">
+      <div class="spinner"></div>
     </div>
 
     <div class="input-area">
