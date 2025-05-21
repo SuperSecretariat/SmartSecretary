@@ -1,0 +1,55 @@
+<div class="col-md-12 form">
+  <div class="card card-container">
+    <div class="title">Show Auth Key</div>
+    <form
+      name="form"
+      (ngSubmit)="emailForm.valid && onSubmit(emailForm)"
+      #emailForm="ngForm"
+      novalidate
+    >
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        name="email"
+        [(ngModel)]="form.email"
+        required
+        email
+        #email="ngModel"
+        [ngClass]="{ 'is-invalid': emailForm.submitted && email.errors }"
+      />
+      @if (emailForm.submitted) {
+        @if (email.errors){
+        <br>
+        <div class="invalid-feedback">
+          @if (email.errors['required']) {
+            <div>Email is required</div>
+          }
+          @else if (email.errors['email']) {
+            <div>Email must be a valid email address</div>
+          }
+        </div>
+        }
+        @else if (emailForm.submitted && !success) {
+          <br>
+          <div class="alert alert-warning">
+            Error: <br />{{ errorMessage }}
+          </div>
+        }
+      }
+      @else if(authKey != null){
+        <br>
+        <div class="alert alert-success">The AuthKey is: {{ authKey }}</div>
+      }
+      <br>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block">Show</button>
+      </div>
+    </div>
+
+    </form>
+
+
+  </div>
+</div>

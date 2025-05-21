@@ -11,6 +11,7 @@ export class BoardAdminLlmFilesComponent {
   entries: FileEntry[] = [];
   selectedFile: File | null = null;
   newFolderName: string = '';
+  searchTerm: string = '';
 
   constructor(private fileManager: LlmFilesService) {}
 
@@ -87,6 +88,14 @@ export class BoardAdminLlmFilesComponent {
         this.loadEntries();
       });
     }
+  }
+
+  filteredEntries(): FileEntry[] {
+    if (!this.searchTerm.trim()) {
+      return this.entries;
+    }
+    const lower = this.searchTerm.toLowerCase();
+    return this.entries.filter(entry => entry.name.toLowerCase().includes(lower));
   }
 }
 
