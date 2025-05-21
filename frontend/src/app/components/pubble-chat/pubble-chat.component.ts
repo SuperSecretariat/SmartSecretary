@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-chat',
@@ -7,7 +7,13 @@ import { Component, AfterViewInit } from '@angular/core';
   standalone: false,
 })
 export class PubbleChatComponent implements AfterViewInit {
+  @ViewChild('chatBox') chatBox!: ElementRef<HTMLElement>;
+
   message: string = '';
+  isLoading = false;
+
+  // message list with sender and what's currently displayed
+  messages: Array<{ sender: 'user' | 'bot'; text: string; displayed: string }> = [];
 
   ngAfterViewInit() {
     const inputField = document.getElementById('user-input') as HTMLInputElement;
@@ -18,27 +24,50 @@ export class PubbleChatComponent implements AfterViewInit {
     const trimmed = this.message.trim();
     if (!trimmed) return;
 
-    const provider = 'mistral';
-    const chatBox = document.getElementById('chat-box') as HTMLElement;
+    // push user message immediately
+    this.messages.push({ sender: 'user', text: trimmed, displayed: trimmed });
+    this.scrollToBottom();
 
-    chatBox.innerHTML += `<div id="message-user" class="message-user"><strong>You:</strong> ${trimmed}</div>`;
     this.message = '';
-    chatBox.scrollTop = chatBox.scrollHeight;
+    this.isLoading = true;
 
+    let responseText = '';
     try {
-      const response = await fetch('http://localhost:8081/api/pubble/chat', {
+      const provider = 'mistral';
+      const resp = await fetch('http://localhost:8081/api/pubble/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: trimmed, provider })
       });
-
-      const data = await response.json();
-
-      chatBox.innerHTML += `<div class="message-bot"><strong>Model:</strong> ${data.answer}</div>`;
-
-      chatBox.scrollTop = chatBox.scrollHeight;
+      const data = await resp.json();
+      responseText = data.answer;
     } catch (err) {
-      chatBox.innerHTML += `<div class="message-bot"><strong>Model:</strong> Error when communicating with server</div>`;
+      responseText = 'Error when communicating with server';
+    } finally {
+      this.isLoading = false;
     }
+
+    // add bot message placeholder
+    const botMsg = { sender: 'bot' as const, text: responseText, displayed: '' };
+    this.messages.push(botMsg);
+
+    // type it out word by word
+    const words = responseText.split(' ');
+    let idx = 0;
+    const interval = setInterval(() => {
+      botMsg.displayed += (idx === 0 ? '' : ' ') + words[idx];
+      this.scrollToBottom();
+      idx++;
+      if (idx >= words.length) {
+        clearInterval(interval);
+      }
+    }, 50);
+  }
+
+  private scrollToBottom() {
+    setTimeout(() => {
+      const box = this.chatBox.nativeElement;
+      box.scrollTop = box.scrollHeight;
+    });
   }
 }
