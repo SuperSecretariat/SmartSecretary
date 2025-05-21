@@ -1,57 +1,62 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.TicketRequestDTO;
-import com.example.demo.model.Message;
-import com.example.demo.model.Ticket;
+import com.example.demo.dto.tickets.MessageDTO;
+import com.example.demo.dto.tickets.TicketCreationDTO;
+import com.example.demo.entity.Ticket;
+import com.example.demo.entity.TicketMessage;
+import com.example.demo.model.enums.TicketStatus;
+import com.example.demo.model.enums.TicketType;
 import com.example.demo.service.TicketService;
-import com.example.demo.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
+
+    @Autowired
     private TicketService ticketService;
-    private UserDetailsServiceImpl userService;
 
-    public TicketController(TicketService ticketService) {
-        this.ticketService = ticketService;
-        this.userService = userService;
-    }
-
+    // Create a new ticket
     @PostMapping
-    public ResponseEntity<String> createTicket(@RequestBody TicketRequestDTO dto) {
-        ticketService.createTicket(dto.getSubject(), dto.getMessage(), dto.getType(), dto.getStatus(), dto.getRegistrationNumber());
-        return ResponseEntity.ok("Created ticket successfully.");
+    public ResponseEntity<Ticket> createTicket(@RequestBody TicketCreationDTO request) {
+        Ticket ticket = ticketService.createTicket(request.getUserId(), request.getSubject(), request.getType(), request.getMessage());
+        return ResponseEntity.ok(ticket);
     }
+
+    // Get all tickets (for admins, with optional filters)
     @GetMapping
-    public ResponseEntity<List<Ticket>> getAllTickets() {
-        return ResponseEntity.ok(ticketService.getAll());
+    public ResponseEntity<List<Ticket>> getAllTickets(
+            @RequestParam(required = false) TicketStatus status,
+            @RequestParam(required = false) TicketType type,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String subject
+    ) {
+        List<Ticket> tickets = ticketService.getAllTickets(status, type, userId, subject);
+        return ResponseEntity.ok(tickets);
     }
 
-    @PostMapping("/close")
-    public ResponseEntity<String> closeTicket(@RequestBody Map<String, Long> payload) {
-        Long ticketId = payload.get("ticketId");
-        ticketService.closeTicket(ticketId);
-        return ResponseEntity.ok("Closed ticket successfully.");
-    }
-    @PostMapping("/done")
-    public ResponseEntity<String> finishTicket(@RequestBody Map<String, Long> payload) {
-        Long ticketId = payload.get("ticketId");
-        ticketService.finishTicket(ticketId);
-        return ResponseEntity.ok("Finished ticket successfully.");
+    // Get tickets for a specific user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Ticket>> getUserTickets(@PathVariable Long userId) {
+        return ResponseEntity.ok(ticketService.getTicketsByUser(userId));
     }
 
-//    @GetMapping("/${ticketId}/messages")
-//    public ResponseEntity<List<Message>> getMessagesForTicket(@RequestBody Long ticketId) {
-//        List<Message> messages = ticketService.getMessagesForTicket(ticketId);
-//        return ResponseEntity.ok(messages);
-//    }
-//    @PostMapping("/send-message")
-//    public ResponseEntity<String> sendTicketMessage(@RequestBody ) {
-//
-//    }
+    // Update ticket status (admin only)
+    @PatchMapping("/{ticketId}/status")
+    public ResponseEntity<Ticket> updateStatus(@PathVariable Long ticketId, @RequestParam TicketStatus status) {
+        return ResponseEntity.ok(ticketService.updateTicketStatus(ticketId, status));
+    }
+
+    // Add message to ticket
+    @PostMapping("/{ticketId}/messages")
+    public ResponseEntity<TicketMessage> addMessage(@PathVariable Long ticketId, @RequestBody MessageDTO request) {
+        return ResponseEntity.ok(ticketService.addMessageToTicket(ticketId, request.getSenderId(), request.getMessage()));
+    }
 }

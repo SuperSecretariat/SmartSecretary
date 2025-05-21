@@ -1,29 +1,30 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
-import com.example.demo.entity.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class Message {
+public class TicketMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
     @ManyToOne
+    @JoinColumn(name = "sender_id")
     private User sender;
 
-    private String content;
+    private String message;
 
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    /* |||||||||| GETTERS AND SETTERS |||||||||| */
+    // GETTERS AND SETTERS
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -31,7 +32,7 @@ public class Message {
     }
 
     public Ticket getTicket() {
-        return this.ticket;
+        return ticket;
     }
 
     public void setTicket(Ticket ticket) {
@@ -39,27 +40,27 @@ public class Message {
     }
 
     public User getSender() {
-        return this.sender;
+        return sender;
     }
 
     public void setSender(User sender) {
         this.sender = sender;
     }
 
-    public String getContent() {
-        return this.content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public LocalDateTime getTimestamp() {
-        return this.timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
-    /* |||||||||| GETTERS AND SETTERS |||||||||| */
 }
+
