@@ -24,6 +24,7 @@ import { FooterComponent } from "./components/footer/footer.component";
 import { AdminNavBarComponent } from "./components/admin-nav-bar/admin-nav-bar.component";
 import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board-admin-add.component";
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminDeleteUserComponent} from "./pages/board-admin/board-admin-delete-user/board-admin-delete-user.component";
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
@@ -31,6 +32,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
+import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 
 
 @NgModule({
@@ -46,12 +48,14 @@ import { ViewFormComponent } from './components/view-form/view-form.component';
     SecretaryNavBarComponent,
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
+    BoardAdminDeleteUserComponent,
     BoardSecretaryAddComponent,
     CompleteFormComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
     PubbleChatComponent,
-    ViewFormComponent
+    ViewFormComponent,
+    BoardAdminLlmFilesComponent
   ],
   imports: [
     BrowserModule,

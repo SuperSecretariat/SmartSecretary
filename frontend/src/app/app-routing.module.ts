@@ -12,6 +12,7 @@ import { AuthGuard } from './components/_helpers/auth.guard';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/board-admin-add.component';
 import {BoardAdminShowAuthKeyComponent} from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminDeleteUserComponent } from './pages/board-admin/board-admin-delete-user/board-admin-delete-user.component';
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
@@ -19,6 +20,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
+import {BoardAdminLlmFilesComponent} from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -50,6 +52,8 @@ const routes: Routes = [
       { path: 'dashboard/add', component: BoardAdminAddComponent },
       // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
       { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent },
+      { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent},
+      { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent },
     ]
   },
   {

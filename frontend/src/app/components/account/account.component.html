@@ -129,6 +129,9 @@
                   <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">
                     Cancel
                   </button>
+                  <button type="button" class="btn btn-danger ms-2" (click)="showDeleteConfirmation()">
+                    Delete Account
+                  </button>
                 }
               </div>
 
@@ -179,9 +182,12 @@
               </div>
             </div>
             <div class="row mt-3">
-              <div class="col-12">
+              <div class="col-12 d-flex justify-content-between">
                 <button class="btn btn-primary" (click)="editProfile()">
                   Modify Details
+                </button>
+                <button type="button" class="btn btn-danger" (click)="showDeleteConfirmation()">
+                  Delete Account
                 </button>
               </div>
             </div>
@@ -191,3 +197,27 @@
     </div>
   </div>
 </div>
+
+<!-- Delete Account Confirmation -->
+<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1" aria-labelledby="deleteModalLabel" [attr.aria-hidden]="!showDeleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Account Deletion</h5>
+        <button type="button" class="btn-close" (click)="hideDeleteConfirmation()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="hideDeleteConfirmation()">Cancel</button>
+        <button type="button" class="btn btn-danger" [disabled]="isDeletingAccount" (click)="deleteAccount()">
+          <output *ngIf="isDeletingAccount" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></output>
+          Delete Account
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showDeleteModal"></div>

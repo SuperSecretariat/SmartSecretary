@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
 
@@ -66,4 +66,41 @@ export class StorageService {
       }
     );
   }
+
+  private readonly DELETE_API = 'http://localhost:8081/api/user/delete-me';
+  deleteAccount(): Observable<any> {
+    const token = this.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(this.DELETE_API, { },
+      {
+        headers: headers,
+        responseType: 'text'
+      });
+  }
+  
+  private readonly SHOWAUTHKEY_API = 'http://localhost:8081/api/user/authkey';
+  showAuthKey(email: string): Observable<any> {
+    const token = this.getUser().token;
+    const params = new HttpParams().set('email', email);
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.get(
+      this.SHOWAUTHKEY_API,
+      {
+        headers: headers,
+        params: params
+      });
+  }
+
+  private readonly DELETEUSER_API = 'http://localhost:8081/api/user/delete-user';
+  deleteUserAccount(registrationNumber: string): Observable<any> {
+    const token = this.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(
+      `${this.DELETEUSER_API}?identifier=${encodeURIComponent(registrationNumber)}`, 
+      {},
+      {
+        headers: headers,
+        responseType: 'text'
+      });
+    }
 }

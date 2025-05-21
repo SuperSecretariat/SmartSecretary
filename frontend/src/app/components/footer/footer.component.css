@@ -3,16 +3,35 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    height: 6vh;
 }
 
 .footer-logo{
     width: 4vw;
     height: auto;
     margin-bottom: 1 rem;
+    transition: transform 0.2s ease;
+}
+
+.footer-logo:hover{
+    transform: scale(1.07);
 }
 
 .logo-text {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    transition: font-size 0.2s ease;
+    color: white;
+}
+
+.gdpr-text{
+    margin-right: 1vh;
+    transition: font-size 0.2s ease;
+  color: white;
+}
+
+.logo-text:hover,.gdpr-text:hover{
+    text-decoration: underline;
+    font-size: 18px;
 }
