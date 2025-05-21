@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Form;
+import com.example.demo.projection.FormTitleProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequestField;
 import com.example.demo.exceptions.FormRequestFieldDataException;
@@ -31,16 +33,12 @@ public class FormRequestService {
 
     public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException {
         // Get the userRegistrationNumber from the JWT token
-        // Uncomment the following line when the frontend is implemented
-//        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
-        //check if the data given by the user fits to the desired form template
+        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
         if (this.formRepository.findNumberOfInputFieldsById(formRequestRequest.getFormId()).getNumberOfInputFields()
                 == formRequestRequest.getFieldsData().size()) {
             FormRequest formRequest = new FormRequest(
                     formRequestRequest.getFormId(),
-        // Uncomment the following line when the frontend is implemented
-//                    userRegistrationNumber,
-                    formRequestRequest.getJwtToken(), //only for testing, remove when frontend is done
+                    userRegistrationNumber,
                     FormRequestStatus.PENDING,
                     createFormRequestFields(formRequestRequest.getFieldsData())
             );
@@ -64,15 +62,15 @@ public class FormRequestService {
     // Used to get all requests for a specific user
     // Can be used to display active formRequests in the dashboard
     public List<FormRequestResponse> getFormRequestsByUserRegistrationNumber(String jwtToken) {
-        //String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(jwtToken);
-        String userRegistrationNumber = jwtToken;
+        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(jwtToken);
         List<FormRequest> formRequests = formRequestRepository.findByUserRegistrationNumber(
                 userRegistrationNumber
         );
 
         List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
         for (FormRequest formRequest : formRequests) {
-            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formRequest.getFormId(), formRequest.getStatus()));
+            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
         }
         return formRequestsResponse;
     }

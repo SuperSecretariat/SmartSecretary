@@ -11,9 +11,8 @@ import { FormsService } from '../_services/forms.service';
   imports: [CommonModule, FormsModule, SearchComponent]
 })
 export class SubmittedFormsComponent implements OnInit {
-  submittedRequests: { id: number; formId: number; status: string }[] = [];
-  filteredRequests: { id: number; formId: number; status: string }[] = [];
-  currentUserId: string = 'user123'; 
+  submittedRequests: { id: number; formTitle: string; status: string }[] = [];
+  filteredRequests: { id: number; formTitle: string; status: string }[] = [];
 
   constructor(private readonly formsService: FormsService) {}
 
@@ -45,10 +44,10 @@ export class SubmittedFormsComponent implements OnInit {
 
     this.filteredRequests = this.submittedRequests.filter(request => {
       const matchesId = filters.id ? request.id.toString().includes(filters.id) : true;
-      //const matchesFormType = filters.formType ? request.formName === filters.formType : true;
+      const matchesFormType = filters.formType ? request.formTitle === filters.formType : true;
       const matchesStatus = filters.status ? request.status === filters.status : true;
 
-      return matchesId && /*matchesFormType && */matchesStatus;
+      return matchesId && matchesFormType && matchesStatus;
     });
   }
 }
