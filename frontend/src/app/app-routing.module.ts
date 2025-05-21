@@ -18,6 +18,7 @@ import { CompleteFormComponent } from './components/complete-form/complete-form.
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
+import { ViewFormComponent } from './components/view-form/view-form.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -35,7 +36,8 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'complete-form/:id', component: CompleteFormComponent },
-      { path: 'pubble', component: PubbleChatComponent }
+      { path: 'pubble', component: PubbleChatComponent },
+      { path: 'view-form/:id', component: ViewFormComponent}
     ]
   },
   {

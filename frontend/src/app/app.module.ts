@@ -30,6 +30,7 @@ import { CompleteFormComponent } from './components/complete-form/complete-form.
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
+import { ViewFormComponent } from './components/view-form/view-form.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
     CompleteFormComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    PubbleChatComponent
+    PubbleChatComponent,
+    ViewFormComponent
   ],
   imports: [
     BrowserModule,

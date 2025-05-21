@@ -51,7 +51,7 @@ export class FormsService {
             formId,
             fields
         };
-        console.log("Payload to be sent:", payload); // Log the payload to check its structure
+        // console.log("Payload to be sent:", payload); // Log the payload to check its structure
         return this.http.post(
             `${FORMS_API_REQUESTS}/create`, 
             payload, 
@@ -64,7 +64,7 @@ export class FormsService {
 
     getSubmittedRequests() : Observable<any> {
         const jwtToken = this.storageService.getUser().token;
-        console.log("JWT Token:", jwtToken); // Log the JWT token to check its value
+        // console.log("JWT Token:", jwtToken); // Log the JWT token to check its value
         const headers = new HttpHeaders().set('Authorization', 'Bearer ' + jwtToken);
         return this.http.get(
             `${FORMS_API_REQUESTS}/submitted`, 
