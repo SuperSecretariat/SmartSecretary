@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Form;
-import com.example.demo.projection.FormTitleProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequestField;
 import com.example.demo.exceptions.FormRequestFieldDataException;
@@ -86,7 +84,6 @@ public class FormRequestService {
     public FormRequest getFormRequestById(Long id) throws InvalidFormRequestIdException {
         Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
         if (formRequest.isPresent()) {
-            System.out.println(formRequest.get());
             return formRequest.get();
         }
         else{

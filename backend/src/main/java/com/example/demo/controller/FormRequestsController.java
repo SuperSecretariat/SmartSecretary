@@ -10,7 +10,6 @@ import com.example.demo.service.FormRequestService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -47,7 +46,6 @@ public class FormRequestsController {
     public ResponseEntity<FormRequest> getFormRequestById(@PathVariable Long id) {
         try {
             FormRequest formRequest = this.formRequestService.getFormRequestById(id);
-            System.out.println(formRequest);
             return ResponseEntity.ok(formRequest);
         }
         catch (InvalidFormRequestIdException e) {

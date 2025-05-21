@@ -11,15 +11,11 @@ import com.example.demo.dto.FormFieldJsonObject;
 import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.dto.FormCreationRequest;
-import com.example.demo.util.WordFileUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,19 +84,14 @@ public class FormService {
         return new FormResponse(form.get().getId(), form.get().getTitle(), form.get().getNumberOfInputFields());
     }
 
-//    public void validateFormRequest(FormRequest formRequest) {}
-
     public byte[] getFormImage(Long id) throws IOException, InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
         if (form.isEmpty()) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
-        this.logger.info("Getting form image for form with title: " + title);
+        this.logger.info("Getting form image for form with title: {}", title);
         return PdfFileUtil.getImageOfPdfFile(title);
-        //Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
-        //this.logger.info("Getting image from path: {}", path);
-        //return Files.readAllBytes(path);
     }
 
     public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {

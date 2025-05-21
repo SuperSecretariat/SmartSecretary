@@ -15,20 +15,13 @@ export class SubmittedFormsComponent implements OnInit {
   submittedRequests: { id: number; formTitle: string; status: string }[] = [];
   filteredRequests: { id: number; formTitle: string; status: string }[] = [];
 
-  constructor(private readonly formsService: FormsService, private router: Router) {}
+  constructor(private readonly formsService: FormsService, private readonly router: Router) {}
 
   ngOnInit(): void {
     this.loadSubmittedRequests();
   }
 
   private loadSubmittedRequests(): void {
-    // const storedSubmittedRequests = localStorage.getItem(`submitted_requests_${this.currentUserId}`);
-    // if (storedSubmittedRequests) {
-    //   this.submittedRequests = JSON.parse(storedSubmittedRequests);
-    // } else {
-    //   this.submittedRequests = [];
-    // }
-    // this.filteredRequests = [...this.submittedRequests];
     this.formsService.getSubmittedRequests().subscribe({
       next: data => {
         this.submittedRequests = data;

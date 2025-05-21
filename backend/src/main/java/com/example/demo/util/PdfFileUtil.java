@@ -12,13 +12,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class PdfFileUtil {
+    private static final String COMMON_PATH = "src/main/resources/uploaded.forms/";
     private PdfFileUtil() {
         // Private constructor to prevent instantiation
     }
+
     public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
         WordFileUtil.convertDocxToPDF(formTitle); // creates the pdf file from the docx
         PdfFileUtil.downloadImageOfPdfFile(formTitle); // creates the image file from the pdf
-        Path pdfFilePath = Paths.get("src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf");
+        Path pdfFilePath = Paths.get(COMMON_PATH + formTitle + '/' + formTitle + ".pdf");
         String pythonScriptPath = "src/main/resources/scripts/convert_points_to_percentages.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath.toString());
         Process process = processBuilder.start();
@@ -47,7 +49,7 @@ public class PdfFileUtil {
     }
 
     public static byte[] getImageOfPdfFile(String formTitle) throws IOException {
-        String pdfFilePath = "src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf";
+        String pdfFilePath = COMMON_PATH + formTitle + '/' + formTitle + ".pdf";
         try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             BufferedImage image = pdfRenderer.renderImageWithDPI(0, 300); // Render the first page at 300 DPI
@@ -56,17 +58,14 @@ public class PdfFileUtil {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(image, "png", byteArrayOutputStream);
 
-            // Get the byte array
-            byte[] imageBytes = byteArrayOutputStream.toByteArray();
-
             // Example: Print the size of the byte array
-            return imageBytes;
+            return byteArrayOutputStream.toByteArray();
         }
     }
 
     public static void downloadImageOfPdfFile(String formTitle) throws IOException {
         byte[] imageBytes = getImageOfPdfFile(formTitle);
-        String imageFilePath = "src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".png";
+        String imageFilePath = COMMON_PATH + formTitle + '/' + formTitle + ".png";
         try(FileOutputStream fos = new FileOutputStream(imageFilePath)) {
             fos.write(imageBytes);
         }
