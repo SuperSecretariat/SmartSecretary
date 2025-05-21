@@ -23,6 +23,6 @@
     <span>Submit Request</span>
   </button>
 </div>
-<div *ngIf="!imageUrl">
-  <p>Loading image...</p>
+<div *ngIf="isLoading" class="loading-spinner">
+  <p>Loading...</p>
 </div>

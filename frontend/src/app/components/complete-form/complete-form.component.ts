@@ -4,6 +4,7 @@ import { FormsService } from '../_services/forms.service';
 import { FormField } from '../models/form.model';
 import { StorageService } from '../_services/storage.service';
 import { environment } from '../../../environments/environments';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-complete-form',
@@ -15,8 +16,9 @@ export class CompleteFormComponent {
   selectedFormId: number | null = null;
   formFields: FormField[] = [];
   warningMessage: string = '';
+  isLoading: boolean = false;
 
-  constructor(private route: ActivatedRoute, private formsService: FormsService) {}
+  constructor(private route: ActivatedRoute, private formsService: FormsService, private router: Router) {}
   imageUrl = `${environment.backendUrl}/api/forms`;
 
   ngOnInit(): void {
@@ -55,6 +57,7 @@ export class CompleteFormComponent {
       return;
     }
     this.warningMessage = '';
+    this.isLoading = true;
     // Get only the values entered by the user (not the whole field object)
     const values = this.formFields
       .filter(field => field.value && field.value.trim() !== '')
@@ -64,9 +67,12 @@ export class CompleteFormComponent {
     this.formsService.submitFormData(this.selectedFormId!, values).subscribe(
       (response) => {
         console.log('Form submitted successfully:', response);
+        this.isLoading = false;
+        this.router.navigate([`/student/submitted-forms`]);
       },
       (error) => {
         console.error('Error submitting form:', error);
+        this.isLoading = true;
       }
     );
   }
