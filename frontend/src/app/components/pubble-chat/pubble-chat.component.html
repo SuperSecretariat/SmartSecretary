@@ -25,9 +25,10 @@
         id="user-input"
         [(ngModel)]="message"
         placeholder="Write a message..."
+        [disabled]="isLoading"
         (keydown.enter)="sendMessage()"
       />
-      <button (click)="sendMessage()">Send</button>
+      <button [disabled]="isLoading" (click)="sendMessage()">Send</button>
     </div>
   </div>
 </div>
