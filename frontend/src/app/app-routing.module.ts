@@ -12,6 +12,7 @@ import { AuthGuard } from './components/_helpers/auth.guard';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/board-admin-add.component';
 import {BoardAdminShowAuthKeyComponent} from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminDeleteUserComponent } from './pages/board-admin/board-admin-delete-user/board-admin-delete-user.component';
 import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
@@ -50,6 +51,7 @@ const routes: Routes = [
       // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
       { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent },
       { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent},
+      { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent },
     ]
   },
   {
