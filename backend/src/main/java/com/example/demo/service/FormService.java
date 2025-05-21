@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
 import com.example.demo.response.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
@@ -10,6 +11,7 @@ import com.example.demo.dto.FormFieldJsonObject;
 import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.dto.FormCreationRequest;
+import com.example.demo.util.WordFileUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
@@ -33,7 +35,7 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
-    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException {
+    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
         String jsonString = PdfFileUtil.mapPdfInputFieldsToCssPercentages(formCreationRequest.getTitle());
 
         ObjectMapper mapper = new ObjectMapper();
@@ -94,9 +96,11 @@ public class FormService {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
-        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
-        this.logger.info("Getting image from path: {}", path);
-        return Files.readAllBytes(path);
+        this.logger.info("Getting form image for form with title: " + title);
+        return PdfFileUtil.getImageOfPdfFile(title);
+        //Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
+        //this.logger.info("Getting image from path: {}", path);
+        //return Files.readAllBytes(path);
     }
 
     public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {

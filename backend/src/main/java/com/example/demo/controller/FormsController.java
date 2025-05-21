@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
 import com.example.demo.response.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
@@ -72,7 +73,7 @@ public class FormsController {
                     .toUri();
             return ResponseEntity.created(location).build();
         }
-        catch (IOException | InterruptedException | FormCreationException e) {
+        catch (IOException | InterruptedException | FormCreationException | InvalidWordToPDFConversion e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
         }
