@@ -48,8 +48,8 @@ export class HeaderComponent implements OnInit {
       .subscribe(() => {
         const url = this.router.url;
 
-        if (url.includes('/home')) this.currentTitle = 'Home';
-        else if (url.includes('/create-form')) this.currentTitle = 'Create Form';
+        
+        if (url.includes('/create-form')) this.currentTitle = 'Create Form';
         else if (url.includes('/submitted-forms')) this.currentTitle = 'Submitted Forms';
         else if (url.includes('/account')) this.currentTitle = 'Account Manager';
         else if (url.includes('/newsfeed')) this.currentTitle = 'Newsfeed';
@@ -70,14 +70,14 @@ export class HeaderComponent implements OnInit {
     next: response => {
       console.log('Logout successful:', response);
       this.storageService.clean();
-      this.router.navigate(['/home']).then(() => {
+      this.router.navigate(['/login']).then(() => {
         window.location.reload();
       });
     },
     error: err => {
       console.error('Logout error:', err);
       this.storageService.clean();
-      this.router.navigate(['/home']).then(() => {
+      this.router.navigate(['/newsfeed']).then(() => {
         window.location.reload();
       });
     }

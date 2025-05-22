@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         const firstRole = this.roles[0];
         const rolePrefix = firstRole.replace('ROLE_', '').toLowerCase();
   
-        this.router.navigate([`/${rolePrefix}/home`]).then(() => {
+        this.router.navigate([`/${rolePrefix}/newsfeed`]).then(() => {
           window.location.reload();
         });
       },
