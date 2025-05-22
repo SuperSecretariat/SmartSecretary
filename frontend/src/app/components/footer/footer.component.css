@@ -1,15 +1,18 @@
+* {
+    margin: 0;
+}
+
 .footer-content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 6vh;
+    height: 7vh;
 }
 
 .footer-logo{
     width: 4vw;
     height: auto;
-    margin-bottom: 1 rem;
     transition: transform 0.2s ease;
 }
 
@@ -28,7 +31,7 @@
 .gdpr-text{
     margin-right: 1vh;
     transition: font-size 0.2s ease;
-  color: white;
+    color: white;
 }
 
 .logo-text:hover,.gdpr-text:hover{

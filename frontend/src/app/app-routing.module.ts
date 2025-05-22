@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { CreateFormComponent } from './components/create-form/create-form.component';
 import { SubmittedFormsComponent } from './components/submitted-forms/submitted-forms.component';
 import { AccountComponent } from './components/account/account.component';
@@ -23,16 +22,16 @@ import { ViewFormComponent } from './components/view-form/view-form.component';
 import {BoardAdminLlmFilesComponent} from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'home', component: HomeComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
 
   {
     path: 'student',
     children: [
-      { path: 'home', component: HomeComponent },
+      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'create-form', component: CreateFormComponent },
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
@@ -45,7 +44,7 @@ const routes: Routes = [
   {
     path: 'admin',
     children: [
-      { path: 'home', component: HomeComponent },
+      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'dashboard', component: BoardAdminComponent },
       { path: 'newsfeed', component: NewsfeedComponent },
@@ -59,7 +58,7 @@ const routes: Routes = [
   {
     path: 'secretary',
     children: [
-      { path: 'home', component: HomeComponent },
+      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'dashboard', component: BoardSecretaryComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },

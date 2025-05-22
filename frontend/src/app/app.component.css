@@ -26,7 +26,7 @@
 .header {
   grid-area: header;
   color: white;
-  padding: 10px;
+  padding: 5px;
   background-color: rgb(21,96,189);
   background: linear-gradient(90deg, rgb(21, 96, 189), rgb(0, 48, 112), rgb(21, 96, 189));
   background-size: 200% 200%;
@@ -34,9 +34,10 @@
 }
 
 .navbar {
-  background: linear-gradient(to bottom, #f8f9fa, #e2e8f0);
+  background-color: #F4F6F8;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   animation: slideIn 0.5s ease-out;
+  padding: 0;
 }
 
 @keyframes slideIn {
@@ -72,7 +73,7 @@
 .footer {
   grid-area: footer;
   color: white;
-  padding: 10px;
+  padding: 5px;
   background-color: rgb(21,96,189);
   background: linear-gradient(90deg, rgb(21, 96, 189), rgb(0, 48, 112), rgb(21, 96, 189));
   background-size: 200% 200%;
@@ -96,11 +97,13 @@
     overflow: hidden;
     justify-content: center;
     box-sizing: border-box;
+    background-color: #F4F6F8;
 }
 
 .app-nav {
     height: 100%;
     width: 100%;
+    background-color: #F4F6F8;
 }
 
 .app-dashboard {
