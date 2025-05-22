@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
+import com.example.demo.response.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
@@ -14,9 +16,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
-    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException {
+    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
         String jsonString = PdfFileUtil.mapPdfInputFieldsToCssPercentages(formCreationRequest.getTitle());
 
         ObjectMapper mapper = new ObjectMapper();
@@ -67,19 +67,22 @@ public class FormService {
         //store the file name, number of input fields, ?size of the pdf file in the database
     }
 
-    public List<Form> getAllActiveForms() {
-        return this.formRepository.findByActive(true);
+    public List<FormResponse> getAllActiveForms() {
+        List<Form> activeForms = this.formRepository.findByActive(true);
+        List<FormResponse> formsResponse = new ArrayList<>();
+        for (Form form : activeForms) {
+            formsResponse.add(new FormResponse(form.getId(), form.getTitle(), form.getNumberOfInputFields()));
+        }
+        return formsResponse;
     }
 
-    public Form getFormById(Long id) throws InvalidFormIdException {
+    public FormResponse getFormById(Long id) throws InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
         if (form.isEmpty()) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
-        return form.get();
+        return new FormResponse(form.get().getId(), form.get().getTitle(), form.get().getNumberOfInputFields());
     }
-
-//    public void validateFormRequest(FormRequest formRequest) {}
 
     public byte[] getFormImage(Long id) throws IOException, InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
@@ -87,9 +90,8 @@ public class FormService {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
-        Path path = Paths.get("backend/src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
-        this.logger.info("Getting image from path: {}", path);
-        return Files.readAllBytes(path);
+        this.logger.info("Getting form image for form with title: {}", title);
+        return PdfFileUtil.getImageOfPdfFile(title);
     }
 
     public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {

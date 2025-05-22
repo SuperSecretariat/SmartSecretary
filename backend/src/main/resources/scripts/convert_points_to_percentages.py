@@ -6,7 +6,7 @@ def get_input_fields_position_and_convert_them_to_percentages(pdf_file_path):
     doc = fitz.open(pdf_file_path)
     input_fields = []
     for page_number, page in enumerate(doc):
-        text_instances = page.search_for("__")
+        text_instances = page.search_for("_")
         page_width, page_height = page.rect.width, page.rect.height
         for rect in text_instances:
             input_field = {

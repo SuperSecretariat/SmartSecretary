@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.exceptions.InvalidHeaderException;
+import com.example.demo.response.FormRequestResponse;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.entity.FormRequest;
@@ -25,17 +27,25 @@ public class FormRequestsController {
         this.formRequestService = formRequestService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<FormRequest>> getAllFormsForUserWithId(String sessionToken) {
+    @GetMapping("/submitted")
+    public ResponseEntity<List<FormRequestResponse>> getAllFormsForUserWithId(@RequestHeader("Authorization") String authorizationHeader) {
         // Logic to retrieve all forms
-        return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(sessionToken));
+        try{
+            if (!authorizationHeader.startsWith("Bearer ")) {
+                throw new InvalidHeaderException("No authorization header containing Bearer was received");
+            }
+            return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(authorizationHeader.substring(7)));
+        }
+        catch (InvalidHeaderException e){
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FormRequest> getFormRequestById(@PathVariable Long id) {
         try {
             FormRequest formRequest = this.formRequestService.getFormRequestById(id);
-            System.out.println(formRequest);
             return ResponseEntity.ok(formRequest);
         }
         catch (InvalidFormRequestIdException e) {
@@ -44,7 +54,7 @@ public class FormRequestsController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest) {
         try {
             FormRequest formRequest = this.formRequestService.createFormRequest(formRequestRequest);

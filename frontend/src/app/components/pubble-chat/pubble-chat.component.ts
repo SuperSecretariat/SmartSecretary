@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environments';
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
@@ -34,7 +35,7 @@ export class PubbleChatComponent implements AfterViewInit {
     let responseText = '';
     try {
       const provider = 'mistral';
-      const resp = await fetch('http://localhost:8081/api/pubble/chat', {
+      const resp = await fetch(`${environment.backendUrl}/api/pubble/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: trimmed, provider })

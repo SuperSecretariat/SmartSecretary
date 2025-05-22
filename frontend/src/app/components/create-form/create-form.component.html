@@ -13,6 +13,7 @@
                       [(ngModel)]="selectedFormId"
                       name="selectedFormId"
                   >
+                  <option value="" disabled>--Please choose a request to complete--</option>
                   <option *ngFor="let form of forms" [value]="form.id">{{ form.title }}</option>
                   </select>
               </div>
@@ -24,7 +25,7 @@
               </div>
             </form>
   
-            <h3>Your Requests</h3>
+            <!-- <h3>Your Requests</h3>
             <ul class="request-list">
               <li *ngFor="let request of requests" class="request-item">
                 <div class="request-details">
@@ -48,7 +49,7 @@
               >
                 Submit Selected Requests
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

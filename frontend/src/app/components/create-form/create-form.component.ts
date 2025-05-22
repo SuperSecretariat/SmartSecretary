@@ -15,7 +15,7 @@ import { Form } from '../models/form.model';
 export class CreateFormComponent implements OnInit {
   forms: Form[] = [];
 
-  selectedFormId: number | null = null; 
+  selectedFormId: string = ''; 
   requests: { id: number; formName: string; status: string }[] = [];
   submittedRequests: { id: number; formName: string; status: string }[] = []; 
   currentUserId: string = ''; 
@@ -56,11 +56,11 @@ export class CreateFormComponent implements OnInit {
   }
 
   completeRequest(): void {
-    if (this.selectedFormId === null) {
+    if (this.selectedFormId == '') {
       alert('No form selected!');
       return;
     }      
-    const selectedFormObject = this.forms.find(form => form.id === this.selectedFormId);
+    const selectedFormObject = this.forms.find(form => form.id == Number(this.selectedFormId));
 
     // if (!selectedFormObject) {
     //   alert('Form not found!');
@@ -82,28 +82,28 @@ export class CreateFormComponent implements OnInit {
       // alert(`The request for "${selectedFormObject.title}" has been added with the number ${newRequest.id}!`);
 
       this.router.navigate([`/student/complete-form/${this.selectedFormId}`]);
-      this.selectedFormId = null;
+      this.selectedFormId = '';
   }
 
   // goToHome(): void {
   //   this.router.navigate(['/submitted-forms']);
   // }
 
-  toggleRequestSelection(request: { id: number; formName: string; status: string }): void {
-    const index = this.selectedRequests.findIndex(r => r.id === request.id);
-    if (index === -1) {
-      this.selectedRequests.push(request);
-    } else {
-      this.selectedRequests.splice(index, 1);
-    }
-  }
+  // toggleRequestSelection(request: { id: number; formName: string; status: string }): void {
+  //   const index = this.selectedRequests.findIndex(r => r.id === request.id);
+  //   if (index === -1) {
+  //     this.selectedRequests.push(request);
+  //   } else {
+  //     this.selectedRequests.splice(index, 1);
+  //   }
+  // }
 
-  submitRequests(): void {
-    this.selectedRequests.forEach(request => {
-      request.status = 'Sent';
-      this.submittedRequests.push(request);
-    });
-  }
+  // submitRequests(): void {
+  //   this.selectedRequests.forEach(request => {
+  //     request.status = 'Sent';
+  //     this.submittedRequests.push(request);
+  //   });
+  // }
   //   localStorage.setItem(`submitted_requests_${this.currentUserId}`, JSON.stringify(this.submittedRequests));
   //   this.requests = this.requests.filter(request => !this.selectedRequests.includes(request));
   //   this.selectedRequests = [];

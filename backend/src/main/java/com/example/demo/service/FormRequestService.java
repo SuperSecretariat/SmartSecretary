@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.response.FormRequestResponse;
+import com.example.demo.entity.FormRequestField;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.entity.FormRequest;
@@ -10,6 +12,7 @@ import com.example.demo.dto.FormRequestRequest;
 import com.example.demo.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,18 +31,14 @@ public class FormRequestService {
 
     public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException {
         // Get the userRegistrationNumber from the JWT token
-        // Uncomment the following line when the frontend is implemented
-//        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
-        //check if the data given by the user fits to the desired form template
+        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
         if (this.formRepository.findNumberOfInputFieldsById(formRequestRequest.getFormId()).getNumberOfInputFields()
-                == formRequestRequest.getFields().size()) {
+                == formRequestRequest.getFieldsData().size()) {
             FormRequest formRequest = new FormRequest(
                     formRequestRequest.getFormId(),
-        // Uncomment the following line when the frontend is implemented
-//                    userRegistrationNumber,
-                    formRequestRequest.getJwtToken(), //only for testing, remove when frontend is done
+                    userRegistrationNumber,
                     FormRequestStatus.PENDING,
-                    formRequestRequest.getFields()
+                    createFormRequestFields(formRequestRequest.getFieldsData())
             );
 
             formRequestRepository.save(formRequest);
@@ -50,16 +49,28 @@ public class FormRequestService {
         }
     }
 
+    private List<FormRequestField> createFormRequestFields(List<String> fieldsData) {
+        List<FormRequestField> formRequestFields = new ArrayList<>();
+        for (String fieldData : fieldsData) {
+            formRequestFields.add(new FormRequestField(fieldData));
+        }
+        return formRequestFields;
+    }
+
     // Used to get all requests for a specific user
     // Can be used to display active formRequests in the dashboard
-    public List<FormRequest> getFormRequestsByUserRegistrationNumber(String sessionToken) {
-        // Uncomment the following line when the frontend is implemented
-//        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(sessionToken);
-        return formRequestRepository.findByUserRegistrationNumber(
-        // Uncomment the following line when the frontend is implemented
-//                userRegistrationNumber
-                sessionToken //only for testing, remove when frontend is done
+    public List<FormRequestResponse> getFormRequestsByUserRegistrationNumber(String jwtToken) {
+        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(jwtToken);
+        List<FormRequest> formRequests = formRequestRepository.findByUserRegistrationNumber(
+                userRegistrationNumber
         );
+
+        List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
+        for (FormRequest formRequest : formRequests) {
+            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
+        }
+        return formRequestsResponse;
     }
 
     public void approveRequest(long requestId) {
@@ -73,7 +84,6 @@ public class FormRequestService {
     public FormRequest getFormRequestById(Long id) throws InvalidFormRequestIdException {
         Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
         if (formRequest.isPresent()) {
-            System.out.println(formRequest.get());
             return formRequest.get();
         }
         else{

@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
+import com.example.demo.response.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
@@ -33,14 +35,14 @@ public class FormsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Form>> getActiveForms() {
+    public ResponseEntity<List<FormResponse>> getActiveForms() {
         return ResponseEntity.ok(formService.getAllActiveForms());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Form> getFormById(@PathVariable Long id) {
+    public ResponseEntity<FormResponse> getFormById(@PathVariable Long id) {
         try {
-            Form form = formService.getFormById(id);
+            FormResponse form = formService.getFormById(id);
             return ResponseEntity.ok(form);
         }
         catch (InvalidFormIdException e) {
@@ -71,7 +73,7 @@ public class FormsController {
                     .toUri();
             return ResponseEntity.created(location).build();
         }
-        catch (IOException | InterruptedException | FormCreationException e) {
+        catch (IOException | InterruptedException | FormCreationException | InvalidWordToPDFConversion e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
         }
