@@ -2,6 +2,10 @@
   margin-top: 2rem;
 }
 
+.spacing-bottom {
+  border-bottom: 1.5px solid #e0e3e7;
+}
+
 .container {
   display: flex;
   align-items: center;
@@ -46,10 +50,11 @@ h1 {
   padding: 32px;
   border: none;
   transition: transform 0.3s ease;
-  width: 600px;
+  width: 800px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  box-shadow: 0 8px 32px rgba(60, 60, 120, 0.18), 0 1.5px 4px rgba(60,60,120,0.10);
 }
 
 .form-control {
@@ -141,7 +146,6 @@ h1 {
   padding-left: 48px;
 }
 
-
 /* Button styling */
 .btn {
   display: block;
@@ -172,6 +176,7 @@ h1 {
 
 .btn-block {
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 

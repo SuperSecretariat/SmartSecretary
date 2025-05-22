@@ -26,7 +26,7 @@
 .header {
   grid-area: header;
   color: white;
-  padding: 10px;
+  padding: 5px;
   background-color: rgb(21,96,189);
   background: linear-gradient(90deg, rgb(21, 96, 189), rgb(0, 48, 112), rgb(21, 96, 189));
   background-size: 200% 200%;
@@ -73,7 +73,7 @@
 .footer {
   grid-area: footer;
   color: white;
-  padding: 10px;
+  padding: 5px;
   background-color: rgb(21,96,189);
   background: linear-gradient(90deg, rgb(21, 96, 189), rgb(0, 48, 112), rgb(21, 96, 189));
   background-size: 200% 200%;
