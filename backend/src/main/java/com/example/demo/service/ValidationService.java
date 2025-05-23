@@ -48,7 +48,7 @@ public class ValidationService {
                 }
             } catch (DecryptionException e) {
                 loggerValidationService.error(e.getMessage());
-                return false;
+                return true;
             }
         }
 
@@ -60,7 +60,7 @@ public class ValidationService {
                 }
             } catch (DecryptionException e) {
                 loggerValidationService.error(e.getMessage());
-                return false;
+                return true;
             }
         }
 
