@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.demo.util.AESUtil.decrypt;
 import static com.example.demo.util.AESUtil.encrypt;
 
 @RestController
@@ -50,59 +49,52 @@ public class AddController {
     @PostMapping("/student")
     public ResponseEntity<JwtResponse> addStudent(@RequestHeader("Authorization") String headerAuth,
                                                   @RequestBody StudentRequest studentRequest) {
-        try{
+        try {
             String token = headerAuth.substring(7);
-
-            if (jwtUtil.validateJwtToken(token)) {
-                String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                Secretary secretary = validationService.findSecretary(decrypt(authKey));
-                if (secretary != null && validationService.findUserByIdentifier(decrypt(secretary.getAuthKey())) != null) {
-                    if (validationService.isEmailUsed(studentRequest.getEmail())) {
-                        return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.EMAIL_IN_USE));
-                    }
-                    if (!validationService.isAuthKeyUsed(studentRequest.getRegistrationNumber())) {
-                        Student newStudent = new Student(studentRequest.getRegistrationNumber(), studentRequest.getEmail());
-                        studentRepository.save(newStudent);
-                        return ResponseEntity.ok(new JwtResponse(ValidationMessage.STUDENT_ADDED));
-                    } else
-                        return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.REG_NUMBER_IN_USE));
-                } else
-                    return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-
-            } else
+            if (!jwtUtil.validateJwtToken(token))
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+
+            if (!validationService.isRequestAuthorizedSecretary(token, jwtUtil))
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+
+            if (validationService.isEmailUsed(studentRequest.getEmail()))
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.EMAIL_IN_USE));
+
+            if (validationService.isAuthKeyUsed(studentRequest.getRegistrationNumber()))
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.REG_NUMBER_IN_USE));
+
+            Student newStudent = new Student(studentRequest.getRegistrationNumber(), studentRequest.getEmail());
+            studentRepository.save(newStudent);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.STUDENT_ADDED));
+
         } catch (DecryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
-
     }
 
     @PostMapping("/secretary")
     public ResponseEntity<JwtResponse> addSecretary(@RequestHeader("Authorization") String headerAuth,
-                                                    @RequestBody SecretaryRequest secretaryRequest){
-        try{
+                                                    @RequestBody SecretaryRequest secretaryRequest) {
+        try {
             String token = headerAuth.substring(7);
-
-            if (jwtUtil.validateJwtToken(token)) {
-                String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                Admin admin = validationService.findAdmin(decrypt(authKey));
-                if (admin != null && validationService.findUserByIdentifier(decrypt(admin.getAuthKey())) != null) {
-                    if (!validationService.isAuthKeyUsed(secretaryRequest.getAuthKey())) {
-                        Secretary newSecretary = new Secretary(encrypt(secretaryRequest.getAuthKey()), secretaryRequest.getEmail());
-                        secretaryRepository.save(newSecretary);
-                        return ResponseEntity.ok(new JwtResponse(ValidationMessage.SECRETARY_ADDED));
-                    } else
-                        return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
-                } else
-                    return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-            } else
+            if (!jwtUtil.validateJwtToken(token))
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+
+            if (!validationService.isRequestAuthorizedAdmin(token, jwtUtil))
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+
+            if (validationService.isAuthKeyUsed(secretaryRequest.getAuthKey()))
+                return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
+
+            Secretary newSecretary = new Secretary(encrypt(secretaryRequest.getAuthKey()), secretaryRequest.getEmail());
+            secretaryRepository.save(newSecretary);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.SECRETARY_ADDED));
+
         } catch (EncryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
         } catch (DecryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
-
     }
 
     @PostMapping("/admin")
@@ -110,34 +102,29 @@ public class AddController {
                                                 @RequestBody AdminRequest adminRequest) {
         try {
             String token = headerAuth.substring(7);
-            if (jwtUtil.validateJwtToken(token)) {
-                String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                Admin admin = validationService.findAdmin(decrypt(authKey));
-                if (admin != null && validationService.findUserByIdentifier(decrypt(admin.getAuthKey())) != null) {
-                    if (!validationService.isAuthKeyUsed(adminRequest.getAuthKey())) {
-                        Admin newAdmin = new Admin(encrypt(adminRequest.getAuthKey()), adminRequest.getEmail());
-                        adminRepository.save(newAdmin);
-                        return ResponseEntity.ok(new JwtResponse(ValidationMessage.ADMIN_ADDED));
-                    } else
-                        return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
-                } else
-                    return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-            } else
+            if (!jwtUtil.validateJwtToken(token))
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+
+            if (!validationService.isRequestAuthorizedAdmin(token, jwtUtil))
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+
+            if (validationService.isAuthKeyUsed(adminRequest.getAuthKey()))
+                return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
+
+            Admin newAdmin = new Admin(encrypt(adminRequest.getAuthKey()), adminRequest.getEmail());
+            adminRepository.save(newAdmin);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.ADMIN_ADDED));
 
         } catch (EncryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
         } catch (DecryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
-
     }
 
     @PostMapping("/admin/test")
     public ResponseEntity<JwtResponse> addAdminDirect(@RequestBody AdminRequest adminRequest) {
         try {
-            System.out.println(adminRequest.getAuthKey() + " " + adminRequest.getEmail());
-
             if (!validationService.isAuthKeyUsed(adminRequest.getAuthKey())) {
                 Admin newAdmin = new Admin(encrypt(adminRequest.getAuthKey()), adminRequest.getEmail());
                 adminRepository.save(newAdmin);
