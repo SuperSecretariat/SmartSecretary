@@ -5,7 +5,7 @@ import com.example.demo.dto.UserProfileData;
 import java.sql.Date;
 import java.util.List;
 
-public class JwtResponse {
+public class JwtResponse{
     private String token;
     private String type = "Bearer";
     private Long id;
@@ -19,12 +19,18 @@ public class JwtResponse {
     private String faculty;
     private List<String> roles;
     private String responseMessage;
+    private Object data;
 
     public JwtResponse(String token, Long id, String registrationNumber, List<String> roles){
         this.token = token;
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.roles = roles;
+    }
+
+    public JwtResponse(String message, Object data){
+        this.responseMessage = message;
+        this.data = data;
     }
 
     public JwtResponse(UserProfileData profileData) {
@@ -93,5 +99,32 @@ public class JwtResponse {
 
     public List<String> getRoles() {
         return roles;
+    }
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public void setResponseMessage(String message) {
+        this.responseMessage = message;
     }
 }

@@ -15,10 +15,10 @@ import com.example.demo.dto.ResetPasswordRequest;
 import com.example.demo.response.JwtResponse;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.UserDetailsImpl;
+import com.example.demo.service.UserDetailsServiceImpl;
 import com.example.demo.service.ValidationService;
 import com.example.demo.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,7 @@ import static com.example.demo.util.AESUtil.encrypt;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -55,7 +56,8 @@ public class AuthController {
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
             EmailService emailService,
-            ValidationService validationService
+            ValidationService validationService,
+            UserDetailsServiceImpl userDetailsService
     ){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -63,82 +65,89 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
         this.emailService = emailService;
         this.validationService = validationService;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
-            User currentUser = validationService.findUserByIdentifier(loginRequest.getRegistrationNumber());
-            if (currentUser == null){
-                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-            }
-            Set<Role> userRole = currentUser.getRoles();
+        User currentUser = validationService.findUserByIdentifier(loginRequest.getRegistrationNumber());
+        if (currentUser == null) {
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        }
 
-            List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
-            if (passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
-                UserDetailsImpl userDetails = UserDetailsImpl.build(currentUser);
+        if (!passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INCORRECT_PASSWORD));
+        }
 
-                String token = jwtUtil.generateJwtToken(
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
-                );
-                return ResponseEntity.ok(new JwtResponse(token, currentUser.getId(), currentUser.getRegNumber(), roleNames));
-            } else
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INCORRECT_PASSWORD));
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(currentUser.getRegNumber());
+
+        String token = jwtUtil.generateJwtToken(
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+        );
+
+        List<String> roleNames = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .toList();
+
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getId(), userDetails.getUsername(), roleNames));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest registerRequest){
-        try{
-            ERole newAccountRole = null;
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest registerRequest) {
+        try {
             String email = registerRequest.getEmail();
-            boolean emailExists = userRepository.existsByEmail(email);
-            if(emailExists)
-            {
+            String regNumber = registerRequest.getRegistrationNumber();
+
+            if (userRepository.existsByEmail(email).booleanValue()) {
                 return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
             }
-            else{
-                if(validationService.findStudent(registerRequest.getRegistrationNumber()) != null)
-                    newAccountRole = ERole.ROLE_STUDENT;
-                else if(validationService.findSecretary(registerRequest.getRegistrationNumber()) != null)
-                    newAccountRole = ERole.ROLE_SECRETARY;
-                else if(validationService.findAdmin(registerRequest.getRegistrationNumber()) != null)
-                    newAccountRole = ERole.ROLE_ADMIN;
-                else
-                    return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+
+            ERole newAccountRole = determineRole(regNumber);
+            if (newAccountRole == null) {
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.INVALID_DATA));
             }
-            if(validateData(registerRequest, newAccountRole)){
-                Optional<Role> accountRole = roleRepository.findByName(newAccountRole);
-                Set<Role> roles = new HashSet<>();
-                if(accountRole.isPresent())
-                    roles.add(accountRole.get());
-                String tempKey = registerRequest.getRegistrationNumber();
-                String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
-                if(!newAccountRole.equals(ERole.ROLE_STUDENT))
-                {
-                    tempKey = encrypt(tempKey);
-                }
-                User newUser = new User(
-                        registerRequest.getLastName(),
-                        registerRequest.getFirstName(),
-                        tempKey,
-                        null,
-                        null,
-                        registerRequest.getEmail(),
-                        hashedPassword,
-                        null,
-                        null
-                );
-                newUser.setRoles(roles);
-                userRepository.save(newUser);
-                return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_SUCCESS));
-            }
-            else
+
+            if (!validateData(registerRequest, newAccountRole)) {
                 return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }
-        catch(EncryptionException ex){
+            }
+
+            String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
+            String identifier = newAccountRole.equals(ERole.ROLE_STUDENT) ? regNumber : encrypt(regNumber);
+
+            User newUser = new User(
+                    registerRequest.getLastName(),
+                    registerRequest.getFirstName(),
+                    identifier,
+                    null,
+                    null,
+                    email,
+                    hashedPassword,
+                    null,
+                    null
+            );
+
+            Optional<Role> accountRole = roleRepository.findByName(newAccountRole);
+            accountRole.ifPresent(role -> {
+                Set<Role> roles = new HashSet<>();
+                roles.add(role);
+                newUser.setRoles(roles);
+            });
+
+            userRepository.save(newUser);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_SUCCESS));
+
+        } catch (EncryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
-        }catch(DecryptionException ex){
+        } catch (DecryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
+    }
+
+    private ERole determineRole(String regNumber) throws DecryptionException{
+        if (validationService.findStudent(regNumber) != null) return ERole.ROLE_STUDENT;
+        if (validationService.findSecretary(regNumber) != null) return ERole.ROLE_SECRETARY;
+        if (validationService.findAdmin(regNumber) != null) return ERole.ROLE_ADMIN;
+        return null;
     }
 
     @PostMapping("/logout")
@@ -217,40 +226,46 @@ public class AuthController {
     }
 
 
-    private boolean validateData(RegisterRequest registerRequest, ERole registerRole){
-        try{
-            String email = registerRequest.getEmail();
+    private boolean validateData(RegisterRequest request, ERole role) {
+        try {
+            String regNumber = request.getRegistrationNumber();
+            String email = request.getEmail();
 
-            switch(registerRole) {
+            switch (role) {
                 case ROLE_STUDENT:
-                    Student student = validationService.findStudent(registerRequest.getRegistrationNumber());
-                    if(student == null)
-                        return false;
-                    else
-                        return student.getRegNumber().equals(registerRequest.getRegistrationNumber()) &&
-                                student.getEmail().equals(email);
+                    return validateStudent(regNumber, email);
                 case ROLE_SECRETARY:
-                    Secretary secretary = validationService.findSecretary(registerRequest.getRegistrationNumber());
-                    if(secretary == null)
-                        return false;
-                    else
-                        return decrypt(secretary.getAuthKey()).equals(registerRequest.getRegistrationNumber()) &&
-                                secretary.getEmail().equals(email);
+                    return validateSecretary(regNumber, email);
                 case ROLE_ADMIN:
-                    Admin admin = validationService.findAdmin(registerRequest.getRegistrationNumber());
-                    if(admin == null)
-                        return false;
-                    else
-                        return decrypt(admin.getAuthKey()).equals(registerRequest.getRegistrationNumber()) &&
-                                admin.getEmail().equals(email);
+                    return validateAdmin(regNumber, email);
                 default:
                     return false;
             }
-        }catch (DecryptionException ex){
-            loggerAuthController.error(ex.getMessage());
+        } catch (DecryptionException ex) {
+            loggerAuthController.error("Decryption failed: {}", ex.getMessage());
             return false;
         }
+    }
 
+    private boolean validateStudent(String regNumber, String email) {
+        Student student = validationService.findStudent(regNumber);
+        return student != null &&
+                student.getRegNumber().equals(regNumber) &&
+                student.getEmail().equals(email);
+    }
+
+    private boolean validateSecretary(String regNumber, String email) throws DecryptionException {
+        Secretary secretary = validationService.findSecretary(regNumber);
+        return secretary != null &&
+                decrypt(secretary.getAuthKey()).equals(regNumber) &&
+                secretary.getEmail().equals(email);
+    }
+
+    private boolean validateAdmin(String regNumber, String email) throws DecryptionException {
+        Admin admin = validationService.findAdmin(regNumber);
+        return admin != null &&
+                decrypt(admin.getAuthKey()).equals(regNumber) &&
+                admin.getEmail().equals(email);
     }
 
 
