@@ -6,8 +6,8 @@ import com.example.demo.constants.ValidationMessage;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Secretary;
 import com.example.demo.entity.Student;
-import com.example.demo.exceptions.DecryptionException;
 import com.example.demo.exceptions.EncryptionException;
+import com.example.demo.model.enums.ERole;
 import com.example.demo.repository.AdminRepository;
 import com.example.demo.repository.SecretaryRepository;
 import com.example.demo.repository.StudentRepository;
@@ -15,6 +15,8 @@ import com.example.demo.dto.AdminRequest;
 import com.example.demo.dto.SecretaryRequest;
 import com.example.demo.dto.StudentRequest;
 import com.example.demo.response.JwtResponse;
+import com.example.demo.service.UserDetailsImpl;
+import com.example.demo.service.UserDetailsServiceImpl;
 import com.example.demo.service.ValidationService;
 import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import static com.example.demo.util.AESUtil.encrypt;
 @RequestMapping("/api/add")
 public class AddController {
 
+    private final UserDetailsServiceImpl userDetailsService;
     private final StudentRepository studentRepository;
     private final SecretaryRepository secretaryRepository;
     private final AdminRepository adminRepository;
@@ -38,38 +41,42 @@ public class AddController {
                          SecretaryRepository secretaryRepository,
                          AdminRepository adminRepository,
                          ValidationService validationService,
-                         JwtUtil jwtUtil) {
+                         JwtUtil jwtUtil,
+                         UserDetailsServiceImpl userDetailsService) {
         this.adminRepository = adminRepository;
         this.secretaryRepository = secretaryRepository;
         this.studentRepository = studentRepository;
         this.validationService = validationService;
         this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/student")
     public ResponseEntity<JwtResponse> addStudent(@RequestHeader("Authorization") String headerAuth,
                                                   @RequestBody StudentRequest studentRequest) {
-        try {
             String token = headerAuth.substring(7);
-            if (!jwtUtil.validateJwtToken(token))
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            }
 
-            if (!validationService.isRequestAuthorizedSecretary(token, jwtUtil))
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+            if (!userDetails.hasRole(ERole.ROLE_SECRETARY)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+            }
 
-            if (validationService.isEmailUsed(studentRequest.getEmail()))
+            if (validationService.isEmailUsed(studentRequest.getEmail())) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.EMAIL_IN_USE));
+            }
 
-            if (validationService.isAuthKeyUsed(studentRequest.getRegistrationNumber()))
+            if (validationService.isAuthKeyUsed(studentRequest.getRegistrationNumber())) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.REG_NUMBER_IN_USE));
+            }
 
             Student newStudent = new Student(studentRequest.getRegistrationNumber(), studentRequest.getEmail());
             studentRepository.save(newStudent);
             return ResponseEntity.ok(new JwtResponse(ValidationMessage.STUDENT_ADDED));
-
-        } catch (DecryptionException ex) {
-            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
-        }
     }
 
     @PostMapping("/secretary")
@@ -77,14 +84,20 @@ public class AddController {
                                                     @RequestBody SecretaryRequest secretaryRequest) {
         try {
             String token = headerAuth.substring(7);
-            if (!jwtUtil.validateJwtToken(token))
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            }
 
-            if (!validationService.isRequestAuthorizedAdmin(token, jwtUtil))
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+            if (!userDetails.hasRole(ERole.ROLE_ADMIN)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+            }
 
-            if (validationService.isAuthKeyUsed(secretaryRequest.getAuthKey()))
+            if (validationService.isAuthKeyUsed(secretaryRequest.getAuthKey())) {
                 return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
+            }
 
             Secretary newSecretary = new Secretary(encrypt(secretaryRequest.getAuthKey()), secretaryRequest.getEmail());
             secretaryRepository.save(newSecretary);
@@ -92,8 +105,6 @@ public class AddController {
 
         } catch (EncryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
-        } catch (DecryptionException ex) {
-            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
     }
 
@@ -102,14 +113,20 @@ public class AddController {
                                                 @RequestBody AdminRequest adminRequest) {
         try {
             String token = headerAuth.substring(7);
-            if (!jwtUtil.validateJwtToken(token))
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            }
 
-            if (!validationService.isRequestAuthorizedAdmin(token, jwtUtil))
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+            if (!userDetails.hasRole(ERole.ROLE_ADMIN)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+            }
 
-            if (validationService.isAuthKeyUsed(adminRequest.getAuthKey()))
+            if (validationService.isAuthKeyUsed(adminRequest.getAuthKey())) {
                 return ResponseEntity.status(409).body(new JwtResponse(ErrorMessage.AUTH_KEY_IN_USE));
+            }
 
             Admin newAdmin = new Admin(encrypt(adminRequest.getAuthKey()), adminRequest.getEmail());
             adminRepository.save(newAdmin);
@@ -117,8 +134,6 @@ public class AddController {
 
         } catch (EncryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
-        } catch (DecryptionException ex) {
-            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
     }
 

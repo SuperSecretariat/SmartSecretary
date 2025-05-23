@@ -15,6 +15,7 @@ import com.example.demo.dto.ResetPasswordRequest;
 import com.example.demo.response.JwtResponse;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.UserDetailsImpl;
+import com.example.demo.service.UserDetailsServiceImpl;
 import com.example.demo.service.ValidationService;
 import com.example.demo.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,7 @@ import static com.example.demo.util.AESUtil.encrypt;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,7 +56,8 @@ public class AuthController {
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
             EmailService emailService,
-            ValidationService validationService
+            ValidationService validationService,
+            UserDetailsServiceImpl userDetailsService
     ){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -62,26 +65,31 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
         this.emailService = emailService;
         this.validationService = validationService;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
-            User currentUser = validationService.findUserByIdentifier(loginRequest.getRegistrationNumber());
-            if (currentUser == null){
-                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-            }
-            Set<Role> userRole = currentUser.getRoles();
+        User currentUser = validationService.findUserByIdentifier(loginRequest.getRegistrationNumber());
+        if (currentUser == null) {
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+        }
 
-            List<String> roleNames = userRole.stream().map(role -> role.getName().toString()).toList();
-            if (passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
-                UserDetailsImpl userDetails = UserDetailsImpl.build(currentUser);
+        if (!passwordEncoder.matches(loginRequest.getPassword(), currentUser.getPassword())) {
+            return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INCORRECT_PASSWORD));
+        }
 
-                String token = jwtUtil.generateJwtToken(
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
-                );
-                return ResponseEntity.ok(new JwtResponse(token, currentUser.getId(), currentUser.getRegNumber(), roleNames));
-            } else
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INCORRECT_PASSWORD));
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(currentUser.getRegNumber());
+
+        String token = jwtUtil.generateJwtToken(
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+        );
+
+        List<String> roleNames = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .toList();
+
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getId(), userDetails.getUsername(), roleNames));
     }
 
     @PostMapping("/register")

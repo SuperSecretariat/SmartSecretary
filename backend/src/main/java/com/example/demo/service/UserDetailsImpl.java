@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.UserDetailsData;
 import com.example.demo.entity.User;
+import com.example.demo.model.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -149,6 +150,15 @@ public class UserDetailsImpl implements UserDetails {
         return Objects.hash(id);
     }
 
+    public List<String> getRoleNames() {
+        return this.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+    }
+
+    public boolean hasRole(ERole role) {
+        return getRoleNames().contains(role.name());
+    }
 
 
 }

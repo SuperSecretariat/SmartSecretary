@@ -9,7 +9,6 @@ import com.example.demo.repository.AdminRepository;
 import com.example.demo.repository.SecretaryRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,25 +124,6 @@ public class ValidationService {
         }
         return null;
     }
-
-    public boolean isRequestAuthorizedSecretary(String token, JwtUtil jwtUtil) throws DecryptionException {
-        String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-        Secretary secretary = findSecretary(decrypt(authKey));
-        if (secretary == null) return false;
-
-        String decryptedUserKey = decrypt(secretary.getAuthKey());
-        return findUserByIdentifier(decryptedUserKey) != null;
-    }
-
-    public boolean isRequestAuthorizedAdmin(String token, JwtUtil jwtUtil) throws DecryptionException {
-        String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-        Admin admin = findAdmin(decrypt(authKey));
-        if (admin == null) return false;
-
-        String decryptedUserKey = decrypt(admin.getAuthKey());
-        return findUserByIdentifier(decryptedUserKey) != null;
-    }
-
 
     public Admin findAdmin(String decryptAuthKey) throws DecryptionException{
         for(Admin admin : adminRepository.findAll()){
