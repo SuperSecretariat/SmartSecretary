@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+
+import com.example.demo.exceptions.InvalidHeaderException;
+import com.example.demo.model.enums.FormRequestStatus;
+
 import com.example.demo.constants.ErrorMessage;
+
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
@@ -48,6 +53,22 @@ public class FormRequestsController {
             return ResponseEntity.ok(new JwtResponse("Form requests retrieved successfully", forms));
 
     }
+
+    @GetMapping("/review-requests")
+    public ResponseEntity<List<FormRequestResponse>> getAllFormsForReview(@RequestHeader("Authorization") String authorizationHeader) {
+        // Logic to retrieve all pending forms
+        try{
+            if (!authorizationHeader.startsWith("Bearer ")) {
+                throw new InvalidHeaderException("No authorization header containing Bearer was received");
+            }
+            return ResponseEntity.ok(formRequestService.getFormRequestsByStatus(FormRequestStatus.PENDING));
+        }
+        catch (InvalidHeaderException e){
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<JwtResponse> getFormRequestById(@PathVariable Long id,

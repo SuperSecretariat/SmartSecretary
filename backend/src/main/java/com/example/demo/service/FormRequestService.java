@@ -73,6 +73,18 @@ public class FormRequestService {
         return formRequestsResponse;
     }
 
+    //Used to get requests based on status
+    //Can also be used to filter requests by status (for students combined with user filtering)
+    public List<FormRequestResponse> getFormRequestsByStatus(FormRequestStatus status) {
+        List<FormRequest> formRequests = formRequestRepository.findByStatus(status);
+
+        List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
+        for (FormRequest formRequest : formRequests) {
+            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
+        }
+        return formRequestsResponse;
+    }
     public void approveRequest(long requestId) {
         // secretary page
     }
