@@ -1,16 +1,23 @@
 package com.example.demo.controller;
 
+
 import com.example.demo.exceptions.InvalidHeaderException;
 import com.example.demo.model.enums.FormRequestStatus;
+
+import com.example.demo.constants.ErrorMessage;
+
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.exceptions.FormRequestFieldDataException;
 import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.entity.FormRequest;
 import com.example.demo.dto.FormRequestRequest;
+import com.example.demo.response.JwtResponse;
 import com.example.demo.service.FormRequestService;
+import com.example.demo.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,24 +30,28 @@ import java.util.List;
 public class FormRequestsController {
     private final Logger logger = LoggerFactory.getLogger(FormRequestsController.class);
     private final FormRequestService formRequestService;
+    private final JwtUtil jwtUtil;
 
-    public FormRequestsController(FormRequestService formRequestService) {
+    @Autowired
+    public FormRequestsController(FormRequestService formRequestService,
+                                  JwtUtil jwtUtil) {
         this.formRequestService = formRequestService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping("/submitted")
-    public ResponseEntity<List<FormRequestResponse>> getAllFormsForUserWithId(@RequestHeader("Authorization") String authorizationHeader) {
-        // Logic to retrieve all forms
-        try{
-            if (!authorizationHeader.startsWith("Bearer ")) {
-                throw new InvalidHeaderException("No authorization header containing Bearer was received");
+    public ResponseEntity<JwtResponse> getAllFormsForUserWithId(
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+            String token = authorizationHeader.substring(7);
+            if (!jwtUtil.validateJwtToken(token)) {
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
             }
-            return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(authorizationHeader.substring(7)));
-        }
-        catch (InvalidHeaderException e){
-            this.logger.error(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
+
+            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            List<FormRequestResponse> forms = formRequestService.getFormRequestsByUserRegistrationNumber(registrationNumber);
+            return ResponseEntity.ok(new JwtResponse("Form requests retrieved successfully", forms));
+
     }
 
     @GetMapping("/review-requests")
@@ -60,30 +71,45 @@ public class FormRequestsController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<FormRequest> getFormRequestById(@PathVariable Long id) {
+    public ResponseEntity<JwtResponse> getFormRequestById(@PathVariable Long id,
+                                                          @RequestHeader("Authorization") String authorizationHeader) {
         try {
-            FormRequest formRequest = this.formRequestService.getFormRequestById(id);
-            return ResponseEntity.ok(formRequest);
-        }
-        catch (InvalidFormRequestIdException e) {
+            String token = authorizationHeader.substring(7);
+            if (!jwtUtil.validateJwtToken(token)) {
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            }
+
+            FormRequest formRequest = formRequestService.getFormRequestById(id);
+            return ResponseEntity.ok(new JwtResponse("Form request retrieved successfully", formRequest));
+        } catch (InvalidFormRequestIdException e) {
             this.logger.error(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
         }
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest) {
+    public ResponseEntity<JwtResponse> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest,
+                                               @RequestHeader("Authorization") String authorizationHeader) {
         try {
-            FormRequest formRequest = this.formRequestService.createFormRequest(formRequestRequest);
+            String token = authorizationHeader.substring(7);
+            if (!jwtUtil.validateJwtToken(token)) {
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            }
+
+            FormRequest formRequest = formRequestService.createFormRequest(formRequestRequest);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(formRequest.getId())
                     .toUri();
-            return ResponseEntity.created(location).build();
-        }
-        catch (FormRequestFieldDataException e) {
+            JwtResponse response = new JwtResponse("Form request created successfully", formRequest.getId());
+            return ResponseEntity.created(location).body(response);
+        } catch (FormRequestFieldDataException e) {
             this.logger.error(e.getMessage());
-            return ResponseEntity.badRequest().body("The number of fields in the form request does not match the number of fields in the form template.");
+            return ResponseEntity.status(400).body(new JwtResponse("The number of fields in the form request does not match the number of fields in the form template."));
+        } catch (Exception e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.UNKNOWN_ERROR));
         }
     }
+
 }

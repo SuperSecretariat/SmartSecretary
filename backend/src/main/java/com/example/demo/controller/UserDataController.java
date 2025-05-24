@@ -2,11 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.constants.ErrorMessage;
 import com.example.demo.constants.ValidationMessage;
-import com.example.demo.entity.Admin;
 import com.example.demo.entity.User;
 import com.example.demo.exceptions.DecryptionException;
 import com.example.demo.exceptions.EncryptionException;
-import com.example.demo.repository.StudentRepository;
+import com.example.demo.model.enums.ERole;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.dto.UpdateProfileRequest;
 import com.example.demo.response.JwtResponse;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.example.demo.util.AESUtil.decrypt;
@@ -39,7 +37,6 @@ public class UserDataController {
             JwtUtil jwtUtil,
             UserDetailsServiceImpl userDetailsService,
             UserRepository userRepository,
-            StudentRepository studentRepository,
             ValidationService validationService
     ){
         this.jwtUtil = jwtUtil;
@@ -49,170 +46,141 @@ public class UserDataController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<JwtResponse> getUserProfile(@RequestHeader("Authorization") String headerAuth){
-        try{
+    public ResponseEntity<JwtResponse> getUserProfile(@RequestHeader("Authorization") String headerAuth) {
+        try {
             String token = headerAuth.substring(7);
 
-            if(jwtUtil.validateJwtToken(token)){
-                String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-
-                UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
-                List<String> roles = userDetails.getAuthorities().stream()
-                        .map(item -> item.getAuthority())
-                        .toList();
-
-                UserProfileData profileData;
-                if(userDetails.getCnp() == null)
-                {
-                    profileData = new UserProfileData(
-                            token,
-                            userDetails.getUsername(),
-                            userDetails.getFirstName(),
-                            userDetails.getLastName(),
-                            userDetails.getEmail(),
-                            null,
-                            userDetails.getDateOfBirth(),
-                            userDetails.getUniversity(),
-                            userDetails.getFaculty(),
-                            roles
-                    );
-                }
-                else
-                {
-                    profileData = new UserProfileData(
-                            token,
-                            userDetails.getUsername(),
-                            userDetails.getFirstName(),
-                            userDetails.getLastName(),
-                            userDetails.getEmail(),
-                            decrypt(userDetails.getCnp()),
-                            userDetails.getDateOfBirth(),
-                            userDetails.getUniversity(),
-                            userDetails.getFaculty(),
-                            roles
-                    );
-                }
-
-                JwtResponse response = new JwtResponse(profileData);
-                return ResponseEntity.ok(response);
-            }
-            else
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }catch (DecryptionException ex){
+            }
+
+            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registrationNumber);
+
+            String decryptedCnp = userDetails.getCnp() != null ? decrypt(userDetails.getCnp()) : null;
+
+            UserProfileData profileData = new UserProfileData(
+                    token,
+                    userDetails.getUsername(),
+                    userDetails.getFirstName(),
+                    userDetails.getLastName(),
+                    userDetails.getEmail(),
+                    decryptedCnp,
+                    userDetails.getDateOfBirth(),
+                    userDetails.getUniversity(),
+                    userDetails.getFaculty(),
+                    userDetails.getRoleNames()
+            );
+
+            return ResponseEntity.ok(new JwtResponse(profileData));
+        } catch (DecryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
-
     }
 
     @PostMapping("/update")
-    public ResponseEntity<JwtResponse> updateUserProfile(@RequestBody UpdateProfileRequest updateRequest, @RequestHeader("Authorization") String headerAuth) {
-        try{
+    public ResponseEntity<JwtResponse> updateUserProfile(@RequestBody UpdateProfileRequest updateRequest,
+                                                         @RequestHeader("Authorization") String headerAuth) {
+        try {
             String token = headerAuth.substring(7);
-            if(jwtUtil.validateJwtToken(token)){
+            if (!jwtUtil.validateJwtToken(token)) {
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+            }
 
-                String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                User currentUser = userRepository.findByRegNumber(registrationNumber).get();
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+            Optional<User> userOptional = userRepository.findById(userDetails.getId());
+
+            if (userOptional.isPresent()) {
+                User currentUser = userOptional.get();
                 currentUser.setCnp(encrypt(updateRequest.getCnp()));
                 currentUser.setFaculty(updateRequest.getFaculty());
                 currentUser.setUniversity(updateRequest.getUniversity());
                 currentUser.setDateOfBirth(updateRequest.getDateOfBirth());
                 userRepository.save(currentUser);
-                return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCESS));
             }
-            else
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        } catch (EncryptionException ex){
+
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.UPDATE_SUCCESS));
+        } catch (EncryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ENCRYPTION_ERROR));
         }
-
     }
 
     @PostMapping("/delete-me")
-    public ResponseEntity<JwtResponse> deleteCurrentUser(@RequestHeader("Authorization") String headerAuth){
-        try{
+    public ResponseEntity<JwtResponse> deleteCurrentUser(@RequestHeader("Authorization") String headerAuth) {
             String token = headerAuth.substring(7);
-            if(jwtUtil.validateJwtToken(token)){
-                String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                User currentUser = null;
-                if(validationService.findStudent(registrationNumber) != null){
-                    currentUser = validationService.findUserByIdentifier(registrationNumber);
-                }
-                else
-                    currentUser = validationService.findUserByIdentifier(decrypt(registrationNumber));
-                if(currentUser != null)
-                {
-                    userRepository.delete(currentUser);
-                    return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
-                }
-                else
-                    return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-            }
-            else
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }catch (DecryptionException ex){
-            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
-        }
+            }
 
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+            User user = userRepository.findById(userDetails.getId()).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+            }
+
+            userRepository.delete(user);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
     }
 
     @GetMapping("/authkey")
     public ResponseEntity<JwtResponse> showAuthenticationKey(@RequestHeader("Authorization") String headerAuth,
-                                                             String email) throws DecryptionException {
-        try{
+                                                             @RequestParam String email) {
+        try {
             String token = headerAuth.substring(7);
-            if(jwtUtil.validateJwtToken(token)){
-                String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                Admin admin = validationService.findAdmin(decrypt(authKey));
-                if(admin != null && validationService.findUserByIdentifier(decrypt(admin.getAuthKey())) != null){
-                    Optional<User> optUser = userRepository.findByEmail(email);
-                    if(optUser.isEmpty())
-                        return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-                    else {
-                        User user = optUser.get();
-                        if(validationService.findStudent(user.getRegNumber()) != null){
-                            return ResponseEntity.ok(new JwtResponse(user.getRegNumber()));
-                        }
-                        String authKeyUser = decrypt(optUser.get().getRegNumber());
-                        return ResponseEntity.ok(new JwtResponse(authKeyUser));
-                    }
-                }
-                else
-                    return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-            }
-            else
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }catch (DecryptionException ex){
+            }
+
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+            if (!userDetails.hasRole(ERole.ROLE_ADMIN)) {
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+            }
+
+            Optional<User> optUser = userRepository.findByEmail(email);
+            if (optUser.isEmpty()) {
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+            }
+
+            String regNum = optUser.get().getRegNumber();
+            String responseKey = validationService.findStudent(regNum) != null
+                    ? regNum
+                    : decrypt(regNum);
+
+            return ResponseEntity.ok(new JwtResponse(responseKey));
+
+        } catch (DecryptionException ex) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
         }
-
     }
 
     @PostMapping("/delete-user")
     public ResponseEntity<JwtResponse> deleteUser(@RequestHeader("Authorization") String headerAuth,
-                                                  String identifier) throws DecryptionException {
-        try{
+                                                  @RequestParam String identifier) {
             String token = headerAuth.substring(7);
-            if(jwtUtil.validateJwtToken(token)){
-                String authKey = jwtUtil.getRegistrationNumberFromJwtToken(token);
-                Admin admin = validationService.findAdmin(decrypt(authKey));
-                if(admin != null && validationService.findUserByIdentifier(decrypt(admin.getAuthKey())) != null){
-                    User userToDelete = validationService.findUserByIdentifier(identifier);
-                    if(userToDelete == null){
-                        return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
-                    }
-                    else{
-                        userRepository.delete(userToDelete);
-                        return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
-                    }
-                }
-                else
-                    return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-            }
-            else
+
+            if (!jwtUtil.validateJwtToken(token)) {
                 return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }catch (DecryptionException ex){
-            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.DECRYPTION_ERROR));
-        }
+            }
+
+            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+            if (!userDetails.hasRole(ERole.ROLE_ADMIN)) {
+                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+            }
+
+            User userToDelete = validationService.findUserByIdentifier(identifier);
+            if (userToDelete == null) {
+                return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NON_EXISTENT_USER));
+            }
+
+            userRepository.delete(userToDelete);
+            return ResponseEntity.ok(new JwtResponse(ValidationMessage.ACCOUNT_DELETED));
 
     }
 
