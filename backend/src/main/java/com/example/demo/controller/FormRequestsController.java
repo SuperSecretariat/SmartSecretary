@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -58,7 +59,11 @@ public class FormRequestsController {
         if (!jwtUtil.validateJwtToken(token)) {
             return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok(formRequestService.getFormRequestsByStatus(FormRequestStatus.PENDING));
+        List<FormRequestResponse> pendingForms = formRequestService.getFormRequestsByStatus(FormRequestStatus.PENDING);
+        List<FormRequestResponse> inReviewForms = formRequestService.getFormRequestsByStatus(FormRequestStatus.IN_REVIEW);
+        List<FormRequestResponse> secForms = new ArrayList<>(pendingForms);
+        secForms.addAll(inReviewForms);
+        return ResponseEntity.ok(secForms);
     }
 
 
