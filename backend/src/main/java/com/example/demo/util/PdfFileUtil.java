@@ -1,15 +1,26 @@
 package com.example.demo.util;
 
 import com.example.demo.exceptions.FormCreationException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class PdfFileUtil {
-    public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException {
-        Path pdfFilePath = Paths.get("src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf");
+    private static final String COMMON_PATH = "src/main/resources/uploaded.forms/";
+    private PdfFileUtil() {
+        // Private constructor to prevent instantiation
+    }
+
+    public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
+        WordFileUtil.convertDocxToPDF(formTitle); // creates the pdf file from the docx
+        PdfFileUtil.downloadImageOfPdfFile(formTitle); // creates the image file from the pdf
+        Path pdfFilePath = Paths.get(COMMON_PATH + formTitle + '/' + formTitle + ".pdf");
         String pythonScriptPath = "src/main/resources/scripts/convert_points_to_percentages.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath.toString());
         Process process = processBuilder.start();
@@ -34,6 +45,29 @@ public class PdfFileUtil {
                 message.append("\n");
             }
             throw new FormCreationException(message.toString());
+        }
+    }
+
+    public static byte[] getImageOfPdfFile(String formTitle) throws IOException {
+        String pdfFilePath = COMMON_PATH + formTitle + '/' + formTitle + ".pdf";
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
+            BufferedImage image = pdfRenderer.renderImageWithDPI(0, 300); // Render the first page at 300 DPI
+
+            // Write the image to a ByteArrayOutputStream
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", byteArrayOutputStream);
+
+            // Example: Print the size of the byte array
+            return byteArrayOutputStream.toByteArray();
+        }
+    }
+
+    public static void downloadImageOfPdfFile(String formTitle) throws IOException {
+        byte[] imageBytes = getImageOfPdfFile(formTitle);
+        String imageFilePath = COMMON_PATH + formTitle + '/' + formTitle + ".png";
+        try(FileOutputStream fos = new FileOutputStream(imageFilePath)) {
+            fos.write(imageBytes);
         }
     }
 }

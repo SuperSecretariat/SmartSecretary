@@ -1,41 +1,37 @@
 package com.example.demo.service;
 
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
+import com.example.demo.response.FormResponse;
 import com.example.demo.exceptions.FormCreationException;
 import com.example.demo.exceptions.InvalidFormIdException;
 import com.example.demo.exceptions.NoFormFieldsFoundException;
-import com.example.demo.model.Form;
-import com.example.demo.model.FormField;
-import com.example.demo.model.FormFieldJsonObject;
-import com.example.demo.model.FormRequest;
-import com.example.demo.repository.FormFieldRepository;
+import com.example.demo.entity.Form;
+import com.example.demo.entity.FormField;
+import com.example.demo.dto.FormFieldJsonObject;
+import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.repository.FormRepository;
-import com.example.demo.request.FormCreationRequest;
+import com.example.demo.dto.FormCreationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FormService {
+    private final Logger logger = LoggerFactory.getLogger(FormService.class);
     private final FormRepository formRepository;
 
-    private final FormFieldRepository formFieldRepository;
-
-    public FormService(FormRepository formRepository, FormFieldRepository formFieldRepository) {
+    public FormService(FormRepository formRepository) {
         this.formRepository = formRepository;
-        this.formFieldRepository = formFieldRepository;
     }
 
-    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException {
+    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
         String jsonString = PdfFileUtil.mapPdfInputFieldsToCssPercentages(formCreationRequest.getTitle());
 
         ObjectMapper mapper = new ObjectMapper();
@@ -47,12 +43,9 @@ public class FormService {
         form.setActive(formCreationRequest.getIsActive());
         form.setTitle(formCreationRequest.getTitle());
         form.setNumberOfInputFields(formFieldsAsJsonObjects.size());
-        this.formRepository.save(form);
 
-        // Create and save new form fields in the db and assign them the newly created form
         List<FormField> formFields = formFieldsAsJsonObjects.stream()
                 .map(formFieldJsonObject -> new FormField(
-                        form.getId(),
                         formFieldJsonObject.getPage(),
                         formFieldJsonObject.getTop(),
                         formFieldJsonObject.getLeft(),
@@ -60,7 +53,10 @@ public class FormService {
                         formFieldJsonObject.getHeight())
                 )
                 .toList();
-        this.formFieldRepository.saveAll(formFields);
+
+        form.addFields(formFields);
+
+        this.formRepository.save(form);
 
         return form;
         //save files in resources/uploaded.forms directory
@@ -71,19 +67,22 @@ public class FormService {
         //store the file name, number of input fields, ?size of the pdf file in the database
     }
 
-    public List<Form> getAllActiveForms() {
-        return this.formRepository.findByActive(true);
+    public List<FormResponse> getAllActiveForms() {
+        List<Form> activeForms = this.formRepository.findByActive(true);
+        List<FormResponse> formsResponse = new ArrayList<>();
+        for (Form form : activeForms) {
+            formsResponse.add(new FormResponse(form.getId(), form.getTitle(), form.getNumberOfInputFields()));
+        }
+        return formsResponse;
     }
 
-    public Form getFormById(Long id) throws InvalidFormIdException {
+    public FormResponse getFormById(Long id) throws InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
         if (form.isEmpty()) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
-        return form.get();
+        return new FormResponse(form.get().getId(), form.get().getTitle(), form.get().getNumberOfInputFields());
     }
-
-    public void validateFormRequest(FormRequest formRequest) {}
 
     public byte[] getFormImage(Long id) throws IOException, InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
@@ -91,28 +90,19 @@ public class FormService {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
-        Path path = Paths.get("src/main/resources/uploaded.forms/" + title + "/" + title + ".jpg");
-        System.out.println(path);
-        return Files.readAllBytes(path);
+        this.logger.info("Getting form image for form with title: {}", title);
+        return PdfFileUtil.getImageOfPdfFile(title);
     }
 
-    public List<FormFieldJsonObject> getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {
+    public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {
         if (!doesFormExist(id)) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
-        List<FormField> formFields = this.formFieldRepository.findByFormId(id);
-        if (formFields.isEmpty()) {
+        FormFieldsProjection formFieldsProjection = this.formRepository.findFieldsById(id);
+        if (formFieldsProjection.getFields().isEmpty()) {
             throw new NoFormFieldsFoundException("No form fields found for the given form ID.");
         }
-        return formFields.stream()
-                .map(formField -> new FormFieldJsonObject(
-                        formField.getPage(),
-                        formField.getTop(),
-                        formField.getLeft(),
-                        formField.getWidth(),
-                        formField.getHeight()
-                ))
-                .toList();
+        return formFieldsProjection;
     }
 
     private boolean doesFormExist(Long id) {

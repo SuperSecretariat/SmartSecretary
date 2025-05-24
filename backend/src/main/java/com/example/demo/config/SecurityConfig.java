@@ -1,6 +1,5 @@
 package com.example.demo.config;
 
-import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,15 +10,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final AuthTokenFilter authTokenFilter;
+
     @Autowired
-    private AuthTokenFilter authTokenFilter;
+    public SecurityConfig(AuthTokenFilter authTokenFilter){
+        this.authTokenFilter = authTokenFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

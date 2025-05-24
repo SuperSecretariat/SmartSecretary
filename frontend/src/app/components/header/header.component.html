@@ -1,13 +1,13 @@
 <mat-toolbar class="centered-toolbar">
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="this.toggleNavBar()">
-        <mat-icon>menu</mat-icon>
+        <img src="fa-bar-menu.svg" alt="Menu" draggable="false">
       </button>
-    
+
 
     <span class="header-title">{{ currentTitle }}</span>
     <span class="example-spacer"></span>
 
     <button *ngIf="isLoggedIn" mat-icon-button class="example-icon favorite-icon" aria-label="Logout" (click)="logout()">
-        <mat-icon>logout</mat-icon>
+        <img src="logout-btn.svg" alt="Logout" draggable="false">
       </button>
 </mat-toolbar>

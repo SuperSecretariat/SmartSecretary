@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { CreateFormComponent } from './components/create-form/create-form.component';
@@ -17,29 +15,51 @@ import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 
 import { httpInterceptorProviders } from './components/_helpers/http.interceptor';
-import { BoardStudentComponent } from './pages/board-student/board-student.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { HeaderComponent } from "./components/header/header.component";
 import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import { FooterComponent } from "./components/footer/footer.component";
+import { AdminNavBarComponent } from "./components/admin-nav-bar/admin-nav-bar.component";
+import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board-admin-add.component";
+import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminDeleteUserComponent} from "./pages/board-admin/board-admin-delete-user/board-admin-delete-user.component";
+import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
+import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+import { CompleteFormComponent } from './components/complete-form/complete-form.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
+import { ViewFormComponent } from './components/view-form/view-form.component';
+import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
     BoardSecretaryComponent,
-    AccountComponent
+    AccountComponent,
+    SecretaryNavBarComponent,
+    BoardAdminAddComponent,
+    BoardAdminShowAuthKeyComponent,
+    BoardAdminDeleteUserComponent,
+    BoardSecretaryAddComponent,
+    CompleteFormComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    PubbleChatComponent,
+    ViewFormComponent,
+    BoardAdminLlmFilesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    AdminNavBarComponent,
     FormsModule,
-    HttpClientModule,
     HeaderComponent,
     NavBarComponent,
     DashboardComponent,
@@ -48,7 +68,10 @@ import { FooterComponent } from "./components/footer/footer.component";
     SubmittedFormsComponent,
     NewsfeedComponent
 ],
-  providers: [httpInterceptorProviders],
+  providers: [
+    httpInterceptorProviders,
+    provideHttpClient(withInterceptorsFromDi())
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

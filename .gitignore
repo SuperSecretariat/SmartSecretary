@@ -21,3 +21,5 @@ node_modules/
 **/target/
 **/build/
 **/out/
+
+rag

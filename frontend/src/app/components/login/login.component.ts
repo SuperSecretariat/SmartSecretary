@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit {
   roles: string[] = [];
 
   constructor(
-    private authService: AuthService,
-    private storageService: StorageService,
-    private router: Router
+    private readonly authService: AuthService,
+    private readonly storageService: StorageService,
+    private readonly router: Router
   ) { }
 
   get formattedRoles(): string {
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         const firstRole = this.roles[0];
         const rolePrefix = firstRole.replace('ROLE_', '').toLowerCase();
   
-        this.router.navigate([`/${rolePrefix}/home`]).then(() => {
+        this.router.navigate([`/${rolePrefix}/newsfeed`]).then(() => {
           window.location.reload();
         });
       },

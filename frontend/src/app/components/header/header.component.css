@@ -2,7 +2,7 @@
     flex: 1 1 auto;
 }
 
-.example-container {      /*     to modify     */
+.example-container {
     position: absolute;
     top: 8vh;
     bottom: 8vh;
@@ -11,20 +11,26 @@
 }
 
 .header-title {
-    position: absolute; 
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     font-size: 18px;
     font-weight: bold;
     color: white;
-  }
+    transition: font-size 0.2s ease;
+}
+
+.header-title:hover{
+    text-decoration: underline;
+    font-size: 20px;
+}
 
 .centered-toolbar {
   display: flex;
   align-items: center;
   height: 5vh;
 }
-  
+
 .example-sidenav-content {
     height: 50%;
 }
@@ -32,20 +38,41 @@
 .example-sidenav {
     background-color: gray;
     padding: 20px;
-    
 }
 
 button {
     transition: transform 0.2s ease, background-color 0.3s ease; 
     border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button:hover {
-    transform: scale(1.1); 
-    background-color: rgba(143, 201, 248, 0.288); 
+    transform: scale(1.2); 
+    background-color: rgba(45, 117, 175, 0.288); 
 }
 
 button:active {
-    transform: scale(0.95); 
-    background-color: rgba(143, 201, 248, 0.483); 
+    transform: scale(0.95);
+    background-color: rgba(143, 201, 248, 0.483);
+}
+
+.example-icon {
+  width: 38px;
+  height: 38px;
+  min-width: 38px; /* prevents Angular Material from overriding it */
+  min-height: 38px;
+  padding: 0;       /* remove extra space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-icon mat-icon { 
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

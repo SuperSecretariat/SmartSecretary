@@ -1,0 +1,45 @@
+<div class="search-container">
+    <button class="search-button" (click)="toggleFilters()">
+      <img src="search-btn.svg" alt="Logout" draggable="false">
+    </button>
+  
+    <!-- Filtrele de căutare -->
+    <div *ngIf="showFilters" class="filters">
+      <div class="filter-item">
+        <label for="searchId">ID:</label>
+        <input
+          id="searchId"
+          type="text"
+          class="form-control"
+          [(ngModel)]="searchId"
+          placeholder="Enter ID"
+        />
+      </div>
+  
+      <div class="filter-item">
+        <label for="filterFormType">Form Type:</label>
+        <select
+          id="filterFormType"
+          class="form-control"
+          [(ngModel)]="filterFormType"
+        >
+          <option value="">All Types</option>
+          <option *ngFor="let type of formTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+  
+      <div class="filter-item">
+        <label for="filterStatus">Status:</label>
+        <select
+          id="filterStatus"
+          class="form-control"
+          [(ngModel)]="filterStatus"
+        >
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+  
+      <button class="btn btn-primary apply-button" (click)="applyFilters()">Apply</button>
+    </div>
+  </div>

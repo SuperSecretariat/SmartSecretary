@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { StorageService } from '../_services/storage.service';
+import { environment } from '../../../environments/environments';
 
-const AUTH_API = 'http://localhost:8081/api/auth/';
+const AUTH_API = `${environment.backendUrl}/api/auth/`;
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,7 +14,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly storageService: StorageService) {}
 
   login(registrationNumber: string ,password: string): Observable<any> {
     return this.http.post(
@@ -44,6 +46,27 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(AUTH_API + 'signout', { }, httpOptions);
+    const token = this.storageService.getUser().token;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(AUTH_API + 'logout', { }, 
+      {
+        headers: headers,
+        responseType: 'text'
+      });
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(AUTH_API + 'forgot-password', {
+      email
+    },
+     httpOptions);
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(AUTH_API + 'reset-password', {
+      token,
+      newPassword
+    },
+     httpOptions);
   }
 }

@@ -1,0 +1,71 @@
+<div class="col-md-12 form">
+  <div class="card card-container">
+    <div class="title">Delete User</div>
+      <form
+        name="formDeleteUser"
+        (ngSubmit)="formDeleteUser.form.valid && onSubmit()"
+        #formDeleteUser="ngForm"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="registrationNumber">Registration Number</label>
+          <input
+            type="text"
+            class="form-control"
+            name="registrationNumber"
+            [(ngModel)]="formData.registrationNumber"
+            required
+            #registrationNumber="ngModel"
+            [ngClass]="{ 'is-invalid': formDeleteUser.submitted && registrationNumber.errors }"
+          />
+          @if (registrationNumber.errors && formDeleteUser.submitted) {
+            <br>
+            <div class="invalid-feedback">
+              @if (registrationNumber.errors['required']) {
+                <div>Registration Number is required</div>
+              }
+            </div>
+          }
+        </div>
+        <br>
+        <div class="form-group">
+          <button type="button" class="btn btn-danger btn-block" (click)="showDeleteConfirmation()">Delete User</button>
+        </div>
+
+        @if (formDeleteUser.submitted && !isSuccessful) {
+          <br>
+          <div class="alert alert-warning">
+            Delete Failed!<br />{{ errorMessage }}
+          </div>
+        }
+        @if (isSuccessful) {
+          <br>
+          <div class="alert alert-success">User deleted successfully</div>
+        }
+      </form>
+  </div>
+</div>
+
+<!-- Delete User Confirmation Modal -->
+<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1" aria-labelledby="deleteModalLabel" [attr.aria-hidden]="!showDeleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm User Deletion</h5>
+        <button type="button" class="btn-close" (click)="hideDeleteConfirmation()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the user with registration number {{ formData.registrationNumber }}? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="hideDeleteConfirmation()">Cancel</button>
+        <button type="button" class="btn btn-danger" [disabled]="isDeletingUser" (click)="deleteUser()">
+          <output *ngIf="isDeletingUser" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></output>
+          Delete User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showDeleteModal"></div>

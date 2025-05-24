@@ -1,10 +1,11 @@
 package com.example.demo.response;
 
+import com.example.demo.dto.UserProfileData;
+
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
-public class JwtResponse {
+public class JwtResponse{
     private String token;
     private String type = "Bearer";
     private Long id;
@@ -17,6 +18,8 @@ public class JwtResponse {
     private String university;
     private String faculty;
     private List<String> roles;
+    private String responseMessage;
+    private Object data;
 
     public JwtResponse(String token, Long id, String registrationNumber, List<String> roles){
         this.token = token;
@@ -25,28 +28,30 @@ public class JwtResponse {
         this.roles = roles;
     }
 
-    public JwtResponse(
-            String token,
-            String registrationNumber,
-            String firstName,
-            String lastName,
-            String email,
-            String cnp,
-            Date dateOfBirth,
-            String university,
-            String faculty,
-            List<String> roles){
-        this.token = token;
-        this.registrationNumber = registrationNumber;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.cnp = cnp;
-        this.dateOfBirth = dateOfBirth;
-        this.university = university;
-        this.faculty = faculty;
-        this.roles = roles;
+    public JwtResponse(String message, Object data){
+        this.responseMessage = message;
+        this.data = data;
+    }
 
+    public JwtResponse(UserProfileData profileData) {
+        this.token = profileData.token();
+        this.registrationNumber = profileData.registrationNumber();
+        this.email = profileData.email();
+        this.firstName = profileData.firstName();
+        this.lastName = profileData.lastName();
+        this.cnp = profileData.cnp();
+        this.dateOfBirth = profileData.dateOfBirth();
+        this.university = profileData.university();
+        this.faculty = profileData.faculty();
+        this.roles = profileData.roles();
+    }
+
+    public JwtResponse(String message){
+        this.responseMessage = message;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
     }
 
     public String getToken() {
@@ -94,5 +99,32 @@ public class JwtResponse {
 
     public List<String> getRoles() {
         return roles;
+    }
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public void setResponseMessage(String message) {
+        this.responseMessage = message;
     }
 }

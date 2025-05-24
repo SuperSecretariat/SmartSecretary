@@ -1,69 +1,64 @@
-<div class="col-md-12">
+<div class="container">
     <div class="card card-container">
-      <!-- <img
-        id="profile-img"
-        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        class="profile-img-card"
-      /> -->
-      @if (!isLoggedIn) {
-      <form
-        name="form"
-        (ngSubmit)="f.form.valid && onSubmit()"
-        #f="ngForm"
-        novalidate
-      >
-        <div class="form-group">
-          <label for="registrationNumber">Registration number</label>
-          <input
-            type="text"
-            class="form-control"
-            name="registrationNumber"
-            [(ngModel)]="form.registrationNumber"
-            required
-            #registrationNumber="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && registrationNumber.errors }"
-          />
-          @if (registrationNumber.errors && f.submitted) {
-          <div class="invalid-feedback">Registration Number is required!</div>
-          }
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            name="password"
-            [(ngModel)]="form.password"
-            required
-            minlength="6"
-            #password="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
-          />
-          @if (password.errors && f.submitted) {
-          <div class="invalid-feedback">
-            @if (password.errors['required']) {
-            <div>Password is required</div>
-            }
-            @if (password.errors['minlength']) {
-            <div>Password must be at least 6 characters</div>
+      <div class="LoginLeft">
+        <h1>Welcome to SmartSecretary!</h1>
+        @if (!isLoggedIn) {
+        <form
+          name="form"
+          (ngSubmit)="f.form.valid && onSubmit()"
+          #f="ngForm"
+          novalidate
+        >
+          <div class="form-group spacing-top input-icon">
+            <span class="icon">
+              <img src="/user.png" alt="User icon" class="user_icon"/>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              name="registrationNumber"
+              [(ngModel)]="form.registrationNumber"
+              required
+              #registrationNumber="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && registrationNumber.errors }"
+              placeholder="Registration number / Email"
+            />
+          </div>
+          <div class="form-group spacing-top input-icon">
+            <span class="icon lock-icon">
+              <img src="/lock.png" alt="User icon" class="user_icon"/>
+            </span>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              [(ngModel)]="form.password"
+              required
+              minlength="6"
+              #password="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
+              placeholder="Password"
+            />
+          </div>
+          <div class="form-group spacing-top spacing-bottom">
+            <button class="btn btn-primary btn-block">Login</button>
+          </div>
+          <div class="form-group mt-2 text-center">
+            <a routerLink="/forgot-password">Forgot password?</a>
+          </div>
+          <div class="form-group">
+            @if (f.submitted && isLoginFailed) {
+            <div class="alert-errorsent" role="alert">
+              Login failed {{ errorMessage }}
+            </div>
             }
           </div>
-          }
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary btn-block">Login</button>
-        </div>
-        <div class="form-group">
-          @if (f.submitted && isLoginFailed) {
-          <div class="alert alert-danger" role="alert">
-            Login failed {{ errorMessage }}
-          </div>
-          }
-        </div>
-      </form>
+        </form>
       } @else {
-      <div class="alert alert-success">
-        Logged in as {{ formattedRoles }}.</div>
-      }
+        <div class="alert alert-success">
+          Logged in as {{ formattedRoles }}.</div>
+        }
+      </div>
+      <img class="uaic-puppet" src="uaic_puppet.png" alt="UAIC_PUPPET">
     </div>
   </div>

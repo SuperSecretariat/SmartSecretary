@@ -26,7 +26,7 @@ export class RegisterComponent {
     return password === confirmationPassword;
   }
 
-  constructor(private authService: AuthService) { }
+  constructor(private readonly authService: AuthService) { }
 
   onSubmit(): void {
     const { firstName, lastName, email, registrationNumber, password, confirmationPassword } = this.form;

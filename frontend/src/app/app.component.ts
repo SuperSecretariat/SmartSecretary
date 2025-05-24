@@ -19,9 +19,9 @@ export class AppComponent {
   isNavBarVisible = false;
 
   constructor(
-    private storageService: StorageService,
-    private authService: AuthService,
-    private navBarVisibilityService: NavBarVisibilityService) 
+    private readonly storageService: StorageService,
+    private readonly authService: AuthService,
+    private readonly navBarVisibilityService: NavBarVisibilityService) 
     { this.navBarVisibilityService.getVisibility().subscribe(value => {
       this.isNavBarVisible = value;});
     }

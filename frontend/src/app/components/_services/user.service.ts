@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environments';
 
-const API_URL = 'http://localhost:8081/api/test/'; //De modificat dupa ce face Vilcu AUTH_API-ul in backend
+const API_URL = `${environment.backendUrl}/api/test/`; //De modificat dupa ce face Vilcu AUTH_API-ul in backend
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getPublicContent(): Observable<any> {
     return this.http.get(API_URL + 'all', { responseType: 'text' });
