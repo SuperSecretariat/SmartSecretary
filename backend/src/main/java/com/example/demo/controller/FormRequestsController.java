@@ -40,60 +40,50 @@ public class FormRequestsController {
     }
 
     @GetMapping("/submitted")
-    public ResponseEntity<JwtResponse> getAllFormsForUserWithId(
+    public ResponseEntity<List<FormRequestResponse>> getAllFormsForUserWithId(
             @RequestHeader("Authorization") String authorizationHeader) {
 
-            String token = authorizationHeader.substring(7);
-            if (!jwtUtil.validateJwtToken(token)) {
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-            }
-
-            String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-            List<FormRequestResponse> forms = formRequestService.getFormRequestsByUserRegistrationNumber(registrationNumber);
-            return ResponseEntity.ok(new JwtResponse("Form requests retrieved successfully", forms));
-
+        String token = authorizationHeader.substring(7);
+        if (!jwtUtil.validateJwtToken(token)) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok(formRequestService.getFormRequestsByUserRegistrationNumber(token));
     }
 
     @GetMapping("/review-requests")
-    public ResponseEntity<List<FormRequestResponse>> getAllFormsForReview(@RequestHeader("Authorization") String authorizationHeader) {
-        // Logic to retrieve all pending forms
-        try{
-            if (!authorizationHeader.startsWith("Bearer ")) {
-                throw new InvalidHeaderException("No authorization header containing Bearer was received");
-            }
-            return ResponseEntity.ok(formRequestService.getFormRequestsByStatus(FormRequestStatus.PENDING));
+    public ResponseEntity<List<FormRequestResponse>> getAllFormsForReview(
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        String token = authorizationHeader.substring(7);
+        if (!jwtUtil.validateJwtToken(token)) {
+            return ResponseEntity.status(401).build();
         }
-        catch (InvalidHeaderException e){
+        return ResponseEntity.ok(formRequestService.getFormRequestsByStatus(FormRequestStatus.PENDING));
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FormRequest> getFormRequestById(@PathVariable Long id,
+                                                          @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.substring(7);
+            if (!jwtUtil.validateJwtToken(token)) {
+                return ResponseEntity.status(401).build();
+            }
+            return ResponseEntity.ok(formRequestService.getFormRequestById(id));
+        } catch (InvalidFormRequestIdException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<JwtResponse> getFormRequestById(@PathVariable Long id,
-                                                          @RequestHeader("Authorization") String authorizationHeader) {
-        try {
-            String token = authorizationHeader.substring(7);
-            if (!jwtUtil.validateJwtToken(token)) {
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-            }
-
-            FormRequest formRequest = formRequestService.getFormRequestById(id);
-            return ResponseEntity.ok(new JwtResponse("Form request retrieved successfully", formRequest));
-        } catch (InvalidFormRequestIdException e) {
-            this.logger.error(e.getMessage());
-            return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }
-    }
-
     @PostMapping("/create")
-    public ResponseEntity<JwtResponse> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest,
+    public ResponseEntity<Void> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest,
                                                @RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = authorizationHeader.substring(7);
             if (!jwtUtil.validateJwtToken(token)) {
-                return ResponseEntity.status(401).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+                return ResponseEntity.status(401).build();
             }
 
             FormRequest formRequest = formRequestService.createFormRequest(formRequestRequest);
@@ -101,15 +91,16 @@ public class FormRequestsController {
                     .path("/{id}")
                     .buildAndExpand(formRequest.getId())
                     .toUri();
-            JwtResponse response = new JwtResponse("Form request created successfully", formRequest.getId());
-            return ResponseEntity.created(location).body(response);
+
+            return ResponseEntity.created(location).build();
         } catch (FormRequestFieldDataException e) {
             this.logger.error(e.getMessage());
-            return ResponseEntity.status(400).body(new JwtResponse("The number of fields in the form request does not match the number of fields in the form template."));
-        } catch (Exception e) {
-            this.logger.error(e.getMessage());
-            return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.UNKNOWN_ERROR));
+            return ResponseEntity.badRequest().build();
         }
+//        catch (Exception e) {
+//            this.logger.error(e.getMessage());
+//            return ResponseEntity.internalServerError().build();
+//        }
     }
 
 }

@@ -51,27 +51,28 @@ export class FormsService {
             formId,
             fields
         };
-        // console.log("Payload to be sent:", payload); // Log the payload to check its structure
         return this.http.post(
             `${FORMS_API_REQUESTS}/create`, 
             payload, 
             {
-                headers: httpOptions.headers,
+                headers: this.addAuthorizationHeader(httpOptions.headers),
                 responseType: "json",
             }
         );
     }
 
     getSubmittedRequests() : Observable<any> {
-        const jwtToken = this.storageService.getUser().token;
-        // console.log("JWT Token:", jwtToken); // Log the JWT token to check its value
-        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + jwtToken);
         return this.http.get(
             `${FORMS_API_REQUESTS}/submitted`, 
             {
-                headers: headers,
+                headers: this.addAuthorizationHeader(httpOptions.headers),
                 responseType: "json",
             }
         );
+    }
+
+    addAuthorizationHeader(headers : HttpHeaders) : HttpHeaders {
+        const jwtToken = this.storageService.getUser().token;
+        return headers.set('Authorization', 'Bearer ' + jwtToken);
     }
 }
