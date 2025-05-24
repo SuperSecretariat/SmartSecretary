@@ -1,11 +1,19 @@
 package com.example.demo.model.enums;
 
+import com.example.demo.exceptions.InvalidFormRequestStatusException;
+
+import java.util.Arrays;
+
 public enum FormRequestStatus {
-    // TO BE DISPUTED
     PENDING,
-    IN_PROGRESS,
-    COMPLETED,
-    REJECTED,
-    ARCHIVED,
-    DELETED
+    APPROVED,
+    MODIFICATIONS_REQUIRED,
+    IN_REVIEW;
+
+    public static FormRequestStatus getStatusFromString (String status) throws InvalidFormRequestStatusException {
+        return Arrays.stream(FormRequestStatus.values())
+                .filter(e -> e.name().equalsIgnoreCase(status))
+                .findFirst()
+                .orElseThrow(() -> new InvalidFormRequestStatusException("Invalid status: " + status));
+    }
 }

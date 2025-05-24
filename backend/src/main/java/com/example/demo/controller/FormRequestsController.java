@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-
+import com.example.demo.exceptions.InvalidFormRequestStatusException;
 import com.example.demo.exceptions.InvalidHeaderException;
 import com.example.demo.model.enums.FormRequestStatus;
 
@@ -101,6 +101,18 @@ public class FormRequestsController {
 //            this.logger.error(e.getMessage());
 //            return ResponseEntity.internalServerError().build();
 //        }
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateFormRequestStatus(@PathVariable Long id, @Valid @RequestBody String status)
+    {
+        try{
+            this.formRequestService.updateFormRequestStatus(id, status);
+            return ResponseEntity.status(204).body("The status of the form request has been updated successfully.");
+        } catch (InvalidFormRequestIdException | InvalidFormRequestStatusException e){
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

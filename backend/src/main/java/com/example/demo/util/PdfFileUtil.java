@@ -21,7 +21,7 @@ public class PdfFileUtil {
         WordFileUtil.convertDocxToPDF(formTitle); // creates the pdf file from the docx
         PdfFileUtil.downloadImageOfPdfFile(formTitle); // creates the image file from the pdf
         Path pdfFilePath = Paths.get(COMMON_PATH + formTitle + '/' + formTitle + ".pdf");
-        String pythonScriptPath = "src/main/resources/scripts/convert_points_to_percentages.py";
+        String pythonScriptPath = "src/main/resources/scripts/convert_points_to_percentages-v3.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath.toString());
         Process process = processBuilder.start();
         int exitCode = process.waitFor();

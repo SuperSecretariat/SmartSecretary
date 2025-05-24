@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exceptions.InvalidFormRequestStatusException;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequestField;
 import com.example.demo.exceptions.FormRequestFieldDataException;
@@ -44,9 +45,7 @@ public class FormRequestService {
             formRequestRepository.save(formRequest);
             return formRequest;
         }
-        else{
-            throw new FormRequestFieldDataException("The number of fields in the form request does not match the number of fields in the form template.");
-        }
+        throw new FormRequestFieldDataException("The number of fields in the form request does not match the number of fields in the form template.");
     }
 
     private List<FormRequestField> createFormRequestFields(List<String> fieldsData) {
@@ -98,8 +97,16 @@ public class FormRequestService {
         if (formRequest.isPresent()) {
             return formRequest.get();
         }
-        else{
-            throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
+        throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
+    }
+
+    public void updateFormRequestStatus(Long id, String status) throws InvalidFormRequestIdException, InvalidFormRequestStatusException {
+        Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
+        if (formRequest.isPresent()) {
+            formRequest.get().setStatus(FormRequestStatus.getStatusFromString(status));
+            this.formRequestRepository.save(formRequest.get());
+            return;
         }
+        throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
     }
 }

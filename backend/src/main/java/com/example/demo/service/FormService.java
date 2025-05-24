@@ -50,7 +50,10 @@ public class FormService {
                         formFieldJsonObject.getTop(),
                         formFieldJsonObject.getLeft(),
                         formFieldJsonObject.getWidth(),
-                        formFieldJsonObject.getHeight())
+                        formFieldJsonObject.getHeight(),
+                        formFieldJsonObject.getText(),
+                        formFieldJsonObject.getPreviousWord()
+                        )
                 )
                 .toList();
 
