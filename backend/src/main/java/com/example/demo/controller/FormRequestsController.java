@@ -1,14 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.exceptions.InvalidFormRequestStatusException;
-import com.example.demo.exceptions.InvalidHeaderException;
+import com.example.demo.exceptions.*;
 import com.example.demo.model.enums.FormRequestStatus;
 
 import com.example.demo.constants.ErrorMessage;
 
 import com.example.demo.response.FormRequestResponse;
-import com.example.demo.exceptions.FormRequestFieldDataException;
-import com.example.demo.exceptions.InvalidFormRequestIdException;
 import com.example.demo.entity.FormRequest;
 import com.example.demo.dto.FormRequestRequest;
 import com.example.demo.response.JwtResponse;
@@ -18,10 +15,14 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class FormRequestsController {
                     .toUri();
 
             return ResponseEntity.created(location).build();
-        } catch (FormRequestFieldDataException e) {
+        } catch (FormRequestFieldDataException | IOException | InvalidWordToPDFConversion | InterruptedException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -104,7 +105,8 @@ public class FormRequestsController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateFormRequestStatus(@PathVariable Long id, @Valid @RequestBody String status)
+    public ResponseEntity<String> updateFormRequestStatus(@PathVariable Long id,
+                                                          @Valid @RequestBody String status)
     {
         try{
             this.formRequestService.updateFormRequestStatus(id, status);
@@ -112,6 +114,26 @@ public class FormRequestsController {
         } catch (InvalidFormRequestIdException | InvalidFormRequestStatusException e){
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getFormImage(@PathVariable Long id,
+                                               @RequestHeader("Authorization") String authorizationHeader) {
+        try{
+            String token = authorizationHeader.substring(7);
+            if (!jwtUtil.validateJwtToken(token)) {
+                return ResponseEntity.status(401).build();
+            }
+
+            byte[] imageBytes = formRequestService.getFormRequestImage(id, token);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG); // or IMAGE_PNG etc.
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        }
+        catch (IOException | InvalidFormIdException e){
+            this.logger.error(e.getMessage());
+            return ResponseEntity.status(500).build();
         }
     }
 
