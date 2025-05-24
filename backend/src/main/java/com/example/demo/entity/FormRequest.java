@@ -54,6 +54,10 @@ public class FormRequest {
         return fields;
     }
 
+    public void setStatus(FormRequestStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "FormRequest{" +

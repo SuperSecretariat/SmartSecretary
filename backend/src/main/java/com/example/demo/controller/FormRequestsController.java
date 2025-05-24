@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.exceptions.InvalidFormRequestStatusException;
 import com.example.demo.exceptions.InvalidHeaderException;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.exceptions.FormRequestFieldDataException;
@@ -66,7 +67,19 @@ public class FormRequestsController {
         }
         catch (FormRequestFieldDataException e) {
             this.logger.error(e.getMessage());
-            return ResponseEntity.badRequest().body("The number of fields in the form request does not match the number of fields in the form template.");
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateFormRequestStatus(@PathVariable Long id, @Valid @RequestBody String status)
+    {
+        try{
+            this.formRequestService.updateFormRequestStatus(id, status);
+            return ResponseEntity.status(204).body("The status of the form request has been updated successfully.");
+        } catch (InvalidFormRequestIdException | InvalidFormRequestStatusException e){
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 }

@@ -26,14 +26,22 @@ public class FormField {
     @NotBlank
     private String height;
 
+    @NotBlank
+    private String text;
+
+    @NotBlank
+    private String previousWord;
+
     public FormField() {}
 
-    public FormField(String page, String top, String left, String width, String height) {
+    public FormField(String page, String top, String left, String width, String height, String text, String previousWord) {
         this.page = page;
         this.top = top;
         this.left = left;
         this.width = width;
         this.height = height;
+        this.text = text;
+        this.previousWord = previousWord;
     }
 
     @Override
@@ -45,6 +53,8 @@ public class FormField {
                 ", left='" + left + '\'' +
                 ", width='" + width + '\'' +
                 ", height='" + height + '\'' +
+                ", text='" + text + '\'' +
+                ", previousWord='" + previousWord + '\'' +
                 '}';
     }
 
@@ -66,5 +76,13 @@ public class FormField {
 
     public String getHeight() {
         return height;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getPreviousWord() {
+        return previousWord;
     }
 }
