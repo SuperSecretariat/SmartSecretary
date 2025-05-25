@@ -29,5 +29,8 @@ public class ErrorMessage {
     public static final String MISSING_FORM_ID = "Form id is missing or empty";
     public static final String MISSING_NUMBER_OF_INPUT_FIELDS = "Number of Input Fields is missing or empty";
 
+    //Calendar error messages
+    public static final String WRONG_FORMAT = "Invalid CSV format";
+    public static final String ERROR_FILE = "Error while working with the file";
     private ErrorMessage(){}
 }
