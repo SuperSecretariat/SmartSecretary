@@ -26,16 +26,25 @@ export class RegisterComponent {
     return password === confirmationPassword;
   }
 
+  passwordValid(password: string): boolean {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$/.test(password);
+  }
+
   constructor(private readonly authService: AuthService) { }
 
   onSubmit(): void {
     const { firstName, lastName, email, registrationNumber, password, confirmationPassword } = this.form;
 
-    // Check if passwords match
     if (!this.passwordsMatch()) {
       this.errorMessage = "Passwords do not match!";
       this.isSignUpFailed = true;
-      return; // Stop the submission
+      return;
+    }
+
+    if (!this.passwordValid(password)) {
+      this.errorMessage = "Password must be at least 5 characters, include upper and lower case letters, a number, and a special character.";
+      this.isSignUpFailed = true;
+      return;
     }
 
     this.authService.register(firstName, lastName, email, registrationNumber, password, confirmationPassword).subscribe({

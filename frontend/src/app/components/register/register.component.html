@@ -120,9 +120,10 @@
               name="password"
               [(ngModel)]="form.password"
               required
-              minlength="6"
+              minlength="5"
               #password="ngModel"
               [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$"
             />
             @if (password.errors && f.submitted) {
             <div class="invalid-feedback">
@@ -130,7 +131,12 @@
               <div>Password is required</div>
               }
               @if (password.errors['minlength']) {
-              <div>Password must be at least 6 characters</div>
+              <div>Password must be at least 5 characters</div>
+              }
+              @if (password.errors['pattern']) {
+              <div>
+                Password must include upper and lower case letters, a number, and a special character.
+              </div>
               }
             </div>
             }
@@ -143,7 +149,7 @@
               name="confirmationPassword"
               [(ngModel)]="form.confirmationPassword"
               required
-              minlength="6"
+              minlength="5"
               #confirmationPassword="ngModel"
               [ngClass]="{ 'is-invalid': f.submitted && confirmationPassword.errors }"
             />
@@ -153,7 +159,7 @@
               <div>Confirm Password is required</div>
               }
               @if (confirmationPassword.errors['minlength']) {
-              <div>Confirm Password must be at least 6 characters</div>
+              <div>Confirm Password must be at least 5 characters</div>
               }
             </div>
             }
