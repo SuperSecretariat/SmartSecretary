@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const BASE_DIR = '/rag/pdfuri';
+const BASE_DIR = '/formDocuments';
 const FILES_API = 'http://localhost:8081/api/files';
 
 export interface FileEntry {
@@ -12,7 +12,7 @@ export interface FileEntry {
 }
 
 @Injectable({ providedIn: 'root' })
-export class LlmFilesService {
+export class FormFilesService {
 
   constructor(private http: HttpClient) {}
 
@@ -25,12 +25,12 @@ export class LlmFilesService {
     );
   }
 
-  uploadFile(file: File, subPath: string): Observable<any> {
+  uploadDocument(file: File, subPath: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     if (subPath) formData.append('subPath', subPath);
     return this.http.post(
-      FILES_API + '/upload' + BASE_DIR,
+      FILES_API + '/uploadDocument' + BASE_DIR,
       formData
     );
   }
@@ -67,10 +67,4 @@ export class LlmFilesService {
       });
   }
 
-  reloadDocumentation(): Observable<any>{
-    return this.http.post(
-      FILES_API + '/reload' + BASE_DIR,
-      null
-    );
-  }
 }

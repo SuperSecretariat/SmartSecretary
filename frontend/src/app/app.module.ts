@@ -32,6 +32,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm
     ResetPasswordComponent,
     PubbleChatComponent,
     ViewFormComponent,
-    BoardAdminLlmFilesComponent
+    BoardAdminLlmFilesComponent,
+    BoardSecretaryChangeFormsComponent
   ],
   imports: [
     BrowserModule,
