@@ -43,3 +43,6 @@ npm-debug.log*
 *.war
 *.jar
 *.ear
+
+src/main/resources/requests
+src/main/resources/uploaded.forms
