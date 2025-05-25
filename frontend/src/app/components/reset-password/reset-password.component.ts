@@ -35,15 +35,24 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
+  passwordValid(password: string): boolean {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
+  }
+
   onSubmit(): void {
     const { newPassword, confirmPassword } = this.form;
-    
-    // Check if passwords match
+
     if (newPassword !== confirmPassword) {
       this.passwordMismatch = true;
       return;
     }
-    
+
+    if (!this.passwordValid(newPassword)) {
+      this.errorMessage = "Password must be at least 8 characters, include upper and lower case letters, a number, and a special character.";
+      this.isSubmitFailed = true;
+      return;
+    }
+
     this.passwordMismatch = false;
 
     this.authService.resetPassword(this.token, newPassword).subscribe({
