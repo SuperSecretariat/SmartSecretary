@@ -12,8 +12,8 @@ interface FileItem {
   templateUrl: './upload-calendar.component.html',
   styleUrl: './upload-calendar.component.css'
 })
+
 export class UploadCalendarComponent {
-  newFolderName = '';
   searchQuery = '';
   selectedFile: File | null = null;
 
@@ -22,12 +22,6 @@ export class UploadCalendarComponent {
   filteredItems(): FileItem[] {
     const query = this.searchQuery.toLowerCase();
     return this.items.filter(item => item.name.toLowerCase().includes(query));
-  }
-
-  createFolder() {
-    if (!this.newFolderName.trim()) return;
-    this.items.push({ name: this.newFolderName, type: 'Folder' });
-    this.newFolderName = '';
   }
 
   deleteItem(item: FileItem) {

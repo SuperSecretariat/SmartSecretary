@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 })
 export class StudentCalendarComponent {
   days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  hours = this.generateHours(8, 20);
+  hours = this.generateHours(8, 19);
 
   events: Event[] = [];
 
