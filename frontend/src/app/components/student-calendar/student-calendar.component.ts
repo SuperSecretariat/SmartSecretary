@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
 interface Event {
   group: string;
   type: string;
   day: string;
-  time: string;
+  time: string; // Initial
   title: string;
   professor: string;
+  startTime?: string; // Parsed
+  endTime?: string;   // Parsed
 }
+interface BackendResponse {
+  events: Event[];
+}
+
 
 @Component({
   selector: 'app-student-calendar',
@@ -17,7 +23,7 @@ interface Event {
   styleUrls: ['./student-calendar.component.css']
 })
 export class StudentCalendarComponent {
-  days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   hours = this.generateHours(8, 19);
   generateHours(start: number, end: number): string[] {
     const result: string[] = [];
@@ -37,35 +43,67 @@ export class StudentCalendarComponent {
   ngOnInit() {
       this.fetchEvents();
   }
+
   fetchEvents() {
-    const token = 'your-auth-token'; // Replace with the actual token
-    const headers = { Authorization: `Bearer ${token}` };
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHVkZW50IiwiaWF0IjoxNzQ4MTgwMjczLCJleHAiOjE3NDgyNjY2NzN9._JMy_9-lPdNBc3k-P22x_S7dCTSqjkN7Jx13RVYrLMg'; // Replace with actual token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    const body = new HttpParams().set('group', this.selectedGroup);
 
     this.http.post<any>(
-        `http://localhost:8081/api/calendar/fetch-group`,
-        { group: this.selectedGroup },
+        'http://localhost:8081/api/calendar/fetch-group',
+        body.toString(),
         { headers }
     ).subscribe({
-      next: (response) => {
+      next: (response: BackendResponse) => {
+        console.log('✅ API response:', response);
         if (response && response.events) {
-          this.events = response.events;
+          this.events = response.events.map(event => {
+            const [start, end] = event.time.split(' - ');
+            return {
+              ...event,
+              startTime: start,
+              endTime: end
+            };
+          });
+          console.log('✅ Events loaded:', this.events);
         } else {
-          console.error('No events found in the response');
+          console.error('No events found in the response', response);
           this.events = [];
         }
-      },
+      }
+      ,
       error: (error) => {
         console.error('Error fetching events:', error);
       }
     });
   }
+
     onGroupChange() {
       this.fetchEvents();
     }
 
-    getEventForSlot(day: string, hour: string): Event | undefined {
-    return this.events.find(event => event.day === day && event.time === hour);
-    }
+  getEventForSlot(day: string, hour: string): Event | undefined {
+    return this.events.find(event => {
+      if (event.day !== day) return false;
+
+      const startParts = event.startTime?.split(':') ?? [];
+      const endParts = event.endTime?.split(':') ?? [];
+      const hourParts = hour.split(':');
+
+      const startHour = parseInt(startParts[0]);
+      const endHour = parseInt(endParts[0]);
+      const currentHour = parseInt(hourParts[0]);
+
+      return currentHour >= startHour && currentHour < endHour;
+    });
+  }
+
+
+
 
 
 }

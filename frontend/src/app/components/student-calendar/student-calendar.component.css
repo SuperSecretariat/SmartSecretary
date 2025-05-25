@@ -96,3 +96,35 @@ body {
   }
 }
 
+.course {
+  background-color: #cfe2ff;
+  border-left-color: #3a78c3;
+}
+
+.lab {
+  background-color: #dbe5ff;
+  border-left-color: #6b5bc1;
+}
+
+.day-column {
+  display: grid;
+  grid-template-rows: repeat(24, 50px); /* Adjust to match the number of hours */
+  position: relative;
+}
+
+.event-block {
+  position: relative; /* Change from absolute to relative */
+  width: 100%;
+  padding: 6px;
+  margin: 0; /* Remove margin to avoid separation */
+  border-radius: 6px;
+  font-size: 12px;
+  color: #1c2b45;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.2s ease;
+}
+
+.event-block:hover {
+  background-color: #bfd8ff;
+}
+
