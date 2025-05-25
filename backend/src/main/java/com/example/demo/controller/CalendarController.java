@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/calendar")
@@ -91,5 +92,32 @@ public class CalendarController {
         } catch (IOException e) {
             return ResponseEntity.status(500).body(new JwtResponse(ErrorMessage.ERROR_FILE));
         }
+
+
+    }
+
+    @PostMapping("/fetch-group")
+    public ResponseEntity<JwtResponse> getCalendarByGroup(@RequestHeader("Authorization") String headerAuth,
+                                                          String group){
+        String token = headerAuth.substring(7);
+        if (!jwtUtil.validateJwtToken(token)) {
+            return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+        }
+
+        String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+
+        if (!userDetails.hasRole(ERole.ROLE_STUDENT)) {
+            return ResponseEntity.status(403).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+        }
+
+        List<Event> eventList = eventRepository.findAllByGroup(group);
+        if(!eventList.isEmpty()) {
+            return ResponseEntity.ok(new JwtResponse(eventList));
+        } else {
+            return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NO_DATA_GROUP));
+        }
+
+
     }
 }

@@ -32,5 +32,6 @@ public class ErrorMessage {
     //Calendar error messages
     public static final String WRONG_FORMAT = "Invalid CSV format";
     public static final String ERROR_FILE = "Error while working with the file";
+    public static final String NO_DATA_GROUP = "No events for this group";
     private ErrorMessage(){}
 }
