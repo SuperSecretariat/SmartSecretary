@@ -99,17 +99,17 @@ public class CalendarController {
     @PostMapping("/fetch-group")
     public ResponseEntity<JwtResponse> getCalendarByGroup(@RequestHeader("Authorization") String headerAuth,
                                                           @RequestParam String group){
-        String token = headerAuth.substring(7);
-        if (!jwtUtil.validateJwtToken(token)) {
-            return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-        }
-
-        String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
-
-        if (!userDetails.hasRole(ERole.ROLE_STUDENT)) {
-            return ResponseEntity.status(403).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-        }
+//        String token = headerAuth.substring(7);
+//        if (!jwtUtil.validateJwtToken(token)) {
+//            return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+//        }
+//
+//        String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+//        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+//
+//        if (!userDetails.hasRole(ERole.ROLE_STUDENT)) {
+//            return ResponseEntity.status(403).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+//        }
 
         List<Event> eventList = eventRepository.findAllByGroup(group);
         if(!eventList.isEmpty()) {

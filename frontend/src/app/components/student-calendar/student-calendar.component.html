@@ -1,23 +1,24 @@
 <div class="container">
-  <div class="calendar">
-    <div class="header">
-      <div class ="day">
-        <label for="group-selector">Group:</label>
-        <select id="group-selector" [(ngModel)]="selectedGroup">
-          <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
-        </select>
-      </div>
-      <div class="day" *ngFor="let day of days">{{ day }}</div>
-    </div>
-    <div class="body">
-      <div class="time-row" *ngFor="let hour of hours;">
-        <div class="time-label">{{ hour }}</div>
-        <div class="day-column" *ngFor="let day of days">
-          <!-- You can insert events here later -->
+    <div class="calendar">
+        <div class="header">
+            <div class="day">
+                <label for="group-selector">Group:</label>
+                <select id="group-selector" [(ngModel)]="selectedGroup" (change)="onGroupChange()">
+                    <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
+                </select>
+            </div>
+            <div class="day" *ngFor="let day of days">{{ day }}</div>
         </div>
-      </div>
+        <div class="body">
+            <div class="time-row" *ngFor="let hour of hours;">
+                <div class="time-label">{{ hour }}</div>
+                <div class="day-column" *ngFor="let day of days">
+                    <div *ngIf="getEventForSlot(day, hour) as event">
+                        <strong>{{ event.title }}</strong><br>
+                        <small>{{ event.professor }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
-
