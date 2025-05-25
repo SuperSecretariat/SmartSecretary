@@ -36,7 +36,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   passwordValid(password: string): boolean {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$/.test(password);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
   }
 
   onSubmit(): void {
@@ -48,7 +48,7 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     if (!this.passwordValid(newPassword)) {
-      this.errorMessage = "Password must be at least 5 characters, include upper and lower case letters, a number, and a special character.";
+      this.errorMessage = "Password must be at least 8 characters, include upper and lower case letters, a number, and a special character.";
       this.isSubmitFailed = true;
       return;
     }

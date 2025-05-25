@@ -27,7 +27,7 @@ export class RegisterComponent {
   }
 
   passwordValid(password: string): boolean {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$/.test(password);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
   }
 
   constructor(private readonly authService: AuthService) { }
@@ -42,7 +42,7 @@ export class RegisterComponent {
     }
 
     if (!this.passwordValid(password)) {
-      this.errorMessage = "Password must be at least 5 characters, include upper and lower case letters, a number, and a special character.";
+      this.errorMessage = "Password must be at least 8 characters, include upper and lower case letters, a number, and a special character.";
       this.isSignUpFailed = true;
       return;
     }
