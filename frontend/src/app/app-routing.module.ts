@@ -19,7 +19,9 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
-import {BoardAdminLlmFilesComponent} from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { StudentCalendarComponent } from './components/student-calendar/student-calendar.component';
+import {UploadCalendarComponent} from './pages/board-secretary/upload-calendar/upload-calendar.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -38,7 +40,8 @@ const routes: Routes = [
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
-      { path: 'view-form/:id', component: ViewFormComponent}
+      { path: 'view-form/:id', component: ViewFormComponent},
+      { path: 'calendar', component: StudentCalendarComponent },
     ]
   },
   {
@@ -63,6 +66,7 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
+      { path: 'dashboard/upload-calendar', component: UploadCalendarComponent}
     ]
   },
   //{ path: 'home', component: HomeComponent },
