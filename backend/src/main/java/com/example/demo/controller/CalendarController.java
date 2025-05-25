@@ -98,7 +98,7 @@ public class CalendarController {
 
     @PostMapping("/fetch-group")
     public ResponseEntity<JwtResponse> getCalendarByGroup(@RequestHeader("Authorization") String headerAuth,
-                                                          String group){
+                                                          @RequestParam String group){
         String token = headerAuth.substring(7);
         if (!jwtUtil.validateJwtToken(token)) {
             return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
@@ -115,6 +115,7 @@ public class CalendarController {
         if(!eventList.isEmpty()) {
             return ResponseEntity.ok(new JwtResponse(eventList));
         } else {
+            System.out.println("No events found for group: " + group);
             return ResponseEntity.status(404).body(new JwtResponse(ErrorMessage.NO_DATA_GROUP));
         }
 
