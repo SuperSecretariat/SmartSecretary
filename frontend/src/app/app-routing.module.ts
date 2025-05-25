@@ -19,7 +19,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
-import {BoardAdminLlmFilesComponent} from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -63,6 +64,7 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
+      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent }
     ]
   },
   //{ path: 'home', component: HomeComponent },
