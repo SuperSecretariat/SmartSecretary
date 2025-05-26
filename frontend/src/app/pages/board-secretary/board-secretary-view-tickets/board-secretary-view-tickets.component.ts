@@ -1,23 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { FormsService } from '../_services/forms.service';
+import { FormsService } from '../../../components/_services/forms.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-submitted-forms',
-  templateUrl: './submitted-forms.component.html',
-  styleUrls: ['./submitted-forms.component.css'],
-  imports: [CommonModule, FormsModule]
+  selector: 'app-board-secretary-view-tickets',
+  standalone: false,
+  templateUrl: './board-secretary-view-tickets.component.html',
+  styleUrl: './board-secretary-view-tickets.component.css'
 })
-export class SubmittedFormsComponent implements OnInit {
-  submittedRequests: { id: number; formTitle: string; status: string }[] = [];
-  filteredRequests: { id: number; formTitle: string; status: string }[] = [];
+export class BoardSecretaryViewTicketsComponent {
+  submittedRequests: {id: number; formTitle: string; status: string }[] = [];
+  filteredRequests: {id: number; formTitle: string; status: string }[] = [];
   searchTerm: string = '';
 
   constructor(
-    private readonly formsService: FormsService,
-    private readonly router: Router
+    private formsService: FormsService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -25,7 +23,7 @@ export class SubmittedFormsComponent implements OnInit {
   }
 
   private loadSubmittedRequests(): void {
-    this.formsService.getSubmittedRequests().subscribe({
+    this.formsService.getAllSubmittedRequests().subscribe({
       next: data => {
         this.submittedRequests = data;
         this.filteredRequests = [...this.submittedRequests];
@@ -49,6 +47,6 @@ export class SubmittedFormsComponent implements OnInit {
   }
 
   viewForm(id: number) {
-    this.router.navigate([`student/view-form`, id])
+    this.router.navigate([`secretary/dashboard/view-form/`, id])
   }
 }

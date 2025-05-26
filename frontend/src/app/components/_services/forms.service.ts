@@ -71,6 +71,16 @@ export class FormsService {
         );
     }
 
+    getAllSubmittedRequests() : Observable<any> {
+        return this.http.get(
+            `${FORMS_API_REQUESTS}/review-requests`,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
+    }
+
     addAuthorizationHeader(headers : HttpHeaders) : HttpHeaders {
         const jwtToken = this.storageService.getUser().token;
         return headers.set('Authorization', 'Bearer ' + jwtToken);

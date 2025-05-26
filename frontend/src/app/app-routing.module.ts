@@ -21,6 +21,8 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
+import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
+import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -61,7 +63,9 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
-      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent }
+      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
+      { path: 'dashboard/viewTickets', component: BoardSecretaryViewTicketsComponent },
+      { path: 'dashboard/view-form/:id', component: ViewFormComponent}
     ]
   },
 ];
