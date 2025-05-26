@@ -75,4 +75,27 @@ export class FormsService {
         const jwtToken = this.storageService.getUser().token;
         return headers.set('Authorization', 'Bearer ' + jwtToken);
     }
+
+    updateFormStatusById(id: number, status: string): Observable<any> {
+        return this.http.patch(
+            `${FORMS_API_REQUESTS}/${id}/status`,
+            JSON.stringify(status), 
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
+    }
+
+    createForm(title: string, isActive: boolean): Observable<any> {
+        const payload = { title, isActive };
+        return this.http.post(
+            FORMS_API_CONTROLLER,
+            payload,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
+    }
 }

@@ -19,6 +19,7 @@
 <div class="submit_button_container">
   <button 
     (click)="saveFormFields()" 
+    [disabled]="isLoading"
     style="position:relative; margin-top: 20px;">
     <span>Submit Request</span>
   </button>

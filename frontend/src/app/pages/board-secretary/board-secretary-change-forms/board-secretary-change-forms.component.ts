@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormFilesService, FileEntry } from '../../../components/_services/form-files.service';
+import { FormsService } from '../../../components/_services/forms.service';
+
 @Component({
   selector: 'app-board-secretary-change-forms',
   standalone: false,
@@ -14,7 +16,10 @@ export class BoardSecretaryChangeFormsComponent {
   searchTerm: string = '';
   errorMessage: string = '';
 
-  constructor(private fileManager: FormFilesService) {}
+  constructor(
+    private fileManager: FormFilesService,
+    private formsService: FormsService
+  ) {}
 
   ngOnInit() {
     this.loadEntries();
@@ -66,8 +71,20 @@ export class BoardSecretaryChangeFormsComponent {
     this.fileManager.uploadDocument(this.selectedFile, this.currentDir).subscribe(() => {
       this.selectedFile = null;
       this.loadEntries();
+
+      const formTitle = fileName.replace('.docx', '');
+      const isActive = true;
+      this.formsService.createForm(formTitle, isActive).subscribe({
+        next: (response) => {
+          console.log('Form created:', response);
+        },
+        error: (err) => {
+          this.errorMessage = err.error || "Form creation failed";
+        }
+      });
+
     }, err => {
-      this.errorMessage =  err.error || "Upload failed";
+      this.errorMessage = err.error || "Upload failed";
     });
   }
 

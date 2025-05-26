@@ -32,7 +32,6 @@ const routes: Routes = [
   {
     path: 'student',
     children: [
-      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'create-form', component: CreateFormComponent },
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
@@ -45,7 +44,6 @@ const routes: Routes = [
   {
     path: 'admin',
     children: [
-      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'dashboard', component: BoardAdminComponent },
       { path: 'newsfeed', component: NewsfeedComponent },
@@ -59,7 +57,6 @@ const routes: Routes = [
   {
     path: 'secretary',
     children: [
-      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'dashboard', component: BoardSecretaryComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
@@ -67,16 +64,6 @@ const routes: Routes = [
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent }
     ]
   },
-  //{ path: 'home', component: HomeComponent },
-  //{ path: 'profile', component: ProfileComponent },
-  //{ path: 'create-form', component: CreateFormComponent },
-  ///{ path: 'submitted-forms', component: SubmittedFormsComponent },
-  //{ path: 'account', component: AccountComponent },
-  //{ path: 'newsfeed', component: NewsfeedComponent },
-  //{ path: 'student', component: BoardStudentComponent },
-  //{ path: 'mod', component: BoardSecretaryComponent },
-  //{ path: 'admin', component: BoardAdminComponent },
-  //{ path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({
