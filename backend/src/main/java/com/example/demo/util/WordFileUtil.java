@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class WordFileUtil {
+    private static final String FORMS_DIRECTORY_PATH = "formDocuments/";
     private WordFileUtil() {}
 
     public static void convertDocxToPDF(String wordFilePath, String pdfOutputDirectoryPath) throws IOException, InterruptedException, InvalidWordToPDFConversion  {
@@ -38,7 +39,7 @@ public class WordFileUtil {
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
-        String docxFilePath = "src/main/resources/uploaded.forms/" + formTitle + '/' + formTitle+ ".docx";
+        String docxFilePath = FORMS_DIRECTORY_PATH + formTitle + '/' + formTitle+ ".docx";
         String docxOutputFilePath = docxOutputDirectoryPath + '/' + formTitle + ".docx";
         try (FileInputStream fis = new FileInputStream(docxFilePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
