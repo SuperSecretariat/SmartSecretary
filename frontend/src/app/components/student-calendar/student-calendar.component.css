@@ -22,6 +22,7 @@ body {
   background-color: #f0f4f8;
   max-width: none;
 }
+
 .calendar {
   display: flex;
   flex-direction: column;
@@ -31,7 +32,6 @@ body {
   overflow: hidden;
   font-family: 'Segoe UI', sans-serif;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
 
   .header {
     display: grid;
@@ -83,6 +83,9 @@ body {
         background-color: #fff;
         height: 50px;
         transition: background-color 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
 
         &:hover {
           background-color: #f3f6fa;
@@ -98,33 +101,44 @@ body {
 
 .course {
   background-color: #cfe2ff;
-  border-left-color: #3a78c3;
+  border: 1px solid #3a78c3;
+  border-radius: 6px;
 }
 
 .lab {
   background-color: #dbe5ff;
-  border-left-color: #6b5bc1;
-}
-
-.day-column {
-  display: grid;
-  grid-template-rows: repeat(24, 50px); /* Adjust to match the number of hours */
-  position: relative;
+  border: 1px solid #6b5bc1;
+  border-radius: 6px;
 }
 
 .event-block {
-  position: relative; /* Change from absolute to relative */
-  width: 100%;
-  padding: 6px;
-  margin: 0; /* Remove margin to avoid separation */
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  width: calc(100% - 4px);
+  padding: 8px;
   border-radius: 6px;
   font-size: 12px;
   color: #1c2b45;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: background-color 0.2s ease;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Dynamic height based on duration - will be set via inline style */
 }
 
 .event-block:hover {
   background-color: #bfd8ff;
+  z-index: 2;
 }
 
+.event-continuation {
+  /* This is an invisible placeholder for slots that are part of a multi-hour event */
+  visibility: hidden;
+  height: 100%;
+}

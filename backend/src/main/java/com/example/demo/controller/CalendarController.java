@@ -44,17 +44,17 @@ public class CalendarController {
     public ResponseEntity<JwtResponse> uploadCalendar(@RequestHeader("Authorization") String headerAuth,
                                                       @RequestParam("file") MultipartFile file) {
         try {
-            String token = headerAuth.substring(7);
-            if (!jwtUtil.validateJwtToken(token)) {
-                return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
-            }
-
-            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
-            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
-
-            if (!userDetails.hasRole(ERole.ROLE_SECRETARY)) {
-                return ResponseEntity.status(403).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
-            }
+//            String token = headerAuth.substring(7);
+//            if (!jwtUtil.validateJwtToken(token)) {
+//                return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
+//            }
+//
+//            String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+//            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(regNumber);
+//
+//            if (!userDetails.hasRole(ERole.ROLE_SECRETARY)) {
+//                return ResponseEntity.status(403).body(new JwtResponse(ErrorMessage.ACCESS_FORBIDDEN));
+//            }
 
             if (file.isEmpty()) {
                 return ResponseEntity.status(400).body(new JwtResponse(ErrorMessage.INVALID_DATA));
