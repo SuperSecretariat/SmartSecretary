@@ -1,0 +1,24 @@
+<div class="ticket-grid">
+  <app-ticket *ngFor="let ticket of tickets" [subject]="ticket.subject" [status]="ticket.status"></app-ticket>
+</div>
+
+<button class="add-button" (click)="openModal()">Add</button>
+
+<div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()"></div>
+<div class="modal" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <h2>Create Ticket</h2>
+    <label>Subject:</label>
+    <input type="text" />
+    <label>Type:</label>
+    <select>
+      <option>Request</option>
+      <option>Complaint</option>
+      <option>Other</option>
+    </select>
+    <label>Message:</label>
+    <textarea></textarea>
+    <button (click)="closeModal()">Cancel</button>
+    <button>Submit</button>
+  </div>
+</div>
