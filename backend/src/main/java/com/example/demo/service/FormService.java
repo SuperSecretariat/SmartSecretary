@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +52,10 @@ public class FormService {
                         formFieldJsonObject.getTop(),
                         formFieldJsonObject.getLeft(),
                         formFieldJsonObject.getWidth(),
-                        formFieldJsonObject.getHeight())
+                        formFieldJsonObject.getHeight(),
+                        formFieldJsonObject.getText(),
+                        formFieldJsonObject.getPreviousWord()
+                        )
                 )
                 .toList();
 
@@ -91,7 +96,8 @@ public class FormService {
         }
         String title = form.get().getTitle();
         this.logger.info("Getting form image for form with title: {}", title);
-        return PdfFileUtil.getImageOfPdfFile(title);
+        String imageFilePath = "src/main/resources/uploaded.forms/" + title + '/' + title + ".png";
+        return Files.readAllBytes(Paths.get(imageFilePath));
     }
 
     public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {

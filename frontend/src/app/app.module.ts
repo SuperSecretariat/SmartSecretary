@@ -34,7 +34,7 @@ import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 import { StudentCalendarComponent } from './components/student-calendar/student-calendar.component';
 import { UploadCalendarComponent } from './pages/board-secretary/upload-calendar/upload-calendar.component';
-
+import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +57,8 @@ import { UploadCalendarComponent } from './pages/board-secretary/upload-calendar
     ViewFormComponent,
     BoardAdminLlmFilesComponent,
     StudentCalendarComponent,
-    UploadCalendarComponent
+    UploadCalendarComponent,
+    BoardSecretaryChangeFormsComponent
   ],
   imports: [
     BrowserModule,
