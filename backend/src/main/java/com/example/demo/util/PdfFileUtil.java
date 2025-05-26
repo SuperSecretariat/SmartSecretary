@@ -1,20 +1,31 @@
 package com.example.demo.util;
 
 import com.example.demo.exceptions.FormCreationException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.example.demo.exceptions.InvalidWordToPDFConversion;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 public class PdfFileUtil {
+    private static final String FORMS_DIRECTORY_PATH = "src/main/resources/uploaded.forms/";
+    private static final String FORM_REQUESTS_DIRECTORY_PATH = "src/main/resources/requests/";
+    private static final String SCRIPTS_DIRECTORY_PATH = "src/main/resources/scripts/";
     private PdfFileUtil() {
         // Private constructor to prevent instantiation
     }
-    public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException {
-        Path pdfFilePath = Paths.get("backend/src/main/resources/uploaded.forms/" + formTitle + "/" + formTitle + ".pdf");
-        String pythonScriptPath = "backend/src/main/resources/scripts/convert_points_to_percentages.py";
-        ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath.toString());
+
+    public static String mapPdfInputFieldsToCssPercentages(String formTitle) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
+        String pdfOutputDirectoryPath = FORMS_DIRECTORY_PATH + formTitle;
+        String docxFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".docx";
+        WordFileUtil.convertDocxToPDF(docxFilePath, pdfOutputDirectoryPath);
+
+        String pdfFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".pdf";
+        PdfFileUtil.downloadImageOfPdfFile(pdfFilePath);
+
+        String pythonScriptPath = SCRIPTS_DIRECTORY_PATH + "convert_points_to_percentages-v3.py";
+        ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath);
         Process process = processBuilder.start();
         int exitCode = process.waitFor();
 
@@ -38,5 +49,39 @@ public class PdfFileUtil {
             }
             throw new FormCreationException(message.toString());
         }
+    }
+
+    public static byte[] getImageOfPdfFile(String pdfFilePath) throws IOException {
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
+            BufferedImage image = pdfRenderer.renderImageWithDPI(0, 300); // Render the first page at 300 DPI
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", byteArrayOutputStream);
+
+            return byteArrayOutputStream.toByteArray();
+        }
+    }
+
+    public static void downloadImageOfPdfFile(String pdfFilePath) throws IOException {
+        byte[] imageBytes = getImageOfPdfFile(pdfFilePath);
+        String imageFilePath = pdfFilePath.substring(0, pdfFilePath.length() - 3) + "png";
+        try(FileOutputStream fos = new FileOutputStream(imageFilePath)) {
+            fos.write(imageBytes);
+        }
+    }
+
+    public static void createPdfAndImageFromDocx(String docxFilePath, String pdfOutputDirectoryPath, String pdfFilePath) throws IOException, InterruptedException, InvalidWordToPDFConversion {
+        WordFileUtil.convertDocxToPDF(docxFilePath, pdfOutputDirectoryPath); // creates the pdf file from the docx
+        PdfFileUtil.downloadImageOfPdfFile(pdfFilePath); // creates the image file from the pdf
+    }
+
+    public static void createPdfAndImageForSubmittedFormRequest(String formTitle, String userRegistrationNumber) throws IOException, InterruptedException, InvalidWordToPDFConversion {
+        String pdfOutputDirectoryPath = FORM_REQUESTS_DIRECTORY_PATH + userRegistrationNumber;
+        String docxFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".docx";
+        WordFileUtil.convertDocxToPDF(docxFilePath, pdfOutputDirectoryPath);
+
+        String pdfFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".pdf";
+        PdfFileUtil.downloadImageOfPdfFile(pdfFilePath);
     }
 }

@@ -54,19 +54,9 @@ public class FormRequest {
         return fields;
     }
 
-    public void submit(){}
-
-    public void approve(){
-        //Secretary page
+    public void setStatus(FormRequestStatus status) {
+        this.status = status;
     }
-
-    public void reject(String reason){
-        //Secretary page
-    }
-
-    public void generatePdf() {}
-
-    public void saveAsDraft(){}
 
     @Override
     public String toString() {

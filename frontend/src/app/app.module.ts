@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { CreateFormComponent } from './components/create-form/create-form.component';
@@ -24,6 +23,7 @@ import { FooterComponent } from "./components/footer/footer.component";
 import { AdminNavBarComponent } from "./components/admin-nav-bar/admin-nav-bar.component";
 import { BoardAdminAddComponent} from "./pages/board-admin/board-admin-add/board-admin-add.component";
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminDeleteUserComponent} from "./pages/board-admin/board-admin-delete-user/board-admin-delete-user.component";
 import { SecretaryNavBarComponent } from './components/secretary-nav-bar/secretary-nav-bar.component';
 import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
@@ -34,6 +34,9 @@ import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tick
 import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
 import { TicketModalComponent } from './components/ticket-modal/ticket-modal.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
+import { ViewFormComponent } from './components/view-form/view-form.component';
+import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 
 
 @NgModule({
@@ -41,7 +44,6 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
     BoardSecretaryComponent,
@@ -49,14 +51,15 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
     SecretaryNavBarComponent,
     BoardAdminAddComponent,
     BoardAdminShowAuthKeyComponent,
+    BoardAdminDeleteUserComponent,
     BoardSecretaryAddComponent,
     CompleteFormComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    ViewTicketsSecretaryComponent,
-    SentTicketsComponent,
-    TicketModalComponent,,
-    PubbleChatComponent
+    PubbleChatComponent,
+    ViewFormComponent,
+    BoardAdminLlmFilesComponent,
+    BoardSecretaryChangeFormsComponent
   ],
   imports: [
     BrowserModule,

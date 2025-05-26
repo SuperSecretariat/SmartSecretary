@@ -11,15 +11,49 @@
     width: 100vw;
 }
 
-.header {
-    grid-area: header;
-    background-color: rgb(21,96,189);
-    color: white;
-    padding: 10px;
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
+.header {
+  grid-area: header;
+  color: white;
+  padding: 5px;
+  background-color: rgb(21,96,189);
+  background: linear-gradient(90deg, rgb(21, 96, 189), rgb(0, 48, 112), rgb(21, 96, 189));
+  background-size: 200% 200%;
+  animation: gradientAnimation 10s ease infinite;
+}
+
+.navbar {
+  background-color: #F4F6F8;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.5s ease-out;
+  padding: 0;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
 .dashboard-NavBarVisible {
-    background-color: rgb(232, 223, 255);
+    background-color: rgb(245, 245, 245);
     color: white;
     width: 80%;
     height: 100%; /* Fixează înălțimea la containerul părinte */
@@ -28,7 +62,7 @@
 }
 
 .dashboard-NavBarNotVisible {
-    background-color: rgb(232, 223, 255);
+    background-color: rgb(245, 245, 245);
     color: white;
     width: 100%;
     height: 100%; /* Fixează înălțimea la containerul părinte */
@@ -37,10 +71,13 @@
 }
 
 .footer {
-    grid-area: footer;
-    background-color: rgb(21,96,189);
-    color: white;
-    padding: 10px;
+  grid-area: footer;
+  color: white;
+  padding: 5px;
+  background-color: rgb(21,96,189);
+  background: linear-gradient(90deg, rgb(21, 96, 189), rgb(0, 48, 112), rgb(21, 96, 189));
+  background-size: 200% 200%;
+  animation: gradientAnimation 10s ease infinite;
 }
 
 .navbar {
@@ -60,11 +97,13 @@
     overflow: hidden;
     justify-content: center;
     box-sizing: border-box;
+    background-color: #F4F6F8;
 }
 
 .app-nav {
     height: 100%;
     width: 100%;
+    background-color: #F4F6F8;
 }
 
 .app-dashboard {

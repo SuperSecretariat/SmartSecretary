@@ -2,7 +2,7 @@
     flex: 1 1 auto;
 }
 
-.example-container {      /*     to modify     */
+.example-container {
     position: absolute;
     top: 8vh;
     bottom: 8vh;
@@ -17,7 +17,13 @@
     font-size: 18px;
     font-weight: bold;
     color: white;
-  }
+    transition: font-size 0.2s ease;
+}
+
+.header-title:hover{
+    text-decoration: underline;
+    font-size: 20px;
+}
 
 .centered-toolbar {
   display: flex;
@@ -32,17 +38,19 @@
 .example-sidenav {
     background-color: gray;
     padding: 20px;
-
 }
 
 button {
-    transition: transform 0.2s ease, background-color 0.3s ease;
-    border-radius: 50%;
+    transition: transform 0.2s ease, background-color 0.3s ease; 
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button:hover {
-    transform: scale(1.1);
-    background-color: rgba(143, 201, 248, 0.288);
+    transform: scale(1.2); 
+    background-color: rgba(45, 117, 175, 0.288); 
 }
 
 button:active {
@@ -51,18 +59,17 @@ button:active {
 }
 
 .example-icon {
-  width: 48px;
-  height: 48px;
-  min-width: 100px; /* prevents Angular Material from overriding it */
-  min-height: 48px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px; /* prevents Angular Material from overriding it */
+  min-height: 38px;
   padding: 0;       /* remove extra space */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.example-icon mat-icon {
-  font-size: 24px;       /* or up to 32px depending on how bold you want it */
+.example-icon mat-icon { 
   width: 100%;
   height: 100%;
   display: flex;

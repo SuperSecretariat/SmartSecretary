@@ -1,20 +1,29 @@
 package com.example.demo.service;
 
-import com.example.demo.exceptions.FormRequestFieldDataException;
-import com.example.demo.exceptions.InvalidFormRequestIdException;
+import com.example.demo.entity.Form;
+import com.example.demo.exceptions.*;
+import com.example.demo.response.FormRequestResponse;
+import com.example.demo.entity.FormRequestField;
 import com.example.demo.entity.FormRequest;
 import com.example.demo.model.enums.FormRequestStatus;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.repository.FormRequestRepository;
 import com.example.demo.dto.FormRequestRequest;
 import com.example.demo.util.JwtUtil;
+import com.example.demo.util.PdfFileUtil;
+import com.example.demo.util.WordFileUtil;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class FormRequestService {
+    private static final String FORM_REQUESTS_DIRECTORY_PATH = "src/main/resources/requests/";
     private final FormRequestRepository formRequestRepository;
     private final FormRepository formRepository;
     private final JwtUtil jwtUtil;
@@ -26,58 +35,96 @@ public class FormRequestService {
     }
 
 
-    public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException {
+    public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException, IOException, InvalidWordToPDFConversion, InterruptedException {
         // Get the userRegistrationNumber from the JWT token
-        // Uncomment the following line when the frontend is implemented
-//        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
-        //check if the data given by the user fits to the desired form template
+        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
         if (this.formRepository.findNumberOfInputFieldsById(formRequestRequest.getFormId()).getNumberOfInputFields()
-                == formRequestRequest.getFields().size()) {
+                == formRequestRequest.getFieldsData().size()) {
             FormRequest formRequest = new FormRequest(
                     formRequestRequest.getFormId(),
-        // Uncomment the following line when the frontend is implemented
-//                    userRegistrationNumber,
-                    formRequestRequest.getJwtToken(), //only for testing, remove when frontend is done
+                    userRegistrationNumber,
                     FormRequestStatus.PENDING,
-                    formRequestRequest.getFields()
+                    createFormRequestFields(formRequestRequest.getFieldsData())
             );
 
+//            save the request in the db
             formRequestRepository.save(formRequest);
+
+//            create files for the formRequest view
+            String formTitle = this.formRepository.findTitleById(formRequestRequest.getFormId()).getTitle();
+            WordFileUtil.fillPlaceholders(formTitle, userRegistrationNumber, formRequestRequest.getFieldsData());
+            PdfFileUtil.createPdfAndImageForSubmittedFormRequest(formTitle, userRegistrationNumber);
+
             return formRequest;
         }
-        else{
-            throw new FormRequestFieldDataException("The number of fields in the form request does not match the number of fields in the form template.");
+        throw new FormRequestFieldDataException("The number of fields in the form request does not match the number of fields in the form template.");
+    }
+
+    private List<FormRequestField> createFormRequestFields(List<String> fieldsData) {
+        List<FormRequestField> formRequestFields = new ArrayList<>();
+        for (String fieldData : fieldsData) {
+            formRequestFields.add(new FormRequestField(fieldData));
         }
+        return formRequestFields;
     }
 
     // Used to get all requests for a specific user
     // Can be used to display active formRequests in the dashboard
-    public List<FormRequest> getFormRequestsByUserRegistrationNumber(String sessionToken) {
-        // Uncomment the following line when the frontend is implemented
-//        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(sessionToken);
-        return formRequestRepository.findByUserRegistrationNumber(
-        // Uncomment the following line when the frontend is implemented
-//                userRegistrationNumber
-                sessionToken //only for testing, remove when frontend is done
+    public List<FormRequestResponse> getFormRequestsByUserRegistrationNumber(String jwtToken) {
+        String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(jwtToken);
+        List<FormRequest> formRequests = formRequestRepository.findByUserRegistrationNumber(
+                userRegistrationNumber
         );
+
+        List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
+        for (FormRequest formRequest : formRequests) {
+            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
+        }
+        return formRequestsResponse;
     }
 
-    public void approveRequest(long requestId) {
-        // secretary page
-    }
+    //Used to get requests based on status
+    //Can also be used to filter requests by status (for students combined with user filtering)
+    public List<FormRequestResponse> getFormRequestsByStatus(FormRequestStatus status) {
+        List<FormRequest> formRequests = formRequestRepository.findByStatus(status);
 
-    public void rejectRequest(long requestId) {
-        // secretary page
+        List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
+        for (FormRequest formRequest : formRequests) {
+            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
+        }
+        return formRequestsResponse;
     }
 
     public FormRequest getFormRequestById(Long id) throws InvalidFormRequestIdException {
         Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
         if (formRequest.isPresent()) {
-            System.out.println(formRequest.get());
             return formRequest.get();
         }
-        else{
-            throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
+        throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
+    }
+
+    // provides a way to update the status of an existing form request
+    public void updateFormRequestStatus(Long id, String status) throws InvalidFormRequestIdException, InvalidFormRequestStatusException {
+        Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
+        if (formRequest.isPresent()) {
+            formRequest.get().setStatus(FormRequestStatus.getStatusFromString(status));
+            this.formRequestRepository.save(formRequest.get());
+            return;
         }
+        throw new InvalidFormRequestIdException("The form request with the given ID does not exist.");
+    }
+
+    // provides the image of the completed form request with the given id
+    public byte[] getFormRequestImage(Long id, String token) throws IOException, InvalidFormIdException {
+        String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+        Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
+        if (formRequest.isEmpty()) {
+            throw new InvalidFormIdException("The form request with the given ID does not exist.");
+        }
+        String title = formRepository.findTitleById(formRequest.get().getFormId()).getTitle();
+        String imageFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".png";
+        return Files.readAllBytes(Paths.get(imageFilePath));
     }
 }

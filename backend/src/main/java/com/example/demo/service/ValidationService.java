@@ -48,7 +48,7 @@ public class ValidationService {
                 }
             } catch (DecryptionException e) {
                 loggerValidationService.error(e.getMessage());
-                return false;
+                return true;
             }
         }
 
@@ -60,7 +60,7 @@ public class ValidationService {
                 }
             } catch (DecryptionException e) {
                 loggerValidationService.error(e.getMessage());
-                return false;
+                return true;
             }
         }
 
@@ -112,7 +112,6 @@ public class ValidationService {
                 }
                 else{
                     String decrypted = decrypt(user.getRegNumber());
-                    System.out.println(decrypted);
                     if(decrypted.equals(identifier)){
                         return user;
                     }
@@ -125,7 +124,6 @@ public class ValidationService {
         }
         return null;
     }
-
 
     public Admin findAdmin(String decryptAuthKey) throws DecryptionException{
         for(Admin admin : adminRepository.findAll()){

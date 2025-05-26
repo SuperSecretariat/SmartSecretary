@@ -9,8 +9,12 @@
         <div *ngFor="let request of filteredRequests" class="card mb-3">
           <div class="card-body request-item">
             <span class="request-id"><strong>ID:</strong> {{ request.id }}</span>
-            <span class="request-form"><strong>Form:</strong> {{ request.formName }}</span>
+            <span class="request-form"><strong>Nume:</strong> {{ request.formTitle }}</span>
             <span class="request-status"><strong>Status:</strong> {{ request.status }}</span>
+            <button class="btn btn-primary float-end"
+            (click)="viewForm(request.id)">
+              View request
+            </button>
           </div>
         </div>
       </div>
