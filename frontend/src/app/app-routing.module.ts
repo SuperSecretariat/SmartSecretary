@@ -65,7 +65,7 @@ const routes: Routes = [
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
       { path: 'dashboard/viewTickets', component: BoardSecretaryViewTicketsComponent },
-      { path: 'dashboard/view-form/:id', component: ViewFormComponent}
+      { path: 'dashboard/view-form/:id', component: BoardSecretaryReviewTicketComponent}
     ]
   },
 ];
