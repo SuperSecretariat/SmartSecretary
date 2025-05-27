@@ -15,7 +15,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:4200") // Replace with your frontend URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE") // "OPTIONS" ?? IDK
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH") // "OPTIONS" ?? IDK
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

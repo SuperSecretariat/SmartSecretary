@@ -89,9 +89,11 @@ export class FormsService {
     updateFormStatusById(id: number, status: string): Observable<any> {
         return this.http.patch(
             `${FORMS_API_REQUESTS}/${id}/status`,
-            JSON.stringify(status), 
+            status,
             {
-                headers: this.addAuthorizationHeader(httpOptions.headers),
+                headers: this.addAuthorizationHeader(
+                    httpOptions.headers.set('Content-Type', 'text/plain')
+                ),
                 responseType: "json",
             }
         );
