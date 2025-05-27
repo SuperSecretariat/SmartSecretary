@@ -1,21 +1,29 @@
 .container {
     margin-top: 20px;
+    width: 100%;
+    max-width: 100%;
   }
   
-  .card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-  }
-  
-  .card-header {
-    background-color: rgb(21,96,189);
-    color: white;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
-  }
+.card {
+  border-radius: 18px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  background: #fff;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+  color: #fff;
+  border-radius: 18px 18px 0 0;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  border-bottom: none;
+  backdrop-filter: blur(2px);
+}
+
   
   .card-body {
     padding: 20px;
@@ -26,44 +34,46 @@
     margin-bottom: 15px;
   }
   
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .is-invalid {
-    border-color: red;
-  }
-  
-  .invalid-feedback {
-    color: red;
-    font-size: 14px;
-  }
-  
-  .request-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-  }
-  
-  .request-item {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-  }
-  
-  .request-details {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-  }
-  
+.form-control,
+.custom-select {
+  background: #f5f8fa;
+  border: 1.5px solid #b0bec5;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  padding: 12px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.03);
+}
+
+.form-control:focus,
+.custom-select:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px #1976d233;
+  background: #e3f2fd;
+}
+
+.custom-select:hover {
+  border-color: #42a5f5;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  position: absolute;
+  top: -12px;
+  left: 14px;
+  background: #fff;
+  padding: 0 6px;
+  font-size: 0.98rem;
+  color: #1976d2;
+  font-weight: 500;
+  transition: color 0.2s;
+  z-index: 2;
+}
+
   .btn {
     padding: 10px 15px;
     border: none;
@@ -73,15 +83,27 @@
     font-weight: bold;
   }
   
-  .btn-primary {
-    background-color: rgb(26, 113, 219);
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-primary:hover {
-    background-color: rgb(21,96,189);
-  }
+  /* Button with modern effect */
+.btn-primary {
+  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
+}
+
+.btn-primary:disabled {
+  background: #b0bec5;
+  color: #fff;
+  cursor: not-allowed;
+}
   
   .btn-secondary {
     background-color:  rgb(26, 113, 219);
@@ -102,18 +124,19 @@
     position: relative;
   }
   
-  .form-group label {
-    position: absolute;
-    top: 12px;
-    left: 10px;
-    background: white;
-    padding: 0 5px;
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.39);
-  }
+  .material-icons {
+  vertical-align: middle;
+  margin-right: 10px;
+  font-size: 2rem;
+  opacity: 0.85;
+}
 
-  .custom-select:hover {
-    border-color: #007bff; 
-    outline: none;
-    transition: border-color 0.3s ease-in-out;
+@media (max-width: 768px) {
+  .col-md-8 {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
+  .card {
+    border-radius: 10px;
+  }
+}

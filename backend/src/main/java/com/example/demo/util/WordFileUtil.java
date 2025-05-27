@@ -5,15 +5,14 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class WordFileUtil {
+    private static final String FORMS_DIRECTORY_PATH = "formDocuments/";
     private WordFileUtil() {}
 
     public static void convertDocxToPDF(String wordFilePath, String pdfOutputDirectoryPath) throws IOException, InterruptedException, InvalidWordToPDFConversion  {
@@ -28,7 +27,14 @@ public class WordFileUtil {
         int exitCode = process.waitFor();
 
         if (exitCode != 0) {
-            throw new InvalidWordToPDFConversion("File being converted: " + wordFilePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            StringBuilder message = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                message.append(line);
+                message.append("\n");
+            }
+            throw new InvalidWordToPDFConversion("Error converting .docx (" + wordFilePath + ") to pdf. Error body: " + message);
         }
     }
 
@@ -38,7 +44,7 @@ public class WordFileUtil {
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
-        String docxFilePath = "src/main/resources/uploaded.forms/" + formTitle + '/' + formTitle+ ".docx";
+        String docxFilePath = FORMS_DIRECTORY_PATH + formTitle + '/' + formTitle+ ".docx";
         String docxOutputFilePath = docxOutputDirectoryPath + '/' + formTitle + ".docx";
         try (FileInputStream fis = new FileInputStream(docxFilePath);
              XWPFDocument doc = new XWPFDocument(fis)) {

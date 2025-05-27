@@ -117,12 +117,12 @@ public class FormRequestService {
     }
 
     // provides the image of the completed form request with the given id
-    public byte[] getFormRequestImage(Long id, String token) throws IOException, InvalidFormIdException {
-        String registrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(token);
+    public byte[] getFormRequestImage(Long id) throws IOException, InvalidFormIdException {
         Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
         if (formRequest.isEmpty()) {
             throw new InvalidFormIdException("The form request with the given ID does not exist.");
         }
+        String registrationNumber = this.formRequestRepository.findRegistrationNumberById(id).getUserRegistrationNumber();
         String title = formRepository.findTitleById(formRequest.get().getFormId()).getTitle();
         String imageFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".png";
         return Files.readAllBytes(Paths.get(imageFilePath));

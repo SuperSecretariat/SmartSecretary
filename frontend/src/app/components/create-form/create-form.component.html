@@ -1,57 +1,33 @@
-<div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <h3>Create Form</h3>
-          </div>
-          <div class="card-body">
-            <form (ngSubmit)="completeRequest()" #f="ngForm" novalidate>
-              <div class="form-group mb-3">
-                  <select
-                      class="form-control custom-select"
-                      [(ngModel)]="selectedFormId"
-                      name="selectedFormId"
-                  >
-                  <option value="" disabled>--Please choose a request to complete--</option>
-                  <option *ngFor="let form of forms" [value]="form.id">{{ form.title }}</option>
-                  </select>
-              </div>
-  
-              <div class="form-group mb-3">
-                <button class="btn btn-primary" [disabled]="!selectedFormId">
-                  Complete Your Request
-                </button>
-              </div>
-            </form>
-  
-            <!-- <h3>Your Requests</h3>
-            <ul class="request-list">
-              <li *ngFor="let request of requests" class="request-item">
-                <div class="request-details">
-                  <span><strong>ID:</strong> {{ request.id }}</span>
-                  <span><strong>Form:</strong> {{ request.formName }}</span>
-                  <span><strong>Status:</strong> {{ request.status }}</span>
-                  <input
-                    type="checkbox"
-                    (change)="toggleRequestSelection(request)"
-                    [checked]="selectedRequests.includes(request)"
-                  />
-                </div>
-              </li>
-            </ul>
-  
-            <div class="form-group mb-3">
-              <button
-                class="btn btn-secondary"
-                (click)="submitRequests()"
-                [disabled]="selectedRequests.length === 0"
+  <div class="row justify-content-center container">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0">
+        <div class="card-header d-flex align-items-center">
+          <span class="material-icons mr-2" style="font-size: 2rem;">assignment</span>
+          <h4 class="mb-0 flex-grow-1">Fill Out a Request</h4>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="completeRequest()" #f="ngForm" novalidate>
+            <div class="form-group mb-4">
+              <select
+                id="selectForm"
+                class="form-control custom-select"
+                [(ngModel)]="selectedFormId"
+                name="selectedFormId"
+                required
               >
-                Submit Selected Requests
+                <option value="" disabled selected hidden>--Select a request--</option>
+                <option *ngFor="let form of forms" [value]="form.id">{{ form.title }}</option>
+              </select>
+            </div>
+            <div class="form-group text-end">
+              <button class="btn btn-primary px-4 py-2" [disabled]="!selectedFormId">
+                <span class="material-icons align-middle" style="font-size: 1.2rem;">check_circle</span>
+                Fill Out
               </button>
-            </div> -->
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

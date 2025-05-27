@@ -1,84 +1,122 @@
+.container {
+  background: #f7fafd;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+  padding: 0;
+  border: none;
+  margin: 10px;
+  overflow-y: auto;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 .request-list {
-    list-style: none;
-    padding: 0.5;
-    margin-top: 2px;
-  }
-  
-  .card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 15px; 
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-  }
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  .card-header {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    background-color: rgb(21, 96, 189);
-    color: white;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
-  }
+.submitted-requests {
+  padding: 24px 32px 8px 32px;
+}
 
-  .card-header h3 {
-    margin: 0;
-  }
-  
-  .request-id {
-    flex: 1;
-    text-align: left;
-  }
-  
-  .request-form {
-    flex: 1;
-    text-align: center;
-  }
-  
-  .request-status {
-    flex: 1;
-    text-align: right;
-  }
+.card.mb-3 {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.07);
+  margin-bottom: 18px;
+  border: none;
+  transition: box-shadow 0.2s;
+}
 
-  .request-id,
+.card.mb-3:hover {
+  box-shadow: 0 6px 24px rgba(25, 118, 210, 0.15);
+}
+
+.card-body.request-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 18px 24px;
+  font-size: 1.08rem;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: transparent;
+  border: none;
+}
+
+.request-id,
 .request-form,
 .request-status {
-  margin-right: 20px; 
+  flex: 1 1 120px;
+  margin-right: 16px;
+  color: #222;
+  font-weight: 500;
 }
-  
-  .no-requests {
-    text-align: center;
-    font-size: 16px;
-    color: #888;
-    margin-top: 20px;
+
+.request-status {
+  text-align: right;
+}
+
+.btn.btn-primary.float-end {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 22px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn.btn-primary.float-end:hover {
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
+}
+
+.no-requests {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+  margin: 40px 0 32px 0;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.search-bar {
+  padding: 24px 32px 0 32px;
+}
+
+.search-bar .form-control {
+  border-radius: 8px;
+  font-size: 1.08rem;
+  padding: 10px 16px;
+  border: 1px solid #bcdffb;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.06);
+}
+
+@media (max-width: 700px) {
+  .submitted-requests {
+    padding: 16px 8px;
   }
-
-  .form-container {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
+  .card-body.request-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 8px;
   }
-
-  .card {
-    margin-bottom: 20px;
-    top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-    margin-right: 20px;
-    max-width: 100%;
+  .request-id, .request-form, .request-status {
+    margin-right: 0;
+    margin-bottom: 8px;
+    text-align: left;
   }
-
-
-  
-  
+  .btn.btn-primary.float-end {
+    width: 100%;
+    margin-top: 10px;
+  }
+}

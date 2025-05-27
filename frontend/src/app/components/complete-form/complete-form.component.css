@@ -26,20 +26,20 @@
 /* Stil pentru inputurile dinamice */
 .image-container input {
   position: absolute;
-  border: 1px solid #007bff; /* Linie de contur albastră */
-  border-radius: 4px; /* Colțuri rotunjite */
+  border: 1px solid #007bff; 
+  border-radius: 4px;
   font-size: 14px;
-  box-sizing: border-box; /* Asigură că padding-ul nu afectează dimensiunea */
-  background-color: rgba(255, 255, 255, 0.8); /* Fundal semi-transparent */
-  color: #333; /* Culoare text */
-  outline: none; /* Elimină conturul implicit */
-  transition: box-shadow 0.3s ease; /* Tranziție pentru focus */
+  box-sizing: border-box; 
+  background-color: rgba(255, 255, 255, 0.8); 
+  color: #333; 
+  outline: none; 
+  transition: box-shadow 0.3s ease; 
 }
 
 /* Stil pentru inputurile la focus */
 .image-container input:focus {
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Umbră albastră la focus */
-  border-color: #0056b3; /* Linie de contur mai închisă */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); 
+  border-color: #0056b3; 
 }
 
 /* Stil pentru mesajul de încărcare */
@@ -53,7 +53,12 @@ div p {
 .submit_button_container{
   display: flex;
   justify-content: center;
-  margin: 10px;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 100%;
 }
 
 button {
@@ -135,4 +140,25 @@ button span {
   text-align: center;
   margin-top: 10px;
   font-weight: 600;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #e3f2fd;
+  border-top: 5px solid #0072ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
