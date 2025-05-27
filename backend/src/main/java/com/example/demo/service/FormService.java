@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class FormService {
+    private static final String FORMS_DIRECTORY_PATH = "formDocuments/";
     private final Logger logger = LoggerFactory.getLogger(FormService.class);
     private final FormRepository formRepository;
 
@@ -96,7 +97,7 @@ public class FormService {
         }
         String title = form.get().getTitle();
         this.logger.info("Getting form image for form with title: {}", title);
-        String imageFilePath = "src/main/resources/uploaded.forms/" + title + '/' + title + ".png";
+        String imageFilePath = FORMS_DIRECTORY_PATH + title + '/' + title + ".png";
         return Files.readAllBytes(Paths.get(imageFilePath));
     }
 

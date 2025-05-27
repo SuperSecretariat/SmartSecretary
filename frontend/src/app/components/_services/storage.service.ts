@@ -71,7 +71,7 @@ export class StorageService {
     );
   }
 
-  private readonly DELETE_API = 'http://localhost:8081/api/user/delete-me';
+  private readonly DELETE_API = `${environment.backendUrl}/api/user/delete-me`;
   deleteAccount(): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -82,7 +82,7 @@ export class StorageService {
       });
   }
   
-  private readonly SHOWAUTHKEY_API = 'http://localhost:8081/api/user/authkey';
+  private readonly SHOWAUTHKEY_API = `${environment.backendUrl}/api/user/authkey`;
   showAuthKey(email: string): Observable<any> {
     const token = this.getUser().token;
     const params = new HttpParams().set('email', email);
@@ -95,7 +95,7 @@ export class StorageService {
       });
   }
 
-  private readonly DELETEUSER_API = 'http://localhost:8081/api/user/delete-user';
+  private readonly DELETEUSER_API = `${environment.backendUrl}/api/user/delete-user`;
   deleteUserAccount(registrationNumber: string): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);

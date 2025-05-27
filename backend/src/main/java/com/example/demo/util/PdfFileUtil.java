@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class PdfFileUtil {
-    private static final String FORMS_DIRECTORY_PATH = "src/main/resources/uploaded.forms/";
+    private static final String FORMS_DIRECTORY_PATH = "formDocuments/";
     private static final String FORM_REQUESTS_DIRECTORY_PATH = "src/main/resources/requests/";
     private static final String SCRIPTS_DIRECTORY_PATH = "src/main/resources/scripts/";
     private PdfFileUtil() {

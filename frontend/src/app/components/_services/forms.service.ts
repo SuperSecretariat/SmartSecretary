@@ -71,8 +71,43 @@ export class FormsService {
         );
     }
 
+    getAllSubmittedRequests() : Observable<any> {
+        return this.http.get(
+            `${FORMS_API_REQUESTS}/review-requests`,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
+    }
+
     addAuthorizationHeader(headers : HttpHeaders) : HttpHeaders {
         const jwtToken = this.storageService.getUser().token;
         return headers.set('Authorization', 'Bearer ' + jwtToken);
+    }
+
+    updateFormStatusById(id: number, status: string): Observable<any> {
+        return this.http.patch(
+            `${FORMS_API_REQUESTS}/${id}/status`,
+            status,
+            {
+                headers: this.addAuthorizationHeader(
+                    httpOptions.headers.set('Content-Type', 'text/plain')
+                ),
+                responseType: "json",
+            }
+        );
+    }
+
+    createForm(title: string, isActive: boolean): Observable<any> {
+        const payload = { title, isActive };
+        return this.http.post(
+            FORMS_API_CONTROLLER,
+            payload,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
     }
 }
