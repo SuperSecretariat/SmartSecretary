@@ -14,3 +14,6 @@ To get started, follow these steps:
 You can find additional information and the full project repository here:  
 🔗 [https://github.com/AndreiBalan98/ArtificialGeneralIntelligence](https://github.com/AndreiBalan98/ArtificialGeneralIntelligence)
 
+
+venv, chroma_db, pdfuri out of the box, fara sa mai fie nevoie sa rulezi create_embeddings.py:
+https://we.tl/t-GBGirgCU7Q (3 zile incepand din mai 28, ora 2:37)
