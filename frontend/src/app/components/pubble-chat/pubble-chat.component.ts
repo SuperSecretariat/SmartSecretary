@@ -40,7 +40,7 @@ export class PubbleChatComponent implements AfterViewInit {
       const resp = await fetch(`${environment.backendUrl}/api/pubble/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: trimmed, provider: 'microsoft' })
+        body: JSON.stringify({ message: trimmed, provider: 'mistral' })
       });
       const data = await resp.json();
       responseText = data.answer;
