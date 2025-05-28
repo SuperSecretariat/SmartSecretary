@@ -22,7 +22,7 @@ node_modules/
 **/build/
 **/out/
 
-chroma_db
-pdfuri
-venv
-__pycache__
+llm/chroma_db
+llm/pdfuri
+llm/venv
+llm/__pycache__
