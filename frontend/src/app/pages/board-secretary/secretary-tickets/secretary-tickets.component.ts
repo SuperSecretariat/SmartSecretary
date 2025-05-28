@@ -9,15 +9,13 @@ import { Ticket, TicketMessage, TicketStatus } from '@models/ticket.model';
   standalone: false,
 })
 export class SecretaryTicketsComponent implements OnInit {
-  tickets: Ticket[] = []; // Populate from service
+  tickets: Ticket[] = [];
   selectedTicket: Ticket | null = null;
   showChatModal = false;
 
   searchQuery = '';
   filterStatus = '';
   filterType = '';
-
-  currentUserName = 'Secretary Name'; // Should be dynamic
   
   constructor(private readonly ticketService: TicketService) {}
 
@@ -55,9 +53,16 @@ export class SecretaryTicketsComponent implements OnInit {
     this.showChatModal = false;
   }
 
-  handleSendMessage(message: TicketMessage): void {
-    // this.selectedTicket?.addMessage(message);
-    // update backend here
+  handleSendMessage(payload: {ticket: Ticket, message: string, callback: (ticket: Ticket) => void}): void {
+    this.ticketService.sendTicketMessage(payload.ticket, payload.message).subscribe({
+      error: err => {
+        console.error('Failed to send message:', err);
+      },
+      next: response => {
+        console.log('Message sent:', response);
+        payload.callback(payload.ticket)
+      },
+    })
   }
 
   handleStatusChange(updatedTicket: Ticket): void {
@@ -68,7 +73,7 @@ export class SecretaryTicketsComponent implements OnInit {
       next: response => {
         console.log('Ticket updated:', response);
         this.refreshUserTickets();
-        this.showChatModal = false;
+        this.closeChat()
       },
     })
   }

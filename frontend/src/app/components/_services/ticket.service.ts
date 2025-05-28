@@ -73,4 +73,17 @@ export class TicketService {
     const MESSAGES_API = `${TICKET_API}/${ticket.id}/messages`
     return this.http.get<TicketMessage[]>(MESSAGES_API, {headers})
   }
+
+  sendTicketMessage(ticket: Ticket, message: string) {
+    const token = this.storageService.getUser()['token']
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+    })
+
+    const params = new HttpParams().set('message', message)
+
+    const MESSAGES_API = `${TICKET_API}/${ticket.id}/messages`
+    return this.http.post(MESSAGES_API, {}, {headers, params})
+  }
 }

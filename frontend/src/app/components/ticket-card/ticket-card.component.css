@@ -1,11 +1,12 @@
 .ticket-card {
-  border: 1px solid black;
+  border: 2px solid black;
   border-radius: 8px;
   cursor: pointer;
   overflow: hidden;
   width: 300px; /* adjust as needed */
   box-shadow: none;
   transition: box-shadow 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .ticket-header {
@@ -13,9 +14,7 @@
   color: white;
   padding: 1rem;
   font-weight: bold;
-  border-bottom: 1px solid black;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-bottom: 2px solid black;
   transition: background-color 0.2s ease;
 }
 
@@ -35,6 +34,7 @@
 /* Hover styles */
 .ticket-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.03);
 }
 
 .ticket-card:hover .ticket-header {

@@ -67,4 +67,17 @@ public class TicketController {
                 .toList();
         return ResponseEntity.ok(messages);
     }
+
+    @PostMapping("/{ticketId}/messages")
+    public ResponseEntity<?> addMessage(
+            @PathVariable Long ticketId,
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestParam String message
+    ) {
+        String jwtToken = authorizationHeader.startsWith("Bearer ") ?
+                authorizationHeader.substring(7) : authorizationHeader;
+
+        ticketService.addMessageToTicket(ticketId, jwtToken, message);
+        return ResponseEntity.ok().build();
+    }
 }

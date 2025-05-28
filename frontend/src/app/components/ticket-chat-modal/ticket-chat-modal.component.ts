@@ -17,7 +17,7 @@ export class TicketChatModalComponent implements OnInit {
   @Input() currentUserName!: string;
 
   @Output() closeModal = new EventEmitter<void>();
-  @Output() sendMessage = new EventEmitter<TicketMessage>();
+  @Output() sendMessage = new EventEmitter<{ticket: Ticket, message: string, callback: (ticket: Ticket) => void}>();
   @Output() changeStatus = new EventEmitter<Ticket>();
 
   messageText = '';
@@ -32,15 +32,14 @@ export class TicketChatModalComponent implements OnInit {
   onSend(): void {
     const content = this.messageText.trim();
     if (!content) return;
+    
+    const payload = {
+      ticket: this.ticket,
+      message: content,
+      callback: this.getMessages.bind(this)
+    }
 
-    const message = new TicketMessage({
-      senderEmail: this.currentUserName,
-      message: this.messageText,
-      timestamp: new Date(),
-    });
-
-    this.sendMessage.emit(message);
-    // this.ticket.addMessage(message);
+    this.sendMessage.emit(payload);
     this.messageText = '';
   }
 

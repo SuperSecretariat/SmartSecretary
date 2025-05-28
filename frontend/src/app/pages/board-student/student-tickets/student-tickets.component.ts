@@ -44,10 +44,17 @@ export class StudentTicketsComponent implements OnInit {
     this.showChatModal = false;
   }
 
-  // handleSendMessage(message: TicketMessage): void {
-  //   this.selectedTicket?.addMessage(message);
-  //   // update backend here
-  // }
+  handleSendMessage(payload: {ticket: Ticket, message: string, callback: (ticket: Ticket) => void}): void {
+    this.ticketService.sendTicketMessage(payload.ticket, payload.message).subscribe({
+      error: err => {
+        console.error('Failed to send message:', err);
+      },
+      next: response => {
+        console.log('Message sent:', response);
+        payload.callback(payload.ticket)
+      },
+    })
+  }
 
   refreshUserTickets(): void {
     this.ticketService.getTickets().subscribe({
