@@ -90,7 +90,13 @@ async def transcribe_audio(audio: UploadFile = File(...)):
 
         if not is_accepted:
             logger.warning(f"Rejected file type: {audio.content_type}")
-            raise HTTPException(status_code=400, detail=f"Unsupported file type: {audio.content_type}")
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "error": f"Unsupported file type: {audio.content_type}",
+                    "status": "error"
+                }
+            )
 
         # Determină extensia fișierului
         if audio.filename and '.' in audio.filename:
@@ -112,36 +118,52 @@ async def transcribe_audio(audio: UploadFile = File(...)):
         # Verifică dacă fișierul nu este gol
         if len(content) == 0:
             os.unlink(tmp_file_path)
-            raise HTTPException(status_code=400, detail="Audio file is empty")
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "error": "Audio file is empty",
+                    "status": "error"
+                }
+            )
 
         # Transcrie audio
         try:
             result = model.transcribe(tmp_file_path, language="ro")
             transcribed_text = result["text"].strip()
+
+            # Log the transcription result
+            logger.info(f"Raw transcription result: '{transcribed_text}'")
+
         except Exception as transcription_error:
             logger.error(f"Whisper transcription error: {str(transcription_error)}")
             os.unlink(tmp_file_path)
-            raise HTTPException(status_code=500, detail=f"Transcription failed: {str(transcription_error)}")
-
-        logger.info(f"Transcription completed: {transcribed_text[:50]}...")
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "error": f"Transcription failed: {str(transcription_error)}",
+                    "status": "error"
+                }
+            )
 
         # Șterge fișierul temporar
         os.unlink(tmp_file_path)
 
-        if not transcribed_text:
+        # Handle empty or very short transcriptions (likely no speech)
+        if not transcribed_text or len(transcribed_text.strip()) < 2:
+            logger.info("No meaningful speech detected in audio")
             return JSONResponse(content={
                 "text": "",
                 "status": "success",
                 "message": "No speech detected in audio"
             })
 
+        logger.info(f"Transcription completed successfully: {transcribed_text[:50]}...")
+
         return JSONResponse(content={
             "text": transcribed_text,
             "status": "success"
         })
 
-    except HTTPException:
-        raise
     except Exception as e:
         logger.error(f"Transcription error: {str(e)}")
         if 'tmp_file_path' in locals() and os.path.exists(tmp_file_path):
