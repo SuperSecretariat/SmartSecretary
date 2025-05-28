@@ -56,48 +56,58 @@ public class PubbleChatController {
             }
 
             String augmentedPrompt = augmentJson.get("augmented_prompt").asText();
-            List<String> chunks = augmentJson.has("chunks") ?
-                    mapper.readValue(augmentJson.get("chunks").toString(), List.class) : Collections.emptyList();
-            List<String> sources = augmentJson.has("sources") ?
-                    mapper.readValue(augmentJson.get("sources").toString(), List.class) : Collections.emptyList();
+            JsonNode chunksNode = augmentJson.get("chunks");
+            JsonNode sourcesNode = augmentJson.get("sources");
 
-            if ("microsoft".equals(provider)) {
+            List<String> chunks = chunksNode != null ? mapper.readValue(chunksNode.toString(), List.class) : Collections.emptyList();
+            List<String> sources = sourcesNode != null ? mapper.readValue(sourcesNode.toString(), List.class) : Collections.emptyList();
+
+            if (provider.equals("microsoft")) {
                 headers.setBearerAuth(openRouterApiKey);
 
-                ObjectNode payload = mapper.createObjectNode();
-                payload.put("model", "microsoft/mai-ds-r1:free");
-                payload.put("temperature", 0.7);
+                ObjectNode openRouterPayload = mapper.createObjectNode();
+                openRouterPayload.put("model", "microsoft/mai-ds-r1:free");
+                openRouterPayload.put("temperature", 0.7);
 
                 ObjectNode message = mapper.createObjectNode();
                 message.put("role", "user");
                 message.put("content", augmentedPrompt);
-                payload.putArray("messages").add(message);
 
-                HttpEntity<String> openRouterRequest = new HttpEntity<>(mapper.writeValueAsString(payload), headers);
+                openRouterPayload.putArray("messages").add(message);
+
+                HttpEntity<String> openRouterRequest = new HttpEntity<>(mapper.writeValueAsString(openRouterPayload), headers);
+
+
                 ResponseEntity<String> openRouterResponse = restTemplate.postForEntity(microsoftUrl, openRouterRequest, String.class);
                 JsonNode openRouterJson = mapper.readTree(openRouterResponse.getBody());
 
-                String answer = openRouterJson.at("/choices/0/message/content").asText("Invalid response from OpenRouter");
-                return new ChatResponse(answer, chunks, sources);
+                JsonNode microsoftAnswerNode = openRouterJson.at("/choices/0/message/content");
+                String microsoftAnswer = microsoftAnswerNode.isTextual() ? microsoftAnswerNode.asText() : "Invalid response from OpenRouter";
 
-            } else if ("mistral".equals(provider)) {
-                ObjectNode payload = mapper.createObjectNode();
-                payload.put("model", "mistral");
-                payload.put("prompt", augmentedPrompt);
-                payload.put("stream", false);
+                return new ChatResponse(microsoftAnswer, chunks, sources);
 
-                HttpEntity<String> ollamaRequest = new HttpEntity<>(mapper.writeValueAsString(payload), headers);
+            } else if (provider.equals("mistral")) {
+                ObjectNode ollamaPayload = mapper.createObjectNode();
+                ollamaPayload.put("model", "mistral");
+                ollamaPayload.put("prompt", augmentedPrompt);
+                ollamaPayload.put("stream", false);
+
+                HttpEntity<String> ollamaRequest = new HttpEntity<>(mapper.writeValueAsString(ollamaPayload), headers);
+
+
                 ResponseEntity<String> ollamaResponse = restTemplate.postForEntity(ollamaUrl, ollamaRequest, String.class);
                 JsonNode ollamaJson = mapper.readTree(ollamaResponse.getBody());
+                String ollamaAnswer = ollamaJson.get("response").asText();
 
-                String answer = ollamaJson.get("response").asText();
-                return new ChatResponse(answer, chunks, sources);
+                return new ChatResponse(ollamaAnswer, chunks, sources);
+            }
+            else {
+                return new ChatResponse("No provider selected", Collections.emptyList(), Collections.emptyList());
             }
 
-            return new ChatResponse("No provider selected", Collections.emptyList(), Collections.emptyList());
-
         } catch (Exception e) {
-            return new ChatResponse("Error processing message: " + e.getMessage(), Collections.emptyList(), Collections.emptyList());
+            e.printStackTrace();
+            return new ChatResponse("Error when processing message: " + e.getMessage(), Collections.emptyList(), Collections.emptyList());
         }
     }
 }
