@@ -23,8 +23,7 @@ export class PubbleChatComponent implements AfterViewInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
-    const inputField = document.getElementById('user-input') as HTMLInputElement;
-    inputField?.focus();
+    (document.getElementById('user-input') as HTMLInputElement)?.focus();
   }
 
   async sendMessage() {
@@ -33,21 +32,19 @@ export class PubbleChatComponent implements AfterViewInit {
 
     this.messages.push({ sender: 'user', text: trimmed, displayed: trimmed });
     this.scrollToBottom();
-
     this.message = '';
     this.isLoading = true;
 
     let responseText = '';
     try {
-      const provider = 'microsoft';
       const resp = await fetch(`${environment.backendUrl}/api/pubble/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: trimmed, provider })
+        body: JSON.stringify({ message: trimmed, provider: 'microsoft' })
       });
       const data = await resp.json();
       responseText = data.answer;
-    } catch (err) {
+    } catch {
       responseText = 'Error when communicating with server';
     } finally {
       this.isLoading = false;
@@ -56,7 +53,6 @@ export class PubbleChatComponent implements AfterViewInit {
     const botMsg = { sender: 'bot' as const, text: responseText, displayed: '' };
     this.messages.push(botMsg);
 
-    // type it out word by word
     const words = responseText.split(' ');
     let idx = 0;
     const interval = setInterval(() => {
@@ -70,10 +66,6 @@ export class PubbleChatComponent implements AfterViewInit {
   }
 
   async toggleRecording() {
-    console.log('Toggle recording called, current state:', this.isRecording);
-    console.log('MediaDevices support:', !!navigator.mediaDevices);
-    console.log('getUserMedia support:', !!navigator.mediaDevices?.getUserMedia);
-
     if (!this.isRecording) {
       await this.startRecording();
     } else {
@@ -83,31 +75,23 @@ export class PubbleChatComponent implements AfterViewInit {
 
   private async startRecording() {
     try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (!navigator.mediaDevices?.getUserMedia) {
         alert('Your browser does not support audio recording');
         return;
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
-        }
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
       });
 
       const options: MediaRecorderOptions = {};
-
       if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
         options.mimeType = 'audio/webm;codecs=opus';
       } else if (MediaRecorder.isTypeSupported('audio/webm')) {
         options.mimeType = 'audio/webm';
-      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-        options.mimeType = 'audio/mp4';
       }
 
       this.mediaRecorder = new MediaRecorder(stream, options);
-      console.log('MediaRecorder created with mimeType:', this.mediaRecorder.mimeType);
       this.audioChunks = [];
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -117,9 +101,9 @@ export class PubbleChatComponent implements AfterViewInit {
       };
 
       this.mediaRecorder.onstop = async () => {
-        const mimeType = this.mediaRecorder?.mimeType || 'audio/webm';
-        const audioBlob = new Blob(this.audioChunks, { type: mimeType });
-        console.log('Audio blob created:', audioBlob.type, 'size:', audioBlob.size);
+        const audioBlob = new Blob(this.audioChunks, {
+          type: this.mediaRecorder?.mimeType || 'audio/webm'
+        });
 
         this.isTranscribing = true;
         this.cdr.detectChanges();
@@ -137,15 +121,11 @@ export class PubbleChatComponent implements AfterViewInit {
       this.mediaRecorder.start();
       this.isRecording = true;
 
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-
+    } catch (error: any) {
       if (error.name === 'NotAllowedError') {
         alert('Microphone access denied. Please allow microphone permissions and try again.');
       } else if (error.name === 'NotFoundError') {
         alert('No microphone found on this device.');
-      } else if (error.name === 'NotSupportedError') {
-        alert('Audio recording is not supported on this device/browser.');
       } else {
         alert(`Error accessing microphone: ${error.message || 'Unknown error'}`);
       }
@@ -171,28 +151,14 @@ export class PubbleChatComponent implements AfterViewInit {
 
       const result = await response.json();
 
-      if (result.status === 'success') {
-        if (result.text && result.text.trim()) {
-          this.message = result.text.trim();
-          setTimeout(() => {
-            const inputField = document.getElementById('user-input') as HTMLInputElement;
-            inputField?.focus();
-            this.cdr.detectChanges();
-          }, 100);
-        } else {
-          console.log('No speech detected in audio recording');
-        }
-      } else {
-        if (result.error && !result.error.includes('No speech detected')) {
-          console.error('Transcription failed:', result.error);
-          alert('Transcription failed. Please try again.');
-        } else {
-          console.log('No speech detected in audio recording');
-        }
+      if (result.status === 'success' && result.text?.trim()) {
+        this.message = result.text.trim();
+        setTimeout(() => {
+          (document.getElementById('user-input') as HTMLInputElement)?.focus();
+          this.cdr.detectChanges();
+        }, 100);
       }
-
     } catch (error) {
-      console.error('Error during transcription:', error);
       alert('Error during transcription. Please try again.');
     }
   }
