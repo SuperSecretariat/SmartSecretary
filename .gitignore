@@ -22,4 +22,7 @@ node_modules/
 **/build/
 **/out/
 
-rag
+chroma_db
+pdfuri
+venv
+__pycache__

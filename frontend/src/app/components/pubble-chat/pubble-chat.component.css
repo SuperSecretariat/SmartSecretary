@@ -79,6 +79,7 @@ body {
   border-top: 1px solid #dee2e6;
   background-color: #f8f9fa;
   padding: 12px;
+  gap: 8px;
 }
 
 #user-input {
@@ -90,10 +91,62 @@ body {
   background-color: #ffffff;
   color: #212529;
   outline: none;
-  margin-right: 10px;
 }
 
-button {
+.mic-button {
+  position: relative;
+  padding: 10px 12px;
+  border: none;
+  background-color: #6c757d;
+  color: white;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mic-button:hover {
+  background-color: #5a6268;
+}
+
+.mic-button.recording {
+  background-color: #dc3545;
+  animation: pulse 1.5s infinite;
+}
+
+.mic-button.recording:hover {
+  background-color: #bb2d3b;
+}
+
+.mic-button.transcribing {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.mic-button.transcribing:hover {
+  background-color: #ffca2c;
+}
+
+.mic-icon {
+  font-size: 16px;
+}
+
+.recording-indicator {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+.send-button {
   padding: 10px 18px;
   border: none;
   background-color: #0d6efd;
@@ -104,8 +157,14 @@ button {
   transition: background-color 0.2s ease-in-out;
 }
 
-button:hover {
+.send-button:hover {
   background-color: #5a6268;
+}
+
+.send-button:disabled,
+.mic-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .spinner-container {
@@ -115,6 +174,13 @@ button:hover {
   padding: 10px;
   background-color: #ffffff;
   border-top: none;
+  gap: 10px;
+}
+
+.transcribing-text {
+  font-size: 14px;
+  color: #6c757d;
+  font-style: italic;
 }
 
 .spinner {
@@ -131,5 +197,26 @@ button:hover {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
   }
 }
