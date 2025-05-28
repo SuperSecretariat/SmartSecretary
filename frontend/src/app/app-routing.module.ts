@@ -23,6 +23,7 @@ import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
 import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
+import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -40,7 +41,8 @@ const routes: Routes = [
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
-      { path: 'view-form/:id', component: ViewFormComponent}
+      { path: 'view-form/:id', component: ViewFormComponent},
+      { path: 'modify-form/:id/:formId', component: ModifyFormComponent }
     ]
   },
   {

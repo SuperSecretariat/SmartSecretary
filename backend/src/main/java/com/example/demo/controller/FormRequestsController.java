@@ -5,6 +5,8 @@ import com.example.demo.model.enums.FormRequestStatus;
 
 import com.example.demo.constants.ErrorMessage;
 
+import com.example.demo.projection.FormFieldsProjection;
+import com.example.demo.projection.FormRequestFieldsProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequest;
 import com.example.demo.dto.FormRequestRequest;
@@ -139,6 +141,29 @@ public class FormRequestsController {
         catch (IOException | InvalidFormIdException e){
             this.logger.error(e.getMessage());
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/{id}/fields")
+    public ResponseEntity<FormRequestFieldsProjection> getFormRequestFieldsById(@PathVariable Long id) {
+        try {
+            FormRequestFieldsProjection formRequestFields = formRequestService.getFormRequestFieldsById(id);
+            return ResponseEntity.ok(formRequestFields);
+        }
+        catch (InvalidFormRequestIdException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFormRequestById(@PathVariable Long id) {
+        try{
+            formRequestService.deleteFormRequestById(id);
+            return ResponseEntity.noContent().build();
+        } catch (InvalidFormRequestIdException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 

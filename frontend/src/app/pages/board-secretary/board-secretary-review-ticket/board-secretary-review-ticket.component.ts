@@ -78,6 +78,7 @@ export class BoardSecretaryReviewTicketComponent implements OnInit, OnDestroy {
         this.statusMessage = `Status updated to ${status.replace('_', ' ')}`;
         this.isLoading = false;
         this.statusChanged = true;
+        this.router.navigate([`secretary/dashboard/viewTickets`])
       },
       error: () => {
         this.statusMessage = 'Failed to update status';

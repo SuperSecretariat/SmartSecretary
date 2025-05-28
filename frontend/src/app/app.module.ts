@@ -35,6 +35,7 @@ import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
 import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
+import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/boa
     BoardAdminLlmFilesComponent,
     BoardSecretaryChangeFormsComponent,
     BoardSecretaryViewTicketsComponent,
-    BoardSecretaryReviewTicketComponent
+    BoardSecretaryReviewTicketComponent,
+    ModifyFormComponent
   ],
   imports: [
     BrowserModule,
