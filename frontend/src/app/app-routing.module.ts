@@ -17,15 +17,12 @@ import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
-import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
-import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
-import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
-import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
+import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
+import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -41,7 +38,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
-      { path: 'ticket-student' , component: TicketStudentComponent },
+      { path: 'tickets', component: StudentTicketsComponent },
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
       { path: 'view-form/:id', component: ViewFormComponent}
@@ -66,10 +63,9 @@ const routes: Routes = [
       { path: 'dashboard', component: BoardSecretaryComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'tickets', component: SecretaryTicketsComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
-      { path: 'dashboard/viewTickets', component: BoardSecretaryViewTicketsComponent },
-      { path: 'dashboard/view-form/:id', component: BoardSecretaryReviewTicketComponent}
     ]
   },
 ];

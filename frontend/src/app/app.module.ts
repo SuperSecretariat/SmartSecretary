@@ -29,16 +29,15 @@ import { BoardSecretaryAddComponent } from './pages/board-secretary/board-secret
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { TicketStudentComponent } from './components/ticket-student/ticket-student.component';
-import { ViewTicketsSecretaryComponent } from './pages/board-secretary/view-tickets-secretary/view-tickets.component';
-import { SentTicketsComponent } from './pages/board-secretary/sent-tickets-secretary/sent-tickets.component';
-import { TicketModalComponent } from './components/ticket-modal/ticket-modal.component';
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
-import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
-import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
+import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
+import { TicketChatModalComponent } from './components/ticket-chat-modal/ticket-chat-modal.component';
+import { TicketCreateModalComponent } from './components/ticket-create-modal/ticket-create-modal.component';
+import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
+import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 
 
 @NgModule({
@@ -62,8 +61,11 @@ import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/boa
     ViewFormComponent,
     BoardAdminLlmFilesComponent,
     BoardSecretaryChangeFormsComponent,
-    BoardSecretaryViewTicketsComponent,
-    BoardSecretaryReviewTicketComponent
+    TicketCardComponent,
+    TicketChatModalComponent,
+    TicketCreateModalComponent,
+    StudentTicketsComponent,
+    SecretaryTicketsComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,6 @@ import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/boa
     CreateFormComponent,
     SubmittedFormsComponent,
     NewsfeedComponent,
-    TicketStudentComponent,
 ],
   providers: [
     httpInterceptorProviders,

@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.tickets.TicketDTO;
+import com.example.demo.dto.tickets.TicketMessageDTO;
 import com.example.demo.entity.Ticket;
 import com.example.demo.entity.TicketMessage;
 import com.example.demo.entity.User;
@@ -8,6 +10,7 @@ import com.example.demo.model.enums.TicketType;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.tickets.TicketMessageRepository;
 import com.example.demo.repository.tickets.TicketRepository;
+import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +29,11 @@ public class TicketService {
     @Autowired
     private UserRepository userRepo;
 
-    public Ticket createTicket(Long userId, String subject, TicketType type, String message) {
-        User user = userRepo.findById(userId).orElseThrow();
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public Ticket createTicketFromJwt(String jwtToken, String subject, TicketType type, String firstMessage) {
+        User user = getUserFromJwt(jwtToken);
 
         Ticket ticket = new Ticket();
         ticket.setSubject(subject);
@@ -37,19 +43,25 @@ public class TicketService {
         TicketMessage msg = new TicketMessage();
         msg.setTicket(ticket);
         msg.setSender(user);
-        msg.setMessage(message);
+        msg.setMessage(firstMessage);
 
         ticket.getMessages().add(msg);
 
         return ticketRepo.save(ticket);
     }
 
-    public List<Ticket> getTicketsByUser(Long userId) {
-        return ticketRepo.findByUserId(userId);
+    public List<Ticket> getTicketsByUser(User user) {
+        return ticketRepo.findByUserId(user.getId());
     }
 
-    public List<Ticket> getAllTickets(TicketStatus status, TicketType type, Long userId, String subject) {
-        return ticketRepo.findByOptionalFilters(status, type, userId, subject);
+    public List<Ticket> getTickets(String jwtToken, boolean getOnlyForUser) {
+        User user = getUserFromJwt(jwtToken);
+
+        if (getOnlyForUser) {
+            return getTicketsByUser(user);
+        }
+
+        return ticketRepo.findAll();
     }
 
     public Ticket updateTicketStatus(Long ticketId, TicketStatus status) {
@@ -68,6 +80,31 @@ public class TicketService {
         msg.setMessage(message);
 
         return messageRepo.save(msg);
+    }
+
+    public User getUserFromJwt(String jwtToken) {
+        String regNumber = jwtUtil.getRegistrationNumberFromJwtToken(jwtToken);
+        return userRepo.findByRegNumber(regNumber)
+                .orElseThrow(() -> new RuntimeException("User not found for registration number: " + regNumber));
+    }
+
+    public TicketDTO toTicketDTO(Ticket ticket) {
+        return new TicketDTO(
+                ticket.getId(),
+                ticket.getSubject(),
+                ticket.getType(),
+                ticket.getStatus(),
+                ticket.getUser().getEmail()
+        );
+    }
+
+    public TicketMessageDTO toTicketMessageDTO(TicketMessage message) {
+        TicketMessageDTO dto = new TicketMessageDTO();
+        dto.setId(message.getId());
+        dto.setSenderEmail(message.getSender().getEmail());
+        dto.setMessage(message.getMessage());
+        dto.setTimestamp(message.getTimestamp());
+        return dto;
     }
 }
 

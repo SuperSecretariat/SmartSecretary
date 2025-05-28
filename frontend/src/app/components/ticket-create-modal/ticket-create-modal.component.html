@@ -1,0 +1,31 @@
+<div class="modal-backdrop" (click)="onCancel()"></div>
+<div class="modal-content" (click)="$event.stopPropagation()">
+  <div class="modal-header">
+    <h2>Create New Ticket</h2>
+    <span class="close-button" (click)="onCancel()">×</span>
+  </div>
+
+  <div class="modal-body">
+    <label>
+      Subject:
+      <input type="text" [(ngModel)]="subject" placeholder="Enter subject" />
+    </label>
+
+    <label>
+      Type:
+      <select [(ngModel)]="type">
+        <option *ngFor="let option of ticketTypes" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </label>
+
+    <label>
+      Message:
+      <textarea [(ngModel)]="message" rows="4" placeholder="Describe your request..."></textarea>
+    </label>
+  </div>
+
+  <div class="modal-footer">
+    <button (click)="onSubmit()" [disabled]="!subject || !type || !message.trim()">Submit</button>
+    <button (click)="onCancel()">Cancel</button>
+  </div>
+</div>

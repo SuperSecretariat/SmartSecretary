@@ -1,3 +1,10 @@
+::ng-deep :root {
+  --uaic-blue: rgb(21, 96, 189);
+  --uaic-deep-blue: rgb(0, 48, 112);
+  --uaic-gray: #ccc;
+  --uaic-light-gray: #dbdbdb;
+}
+
 .app-container {
     display: grid;
 
