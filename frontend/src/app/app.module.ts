@@ -33,8 +33,11 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
-import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
-import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
+import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
+import { TicketChatModalComponent } from './components/ticket-chat-modal/ticket-chat-modal.component';
+import { TicketCreateModalComponent } from './components/ticket-create-modal/ticket-create-modal.component';
+import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
+import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 
 
@@ -59,8 +62,11 @@ import { ModifyFormComponent } from './components/modify-form/modify-form.compon
     ViewFormComponent,
     BoardAdminLlmFilesComponent,
     BoardSecretaryChangeFormsComponent,
-    BoardSecretaryViewTicketsComponent,
-    BoardSecretaryReviewTicketComponent,
+    TicketCardComponent,
+    TicketChatModalComponent,
+    TicketCreateModalComponent,
+    StudentTicketsComponent,
+    SecretaryTicketsComponent,
     ModifyFormComponent
   ],
   imports: [
@@ -74,7 +80,7 @@ import { ModifyFormComponent } from './components/modify-form/modify-form.compon
     FooterComponent,
     CreateFormComponent,
     SubmittedFormsComponent,
-    NewsfeedComponent
+    NewsfeedComponent,
 ],
   providers: [
     httpInterceptorProviders,

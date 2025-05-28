@@ -21,8 +21,8 @@ import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.compon
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
-import { BoardSecretaryViewTicketsComponent } from './pages/board-secretary/board-secretary-view-tickets/board-secretary-view-tickets.component';
-import { BoardSecretaryReviewTicketComponent } from './pages/board-secretary/board-secretary-review-ticket/board-secretary-review-ticket.component';
+import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
+import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 
 const routes: Routes = [
@@ -39,6 +39,7 @@ const routes: Routes = [
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'tickets', component: StudentTicketsComponent },
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
       { path: 'view-form/:id', component: ViewFormComponent},
@@ -64,10 +65,9 @@ const routes: Routes = [
       { path: 'dashboard', component: BoardSecretaryComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'tickets', component: SecretaryTicketsComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
-      { path: 'dashboard/viewTickets', component: BoardSecretaryViewTicketsComponent },
-      { path: 'dashboard/view-form/:id', component: BoardSecretaryReviewTicketComponent}
     ]
   },
 ];
