@@ -13,7 +13,7 @@ export class SecretaryNavBarComponent {
 
   ngOnInit(): void {
     this.navBarItems.push(new NavBarItem('Add', `/secretary/dashboard/add`));
-    this.navBarItems.push(new NavBarItem('View Student Tickets', `/secretary/dashboard/viewTickets`));
+    this.navBarItems.push(new NavBarItem('Tickets', `/secretary/tickets`));
     this.navBarItems.push(new NavBarItem('Add Document', `/secretary/dashboard/changeForms`));
     this.navBarItems.push(new NavBarItem('Delete Student', ``)); //to be implemented
   }
