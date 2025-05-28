@@ -1,0 +1,37 @@
+<div class="toolbar">
+  <input type="text" [(ngModel)]="searchQuery" placeholder="Search by subject" />
+  <select [(ngModel)]="filterStatus">
+    <option value="">All Statuses</option>
+    <option>OPEN</option>
+    <option>CLOSED</option>
+  </select>
+  <select [(ngModel)]="filterType">
+    <option value="">All Types</option>
+    <option *ngFor="let type of ['BUG_REPORT', 'INFORMATION_REQUEST', 'FEATURE_REQUEST', 'Other']">{{ type }}</option>
+  </select>
+
+  <button (click)="showCreateModal = true">+ Create Ticket</button>
+</div>
+
+<div class="ticket-list">
+  <app-ticket-card
+    *ngFor="let ticket of filteredTickets"
+    [ticket]="ticket"
+    (openChat)="openChat(ticket)">
+  </app-ticket-card>
+</div>
+
+<app-ticket-create-modal
+  *ngIf="showCreateModal"
+  (submitTicket)="handleNewTicket($event)"
+  (closeModal)="showCreateModal = false">
+</app-ticket-create-modal>
+
+<app-ticket-chat-modal
+  *ngIf="showChatModal && selectedTicket"
+  [ticket]="selectedTicket"
+  [userRole]="'student'"
+  [currentUserName]="currentUserName"
+  (sendMessage)="handleSendMessage($event)"
+  (closeModal)="closeChat()">
+</app-ticket-chat-modal>

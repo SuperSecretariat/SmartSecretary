@@ -35,6 +35,11 @@ import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm
 import { StudentCalendarComponent } from './components/student-calendar/student-calendar.component';
 import { UploadCalendarComponent } from './pages/board-secretary/upload-calendar/upload-calendar.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
+import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
+import { TicketChatModalComponent } from './components/ticket-chat-modal/ticket-chat-modal.component';
+import { TicketCreateModalComponent } from './components/ticket-create-modal/ticket-create-modal.component';
+import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
+import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +63,13 @@ import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/boar
     BoardAdminLlmFilesComponent,
     StudentCalendarComponent,
     UploadCalendarComponent,
-    BoardSecretaryChangeFormsComponent
+    BoardSecretaryChangeFormsComponent,
+    BoardSecretaryChangeFormsComponent,
+    TicketCardComponent,
+    TicketChatModalComponent,
+    TicketCreateModalComponent,
+    StudentTicketsComponent,
+    SecretaryTicketsComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +82,7 @@ import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/boar
     FooterComponent,
     CreateFormComponent,
     SubmittedFormsComponent,
-    NewsfeedComponent
+    NewsfeedComponent,
 ],
   providers: [
     httpInterceptorProviders,

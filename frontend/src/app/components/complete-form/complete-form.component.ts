@@ -62,11 +62,11 @@ export class CompleteFormComponent {
     const values = this.formFields
       .filter(field => field.value && field.value.trim() !== '')
       .map(field => field.value);
-    console.log('User inputted values:', values);
+    //console.log('User inputted values:', values);
     // Now you have an array of just the inputted values
     this.formsService.submitFormData(this.selectedFormId!, values).subscribe(
       (response) => {
-        console.log('Form submitted successfully:', response);
+        //console.log('Form submitted successfully:', response);
         this.isLoading = false;
         this.router.navigate([`/student/submitted-forms`]);
       },

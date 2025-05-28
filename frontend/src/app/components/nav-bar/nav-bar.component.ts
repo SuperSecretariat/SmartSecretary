@@ -48,7 +48,7 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('Account Manager', `/${rolePrefix}/account`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
       ];
-    else
+    else // STUDENT
       this.navBarItems = [
         new NavBarItem('Create form', `/${rolePrefix}/create-form`),
         new NavBarItem('Submitted forms', `/${rolePrefix}/submitted-forms`),
@@ -56,6 +56,8 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
         new NavBarItem('Pubble AI', `/${rolePrefix}/pubble`),
         new NavBarItem('Calendar', `/${rolePrefix}/calendar`),
+        new NavBarItem('Tickets', `/${rolePrefix}/tickets`),
+        new NavBarItem('Pubble AI', `/${rolePrefix}/pubble`),
       ];
 
     if (this.isLoggedIn) {

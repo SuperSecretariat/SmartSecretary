@@ -23,6 +23,8 @@ import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm
 import { StudentCalendarComponent } from './components/student-calendar/student-calendar.component';
 import { UploadCalendarComponent} from './pages/board-secretary/upload-calendar/upload-calendar.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
+import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
+import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 
 
 const routes: Routes = [
@@ -35,11 +37,11 @@ const routes: Routes = [
   {
     path: 'student',
     children: [
-      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'create-form', component: CreateFormComponent },
       { path: 'submitted-forms', component: SubmittedFormsComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'tickets', component: StudentTicketsComponent },
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
       { path: 'view-form/:id', component: ViewFormComponent},
@@ -49,7 +51,6 @@ const routes: Routes = [
   {
     path: 'admin',
     children: [
-      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'dashboard', component: BoardAdminComponent },
       { path: 'newsfeed', component: NewsfeedComponent },
@@ -63,26 +64,17 @@ const routes: Routes = [
   {
     path: 'secretary',
     children: [
-      { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
       { path: 'dashboard', component: BoardSecretaryComponent },
       { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
       { path: 'newsfeed', component: NewsfeedComponent },
+      { path: 'tickets', component: SecretaryTicketsComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
       { path: 'dashboard/upload-calendar', component: UploadCalendarComponent},
+      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
 
     ]
   },
-  //{ path: 'home', component: HomeComponent },
-  //{ path: 'profile', component: ProfileComponent },
-  //{ path: 'create-form', component: CreateFormComponent },
-  ///{ path: 'submitted-forms', component: SubmittedFormsComponent },
-  //{ path: 'account', component: AccountComponent },
-  //{ path: 'newsfeed', component: NewsfeedComponent },
-  //{ path: 'student', component: BoardStudentComponent },
-  //{ path: 'mod', component: BoardSecretaryComponent },
-  //{ path: 'admin', component: BoardAdminComponent },
-  //{ path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

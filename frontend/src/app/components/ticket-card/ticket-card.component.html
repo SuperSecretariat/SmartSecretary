@@ -1,0 +1,10 @@
+<div class="ticket-card" (click)="onCardClick()">
+  <div class="ticket-header">
+    <h3>{{ ticket.subject }}</h3>
+  </div>
+  <div class="ticket-body">
+    <p><strong>Status:</strong> {{ ticket.status }}</p>
+    <p><strong>Type:</strong> {{ ticket.type }}</p>
+    <p><strong>Creator:</strong> {{ ticket.creatorEmail }}</p>
+  </div>
+</div>

@@ -131,7 +131,7 @@ public class FormRequestsController {
                 return ResponseEntity.status(401).build();
             }
 
-            byte[] imageBytes = formRequestService.getFormRequestImage(id, token);
+            byte[] imageBytes = formRequestService.getFormRequestImage(id);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_PNG); // or IMAGE_PNG etc.
             return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);

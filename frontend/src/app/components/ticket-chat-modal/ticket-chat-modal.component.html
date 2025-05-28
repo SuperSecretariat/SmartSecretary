@@ -1,0 +1,26 @@
+<div class="modal-backdrop">
+  <div class="chat-modal">
+    <div class="header">
+      <h2>Chat for: {{ ticket.subject }}</h2>
+      <button class="close-button" (click)="onClose()">×</button>
+    </div>
+
+    <div class="messages">
+      <div *ngFor="let msg of ticketMessages" class="message">
+        <strong>{{ msg.senderEmail }}:</strong> {{ msg.message }}
+        <div class="timestamp">{{ msg.timestamp | date:'short' }}</div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <textarea [(ngModel)]="messageText" placeholder="Type your message..."></textarea>
+      <button type="button" (click)="onSend()">Send</button>
+    </div>
+
+    <div *ngIf="userRole === 'secretary'" class="admin-controls">
+      <button (click)="onStatusChange()">
+        {{ ticket.status === TicketStatus.OPEN ? 'Close Ticket' : 'Reopen Ticket' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -17,12 +17,14 @@
   {{ warningMessage }}
 </div>
 <div class="submit_button_container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
   <button 
     (click)="saveFormFields()" 
+    [disabled]="isLoading"
     style="position:relative; margin-top: 20px;">
     <span>Submit Request</span>
   </button>
-</div>
-<div *ngIf="isLoading" class="loading-spinner">
-  <p>Loading...</p>
 </div>

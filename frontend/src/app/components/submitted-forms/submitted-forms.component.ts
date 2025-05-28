@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SearchComponent } from '../search/search.component';
 import { FormsService } from '../_services/forms.service';
 import { Router } from '@angular/router';
 
@@ -9,13 +8,17 @@ import { Router } from '@angular/router';
   selector: 'app-submitted-forms',
   templateUrl: './submitted-forms.component.html',
   styleUrls: ['./submitted-forms.component.css'],
-  imports: [CommonModule, FormsModule, SearchComponent]
+  imports: [CommonModule, FormsModule]
 })
 export class SubmittedFormsComponent implements OnInit {
   submittedRequests: { id: number; formTitle: string; status: string }[] = [];
   filteredRequests: { id: number; formTitle: string; status: string }[] = [];
+  searchTerm: string = '';
 
-  constructor(private readonly formsService: FormsService, private readonly router: Router) {}
+  constructor(
+    private readonly formsService: FormsService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadSubmittedRequests();
@@ -33,16 +36,16 @@ export class SubmittedFormsComponent implements OnInit {
     });
   }
 
-  onFiltersApplied(filters: any): void {
-    console.log('Filters applied:', filters);
-
-    this.filteredRequests = this.submittedRequests.filter(request => {
-      const matchesId = filters.id ? request.id.toString().includes(filters.id) : true;
-      const matchesFormType = filters.formType ? request.formTitle === filters.formType : true;
-      const matchesStatus = filters.status ? request.status === filters.status : true;
-
-      return matchesId && matchesFormType && matchesStatus;
-    });
+  onSearch(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredRequests = [...this.submittedRequests];
+      return;
+    }
+    this.filteredRequests = this.submittedRequests.filter(request =>
+      request.id.toString().includes(term) ||
+      request.formTitle.toLowerCase().includes(term)
+    );
   }
 
   viewForm(id: number) {
