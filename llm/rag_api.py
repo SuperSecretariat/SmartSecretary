@@ -23,7 +23,7 @@ def augment_prompt(input_data: PromptInput):
         return {"error": "Vector DB este gol. Încarcă mai întâi niște PDF-uri."}
 
     try:
-        retrieved_docs = retriever.get_relevant_documents(input_data.prompt)
+        retrieved_docs = retriever.invoke(input_data.prompt)
 
         context_chunks = [doc.page_content for doc in retrieved_docs]
         sources = [doc.metadata.get("source", "Necunoscut") for doc in retrieved_docs]
