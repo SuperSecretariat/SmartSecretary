@@ -10,7 +10,7 @@
         [ngClass]="msg.sender === 'user' ? 'message-user' : 'message-bot'"
         class="message"
       >
-        <strong>{{ msg.sender === 'user' ? 'You:' : 'Model:' }}</strong>
+        <strong>{{ msg.sender === 'user' ? 'You:' : 'Pubble:' }}</strong>
         {{ msg.displayed }}
       </div>
     </div>
@@ -28,7 +28,26 @@
         [disabled]="isLoading"
         (keydown.enter)="sendMessage()"
       />
-      <button [disabled]="isLoading" (click)="sendMessage()">Send</button>
+
+      <button
+        class="mic-button"
+        [class.recording]="isRecording"
+        [class.transcribing]="isTranscribing"
+        [disabled]="isLoading || isTranscribing"
+        (click)="toggleRecording()"
+        title="{{ isRecording ? 'Stop recording' : 'Start recording' }}"
+      >
+        <span class="mic-icon">🔴</span>
+        <span *ngIf="isRecording" class="recording-indicator"></span>
+      </button>
+
+      <button
+        class="send-button"
+        [disabled]="isLoading || isRecording || isTranscribing"
+        (click)="sendMessage()"
+      >
+        Send
+      </button>
     </div>
   </div>
 </div>
