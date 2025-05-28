@@ -47,8 +47,7 @@ public class AudioTranscriptionController {
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                    transcriptionUrl, requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(transcriptionUrl, requestEntity, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 JsonNode responseJson = mapper.readTree(response.getBody());

@@ -1,5 +1,5 @@
 import { environment } from '../../../environments/environments';
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-chat',
@@ -18,8 +18,9 @@ export class PubbleChatComponent implements AfterViewInit {
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
 
-  // message list with sender and what's currently displayed
   messages: Array<{ sender: 'user' | 'bot'; text: string; displayed: string }> = [];
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
     const inputField = document.getElementById('user-input') as HTMLInputElement;
@@ -30,7 +31,6 @@ export class PubbleChatComponent implements AfterViewInit {
     const trimmed = this.message.trim();
     if (!trimmed) return;
 
-    // push user message immediately
     this.messages.push({ sender: 'user', text: trimmed, displayed: trimmed });
     this.scrollToBottom();
 
@@ -53,7 +53,6 @@ export class PubbleChatComponent implements AfterViewInit {
       this.isLoading = false;
     }
 
-    // add bot message placeholder
     const botMsg = { sender: 'bot' as const, text: responseText, displayed: '' };
     this.messages.push(botMsg);
 
@@ -71,6 +70,10 @@ export class PubbleChatComponent implements AfterViewInit {
   }
 
   async toggleRecording() {
+    console.log('Toggle recording called, current state:', this.isRecording);
+    console.log('MediaDevices support:', !!navigator.mediaDevices);
+    console.log('getUserMedia support:', !!navigator.mediaDevices?.getUserMedia);
+
     if (!this.isRecording) {
       await this.startRecording();
     } else {
@@ -80,75 +83,119 @@ export class PubbleChatComponent implements AfterViewInit {
 
   private async startRecording() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Your browser does not support audio recording');
+        return;
+      }
 
-      this.mediaRecorder = new MediaRecorder(stream);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+
+      const options: MediaRecorderOptions = {};
+
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        options.mimeType = 'audio/webm;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        options.mimeType = 'audio/webm';
+      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options.mimeType = 'audio/mp4';
+      }
+
+      this.mediaRecorder = new MediaRecorder(stream, options);
+      console.log('MediaRecorder created with mimeType:', this.mediaRecorder.mimeType);
       this.audioChunks = [];
 
       this.mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-              this.audioChunks.push(event.data);
-            }
-          };
-
-          this.mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-            console.log('Sending audio blob:', audioBlob.type);
-
-            await this.transcribeAudio(audioBlob);
-
-            stream.getTracks().forEach(track => track.stop());
-          };
-
-          this.mediaRecorder.start();
-          this.isRecording = true;
-
-        } catch (error) {
-          console.error('Error accessing microphone:', error);
-          alert('Error accessing microphone. Please check permissions.');
+          this.audioChunks.push(event.data);
         }
-      }
+      };
 
-    private async stopRecording() {
-      if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-        this.mediaRecorder.stop();
-        this.isRecording = false;
+      this.mediaRecorder.onstop = async () => {
+        const mimeType = this.mediaRecorder?.mimeType || 'audio/webm';
+        const audioBlob = new Blob(this.audioChunks, { type: mimeType });
+        console.log('Audio blob created:', audioBlob.type, 'size:', audioBlob.size);
+
+        this.isTranscribing = true;
+        this.cdr.detectChanges();
+
+        try {
+          await this.transcribeAudio(audioBlob);
+        } finally {
+          this.isTranscribing = false;
+          this.cdr.detectChanges();
+        }
+
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      this.mediaRecorder.start();
+      this.isRecording = true;
+
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+
+      if (error.name === 'NotAllowedError') {
+        alert('Microphone access denied. Please allow microphone permissions and try again.');
+      } else if (error.name === 'NotFoundError') {
+        alert('No microphone found on this device.');
+      } else if (error.name === 'NotSupportedError') {
+        alert('Audio recording is not supported on this device/browser.');
+      } else {
+        alert(`Error accessing microphone: ${error.message || 'Unknown error'}`);
       }
     }
+  }
 
-    private async transcribeAudio(audioBlob: Blob) {
-      this.isTranscribing = true;
+  private async stopRecording() {
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      this.mediaRecorder.stop();
+      this.isRecording = false;
+    }
+  }
 
-      try {
-        const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.webm');
+  private async transcribeAudio(audioBlob: Blob) {
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.webm');
 
-        const response = await fetch(`${environment.backendUrl}/api/audio/transcribe`, {
-          method: 'POST',
-          body: formData
-        });
+      const response = await fetch(`${environment.backendUrl}/api/audio/transcribe`, {
+        method: 'POST',
+        body: formData
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (result.text) {
-          this.message = result.text;
-          // Focus input field so user can edit if needed
+      if (result.status === 'success') {
+        if (result.text && result.text.trim()) {
+          this.message = result.text.trim();
           setTimeout(() => {
             const inputField = document.getElementById('user-input') as HTMLInputElement;
             inputField?.focus();
+            this.cdr.detectChanges();
           }, 100);
         } else {
+          console.log('No speech detected in audio recording');
+        }
+      } else {
+        if (result.error && !result.error.includes('No speech detected')) {
           console.error('Transcription failed:', result.error);
           alert('Transcription failed. Please try again.');
+        } else {
+          console.log('No speech detected in audio recording');
         }
-
-      } catch (error) {
-        console.error('Error during transcription:', error);
-        alert('Error during transcription. Please try again.');
-      } finally {
-        this.isTranscribing = false;
       }
+
+    } catch (error) {
+      console.error('Error during transcription:', error);
+      alert('Error during transcription. Please try again.');
     }
+  }
 
   private scrollToBottom() {
     setTimeout(() => {
