@@ -1,0 +1,38 @@
+<div class="mainInteraction">
+  <div class="inputBox">
+    <div style="color: black">
+      <input type="file" (change)="onFileSelected($event)">
+      <button (click)="uploadFile()" style="margin-top: 10px;">Upload</button>
+    </div>
+  </div>
+
+  <div>
+    <input type="text" placeholder="Search files and folders..." [(ngModel)]="searchQuery">
+    <button (click)="reloadDocs()">Reload Calendar Documentation</button>
+  </div>
+</div>
+
+<table class="fileList">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Size</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of filteredItems()">
+    <td>
+      <span *ngIf="item.type === 'Folder'" class="folder clickable">{{ item.name }}</span>
+      <span *ngIf="item.type !== 'Folder'" class="file">{{ item.name }}</span>
+    </td>
+    <td>{{ item.type }}</td>
+    <td>{{ item.size || '-' }}</td>
+    <td>
+      <button (click)="deleteItem(item)">Delete</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+

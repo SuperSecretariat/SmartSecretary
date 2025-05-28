@@ -1,6 +1,7 @@
 package com.example.demo.response;
 
 import com.example.demo.dto.UserProfileData;
+import com.example.demo.entity.Event;
 
 import java.sql.Date;
 import java.util.List;
@@ -20,12 +21,17 @@ public class JwtResponse{
     private List<String> roles;
     private String responseMessage;
     private Object data;
+    private List<Event> events;
 
     public JwtResponse(String token, Long id, String registrationNumber, List<String> roles){
         this.token = token;
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.roles = roles;
+    }
+
+    public JwtResponse(List<Event> events){
+        this.events = events;
     }
 
     public JwtResponse(String message, Object data){
@@ -126,5 +132,13 @@ public class JwtResponse{
 
     public void setResponseMessage(String message) {
         this.responseMessage = message;
+    }
+
+    public void setEvents(List<Event> events){
+        this.events = events;
+    }
+
+    public List<Event> getEvents(){
+        return this.events;
     }
 }

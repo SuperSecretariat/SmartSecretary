@@ -9,7 +9,7 @@ public class ValidationMessage {
     public static final String UPDATE_SUCCESS = "Profile information updated successfully";
     public static final String EMAIL_SUCCESS = "Email sent successfully";
     public static final String ACCOUNT_DELETED = "Account deleted successfully";
-    public static final String REGISTER_SUCCESS = "Registration successfully";
+    public static final String CALENDAR_UPLOAD = "Calendar has been uploaded succesfully";
 
     private ValidationMessage(){}
 }
