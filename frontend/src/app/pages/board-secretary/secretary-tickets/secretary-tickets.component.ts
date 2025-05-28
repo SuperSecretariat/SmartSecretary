@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { TicketService } from '@/components/_services/ticket.service';
+import { Component, OnInit } from '@angular/core';
 import { Ticket, TicketMessage, TicketStatus } from '@models/ticket.model';
 
 @Component({
@@ -7,7 +8,7 @@ import { Ticket, TicketMessage, TicketStatus } from '@models/ticket.model';
   styleUrls: ['./secretary-tickets.component.css'],
   standalone: false,
 })
-export class SecretaryTicketsComponent {
+export class SecretaryTicketsComponent implements OnInit {
   tickets: Ticket[] = []; // Populate from service
   selectedTicket: Ticket | null = null;
   showChatModal = false;
@@ -17,6 +18,12 @@ export class SecretaryTicketsComponent {
   filterType = '';
 
   currentUserName = 'Secretary Name'; // Should be dynamic
+  
+  constructor(private readonly ticketService: TicketService) {}
+
+  ngOnInit(): void {
+    this.refreshUserTickets();
+  }
 
   get filteredTickets(): Ticket[] {
     return this.tickets.filter(ticket =>
@@ -24,6 +31,18 @@ export class SecretaryTicketsComponent {
       (!this.filterStatus || ticket.status === this.filterStatus) &&
       (!this.filterType || ticket.type === this.filterType)
     );
+  }
+
+  refreshUserTickets(): void {
+    this.ticketService.getTickets().subscribe({
+      error: (err) => {
+        console.error('Failed to load tickets:', err);
+      },
+      next: (tickets: Ticket[]) => {
+        console.log('received tickets: ', tickets)
+        this.tickets = tickets;
+      },
+    });
   }
 
   openChat(ticket: Ticket): void {
@@ -41,6 +60,16 @@ export class SecretaryTicketsComponent {
     // update backend here
   }
 
-  handleStatusChange(newStatus: String): void {
+  handleStatusChange(updatedTicket: Ticket): void {
+    this.ticketService.updateTicketStatus(updatedTicket).subscribe({
+      error: err => {
+        console.error('Failed to update ticket:', err);
+      },
+      next: response => {
+        console.log('Ticket updated:', response);
+        this.refreshUserTickets();
+        this.showChatModal = false;
+      },
+    })
   }
 }

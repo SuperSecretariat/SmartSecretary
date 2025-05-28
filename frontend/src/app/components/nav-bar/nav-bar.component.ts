@@ -47,7 +47,6 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('Secretary Dashboard', `/${rolePrefix}/dashboard`),
         new NavBarItem('Account Manager', `/${rolePrefix}/account`),
         new NavBarItem('News Feed', `/${rolePrefix}/newsfeed`),
-        new NavBarItem('Tickets', `/${rolePrefix}/tickets`),
       ];
     else // STUDENT
       this.navBarItems = [

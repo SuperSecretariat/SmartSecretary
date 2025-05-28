@@ -58,9 +58,13 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.toTicketDTO(updatedTicket));
     }
 
-//    @PostMapping("/{ticketId}/messages")
-//    public ResponseEntity<TicketMessageDTO> addMessage(@PathVariable Long ticketId, @RequestBody TicketMessageDTO request) {
-//        TicketMessage msg = ticketService.addMessageToTicket(ticketId, request.getSenderId(), request.getMessage());
-//        return ResponseEntity.ok(ticketService.toTicketMessageDTO(msg));
-//    }
+    @GetMapping("/{ticketId}/messages")
+    public ResponseEntity<List<TicketMessageDTO>> getMessages(@PathVariable Long ticketId) {
+        List<TicketMessageDTO> messages = ticketService
+                .getMessagesOfTicket(ticketId)
+                .stream()
+                .map(ticketService::toTicketMessageDTO)
+                .toList();
+        return ResponseEntity.ok(messages);
+    }
 }

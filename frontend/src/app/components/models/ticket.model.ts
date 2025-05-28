@@ -21,13 +21,15 @@ export const TicketStatusLabels: Record<TicketStatus, string> = {
 }
 
 export class TicketMessage {
-  sender: string;
-  content: string;
+  id: number;
+  senderEmail: string;
+  message: string;
   timestamp: Date;
 
   constructor(data: Partial<TicketMessage>) {
-    this.sender = data.sender ?? '';
-    this.content = data.content ?? '';
+    this.id = data.id ?? -1;
+    this.senderEmail = data.senderEmail ?? '';
+    this.message = data.message ?? '';
     this.timestamp = data.timestamp ? new Date(data.timestamp) : new Date();
   }
 

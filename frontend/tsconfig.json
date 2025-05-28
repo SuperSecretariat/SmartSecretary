@@ -23,6 +23,7 @@
       "@components/*": ["app/components/*"],
       "@services/*": ["app/components/_services/*"],
       "@models/*": ["app/components/models/*"],
+      "@env/*": ["environments/*"]
     }
   },
   "angularCompilerOptions": {

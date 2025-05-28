@@ -27,7 +27,7 @@ export class TicketCreateModalComponent {
     }
 
     const initialMessage = new TicketMessage({
-      content: this.message.trim(),
+      message: this.message.trim(),
       timestamp: new Date(),
     });
 

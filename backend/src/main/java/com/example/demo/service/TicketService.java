@@ -70,6 +70,10 @@ public class TicketService {
         return ticketRepo.save(ticket);
     }
 
+    public List<TicketMessage> getMessagesOfTicket(Long ticketId) {
+        return messageRepo.findByTicketIdOrderByTimestampAsc(ticketId);
+    }
+
     public TicketMessage addMessageToTicket(Long ticketId, Long senderId, String message) {
         Ticket ticket = ticketRepo.findById(ticketId).orElseThrow();
         User sender = userRepo.findById(senderId).orElseThrow();

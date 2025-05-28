@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Ticket, TicketMessage, TicketStatus, TicketStatusLabels } from '@models/ticket.model';
+import { TicketService } from '../_services/ticket.service';
 
 @Component({
   selector: 'app-ticket-chat-modal',
@@ -7,7 +8,7 @@ import { Ticket, TicketMessage, TicketStatus, TicketStatusLabels } from '@models
   styleUrls: ['./ticket-chat-modal.component.css'],
   standalone: false,
 })
-export class TicketChatModalComponent {
+export class TicketChatModalComponent implements OnInit {
   TicketStatus = TicketStatus;
   TicketStatusLabels = TicketStatusLabels;
 
@@ -17,17 +18,24 @@ export class TicketChatModalComponent {
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() sendMessage = new EventEmitter<TicketMessage>();
-  @Output() changeStatus = new EventEmitter<string>();
+  @Output() changeStatus = new EventEmitter<Ticket>();
 
   messageText = '';
+  ticketMessages: TicketMessage[] = [];
+
+  constructor(private readonly ticketService: TicketService) {}
+
+  ngOnInit(): void {
+    this.getMessages(this.ticket)
+  }
 
   onSend(): void {
     const content = this.messageText.trim();
     if (!content) return;
 
     const message = new TicketMessage({
-      sender: this.currentUserName,
-      content,
+      senderEmail: this.currentUserName,
+      message: this.messageText,
       timestamp: new Date(),
     });
 
@@ -36,10 +44,22 @@ export class TicketChatModalComponent {
     this.messageText = '';
   }
 
+  getMessages(ticket: Ticket): void {
+    this.ticketService.getTicketMessages(ticket).subscribe({
+      error: (err) => {
+        console.error('Failed to load messages:', err);
+      },
+      next: (messages: TicketMessage[]) => {
+        console.log('received messages: ', messages)
+        this.ticketMessages = messages;
+      },
+    })
+  }
+
   onStatusChange(): void {
-    const newStatus = this.ticket.status === TicketStatus.OPEN ? TicketStatus.CLOSED : TicketStatus.OPEN;
+    const newStatus = ( this.ticket.status === TicketStatus.OPEN ? TicketStatus.CLOSED : TicketStatus.OPEN );
     this.ticket.status = newStatus;
-    this.changeStatus.emit(newStatus);
+    this.changeStatus.emit(this.ticket);
   }
 
   onClose(): void {
