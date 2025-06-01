@@ -10,9 +10,9 @@ import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 import { AuthGuard } from './components/_helpers/auth.guard';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/board-admin-add.component';
-import {BoardAdminShowAuthKeyComponent} from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
+import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
 import { BoardAdminDeleteUserComponent } from './pages/board-admin/board-admin-delete-user/board-admin-delete-user.component';
-import {BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
+import { BoardSecretaryAddComponent} from './pages/board-secretary/board-secretary-add/board-secretary-add.component';
 import { BoardSecretaryComponent } from './pages/board-secretary/board-secretary.component';
 import { CompleteFormComponent } from './components/complete-form/complete-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
@@ -20,12 +20,15 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { StudentCalendarComponent } from './components/student-calendar/student-calendar.component';
+import { UploadCalendarComponent} from './pages/board-secretary/upload-calendar/upload-calendar.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
 import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -45,7 +48,8 @@ const routes: Routes = [
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
       { path: 'view-form/:id', component: ViewFormComponent},
-      { path: 'modify-form/:id/:formId', component: ModifyFormComponent }
+      { path: 'modify-form/:id/:formId', component: ModifyFormComponent },
+      { path: 'calendar', component: StudentCalendarComponent },
     ]
   },
   {
@@ -69,6 +73,7 @@ const routes: Routes = [
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'tickets', component: SecretaryTicketsComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
+      { path: 'dashboard/upload-calendar', component: UploadCalendarComponent},
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
       { path: 'dashboard/viewTickets', component: ViewRequestsComponent },
       { path: 'dashboard/view-form/:id', component: ReviewRequestComponent}

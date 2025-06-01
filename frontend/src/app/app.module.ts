@@ -32,6 +32,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { PubbleChatComponent } from './components/pubble-chat/pubble-chat.component';
 import { ViewFormComponent } from './components/view-form/view-form.component';
 import { BoardAdminLlmFilesComponent } from './pages/board-admin/board-admin-llm-files/board-admin-llm-files.component';
+import { StudentCalendarComponent } from './components/student-calendar/student-calendar.component';
+import { UploadCalendarComponent } from './pages/board-secretary/upload-calendar/upload-calendar.component';
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
 import { TicketChatModalComponent } from './components/ticket-chat-modal/ticket-chat-modal.component';
@@ -41,7 +43,6 @@ import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tic
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
 import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
-
 
 @NgModule({
   declarations: [
@@ -63,6 +64,9 @@ import { ReviewRequestComponent } from './pages/board-secretary/review-request/r
     PubbleChatComponent,
     ViewFormComponent,
     BoardAdminLlmFilesComponent,
+    StudentCalendarComponent,
+    UploadCalendarComponent,
+    BoardSecretaryChangeFormsComponent,
     BoardSecretaryChangeFormsComponent,
     TicketCardComponent,
     TicketChatModalComponent,

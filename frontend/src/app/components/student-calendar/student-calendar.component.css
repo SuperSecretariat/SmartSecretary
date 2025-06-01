@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eae2f8;
+  color: #212529;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: #f0f4f8;
+  max-width: none;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #f8f9fb;
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .header {
+    display: grid;
+    grid-template-columns: 75px repeat(7, 1fr);
+    background-color: #e6ecf4;
+    color: #4a4a4a;
+    font-weight: bold;
+    border-bottom: 1px solid #cdd7e1;
+
+    .day {
+      padding: 12px 0;
+      text-align: center;
+      border-right: 1px solid #d1dbe5;
+
+      &:nth-child(2) {
+        border-left: 1px solid #d1dbe5;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+
+    .time-row {
+      display: grid;
+      grid-template-columns: 75px repeat(7, 1fr);
+      border-top: 1px solid #dee4eb;
+
+      &.thick-line {
+        border-top: 2px solid #a5b4c3;
+      }
+
+      .time-label {
+        text-align: center;
+        font-size: 11px;
+        color: #5c6b7c;
+        padding: 6px 0;
+        background-color: #f0f3f7;
+        border-right: 1px solid #d1dbe5;
+      }
+
+      .day-column {
+        border-right: 1px solid #f0f0f0;
+        background-color: #fff;
+        height: 50px;
+        transition: background-color 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        &:hover {
+          background-color: #f3f6fa;
+        }
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+}
+
+.course {
+  background-color: #cfe2ff;
+  border: 1px solid #3a78c3;
+  border-radius: 6px;
+}
+
+.lab {
+  background-color: #dbe5ff;
+  border: 1px solid #6b5bc1;
+  border-radius: 6px;
+}
+
+.event-block {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  width: calc(100% - 4px);
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #1c2b45;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.2s ease;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Dynamic height based on duration - will be set via inline style */
+}
+
+.event-block:hover {
+  background-color: #bfd8ff;
+  z-index: 2;
+}
+
+.event-continuation {
+  /* This is an invisible placeholder for slots that are part of a multi-hour event */
+  visibility: hidden;
+  height: 100%;
+}

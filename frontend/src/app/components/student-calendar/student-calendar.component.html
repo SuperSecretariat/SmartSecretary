@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="calendar">
+        <div class="header">
+            <div class="day">
+                <label for="group-selector">Group:</label>
+                <select id="group-selector" [(ngModel)]="selectedGroup" (change)="onGroupChange()">
+                    <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
+                </select>
+            </div>
+            <div class="day" *ngFor="let day of days">{{ day }}</div>
+        </div>
+        <div class="body">
+            <div class="time-row" *ngFor="let hour of hours;">
+                <div class="time-label">{{ hour }}</div>
+                <div class="day-column" *ngFor="let day of days">
+                    <!-- Render the event only at its starting time slot -->
+                    <div *ngIf="shouldRenderEvent(day, hour) as event"
+                         [ngClass]="{
+                           'event-block': true,
+                           'course': event.type === 'Course',
+                           'lab': event.type === 'Laboratory'
+                         }"
+                         [style.height.px]="event.duration * 50 - 4">
+                        <strong>{{ event.title }}</strong><br>
+                        <small>{{ event.professor }}</small>
+                    </div>
+
+                    <!-- Create an invisible placeholder for continuation slots -->
+                    <div *ngIf="isEventContinuation(day, hour)"
+                         class="event-continuation"
+                         style="pointer-events: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
