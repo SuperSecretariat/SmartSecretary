@@ -39,6 +39,8 @@ import { TicketCreateModalComponent } from './components/ticket-create-modal/tic
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
+import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
+import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
 
 
 @NgModule({
@@ -67,7 +69,9 @@ import { ModifyFormComponent } from './components/modify-form/modify-form.compon
     TicketCreateModalComponent,
     StudentTicketsComponent,
     SecretaryTicketsComponent,
-    ModifyFormComponent
+    ModifyFormComponent,
+    ViewRequestsComponent,
+    ReviewRequestComponent
   ],
   imports: [
     BrowserModule,

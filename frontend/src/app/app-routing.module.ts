@@ -24,6 +24,8 @@ import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/boar
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
+import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
+import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -68,6 +70,8 @@ const routes: Routes = [
       { path: 'tickets', component: SecretaryTicketsComponent },
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
+      { path: 'dashboard/viewTickets', component: ViewRequestsComponent },
+      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent}
     ]
   },
 ];

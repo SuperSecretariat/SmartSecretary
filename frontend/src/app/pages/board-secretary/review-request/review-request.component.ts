@@ -9,10 +9,10 @@ import { FormsService } from '../../../components/_services/forms.service';
 @Component({
   selector: 'app-board-secretary-review-ticket',
   standalone: false,
-  templateUrl: './board-secretary-review-ticket.component.html',
-  styleUrl: './board-secretary-review-ticket.component.css'
+  templateUrl: './review-request.component.html',
+  styleUrl: './review-request.component.css'
 })
-export class BoardSecretaryReviewTicketComponent implements OnInit, OnDestroy {
+export class ReviewRequestComponent implements OnInit, OnDestroy {
   selectedFormId: number | null = null;
   imageUrl: SafeUrl | null = null;
   isLoading = false;
@@ -22,12 +22,12 @@ export class BoardSecretaryReviewTicketComponent implements OnInit, OnDestroy {
 
   
   constructor(
-    private storageService: StorageService,
-    private http: HttpClient,
-    private sanitizer: DomSanitizer,
-    private route: ActivatedRoute,
-    private router: Router,
-    private formsService: FormsService
+    private readonly storageService: StorageService,
+    private readonly http: HttpClient,
+    private readonly sanitizer: DomSanitizer,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly formsService: FormsService
   ) {}
 
   ngOnInit(): void {
