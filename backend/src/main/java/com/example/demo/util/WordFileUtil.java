@@ -44,7 +44,7 @@ public class WordFileUtil {
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
-        String docxFilePath = FORMS_DIRECTORY_PATH + formTitle + '/' + formTitle+ ".docx";
+        String docxFilePath = FORMS_DIRECTORY_PATH + formTitle + '/' + formTitle + ".docx";
         String docxOutputFilePath = docxOutputDirectoryPath + '/' + formTitle + ".docx";
         try (FileInputStream fis = new FileInputStream(docxFilePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
@@ -59,18 +59,19 @@ public class WordFileUtil {
 
                         for (String word : words) {
                             if (word.startsWith("_") && wordIndex < replacementWords.size()) {
-                                if (!word.endsWith("_")){
-                                    replacementWords.set(wordIndex, replacementWords.get(wordIndex) + word.charAt(word.length() - 1));
+                                String replacement = replacementWords.get(wordIndex);
+                                if (!word.endsWith("_")) {
+                                    replacement += word.charAt(word.length() - 1);
                                 }
-                                updatedText.append(replacementWords.get(wordIndex)).append(" ");
+                                updatedText.append(replacement).append(" "); // Ensure space after replacement
                                 wordIndex++;
                             } else {
-                                updatedText.append(word).append(" ");
+                                updatedText.append(word).append(" "); // Ensure space after regular word
                             }
                         }
 
                         // Update the run with the modified text
-                        run.setText(updatedText.toString().trim(), 0);
+                        run.setText(updatedText.toString(), 0);
                     }
                 }
             }

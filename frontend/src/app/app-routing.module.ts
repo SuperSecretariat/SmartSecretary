@@ -25,6 +25,9 @@ import { UploadCalendarComponent} from './pages/board-secretary/upload-calendar/
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
+import { ModifyFormComponent } from './components/modify-form/modify-form.component';
+import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
+import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
 
 
 const routes: Routes = [
@@ -45,6 +48,7 @@ const routes: Routes = [
       { path: 'complete-form/:id', component: CompleteFormComponent },
       { path: 'pubble', component: PubbleChatComponent },
       { path: 'view-form/:id', component: ViewFormComponent},
+      { path: 'modify-form/:id/:formId', component: ModifyFormComponent },
       { path: 'calendar', component: StudentCalendarComponent },
     ]
   },
@@ -71,8 +75,8 @@ const routes: Routes = [
       { path: 'dashboard/add', component: BoardSecretaryAddComponent },
       { path: 'dashboard/upload-calendar', component: UploadCalendarComponent},
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
-      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
-
+      { path: 'dashboard/viewTickets', component: ViewRequestsComponent },
+      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent}
     ]
   },
 ];

@@ -6,11 +6,13 @@ public class FormRequestResponse {
     private final Long id;
     private final String formTitle;
     private final FormRequestStatus status;
+    private final Long formId;
 
-    public FormRequestResponse(Long id, String formTitle, FormRequestStatus status) {
+    public FormRequestResponse(Long id, String formTitle, FormRequestStatus status, Long formId) {
         this.id = id;
         this.formTitle = formTitle;
         this.status = status;
+        this.formId = formId;
     }
 
     public Long getId() {
@@ -23,5 +25,9 @@ public class FormRequestResponse {
 
     public FormRequestStatus getStatus() {
         return status;
+    }
+
+    public Long getFormId() {
+        return formId;
     }
 }

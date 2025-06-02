@@ -32,7 +32,7 @@ export class StorageService {
     return {};
   }
 
-   public getRegistrationNumber(): string{
+  public getRegistrationNumber(): string{
     return this.getUser().registrationNumber.toString();
   }
 

@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Form;
 import com.example.demo.exceptions.*;
+import com.example.demo.projection.FormFieldsProjection;
+import com.example.demo.projection.FormRequestFieldsProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequestField;
 import com.example.demo.entity.FormRequest;
@@ -79,7 +81,7 @@ public class FormRequestService {
         List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
         for (FormRequest formRequest : formRequests) {
             String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
-            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus(), formRequest.getFormId()));
         }
         return formRequestsResponse;
     }
@@ -92,7 +94,7 @@ public class FormRequestService {
         List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
         for (FormRequest formRequest : formRequests) {
             String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
-            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus()));
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus(), formRequest.getFormId()));
         }
         return formRequestsResponse;
     }
@@ -126,5 +128,23 @@ public class FormRequestService {
         String title = formRepository.findTitleById(formRequest.get().getFormId()).getTitle();
         String imageFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".png";
         return Files.readAllBytes(Paths.get(imageFilePath));
+    }
+
+    public FormRequestFieldsProjection getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException{
+        if (!doesFormRequestExist(id)) {
+            throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
+        }
+        return this.formRequestRepository.findFormRequestFieldsById(id);
+    }
+
+    private boolean doesFormRequestExist(Long id) {
+        return this.formRequestRepository.existsById(id);
+    }
+
+    public void deleteFormRequestById(Long id) throws InvalidFormRequestIdException {
+        if (!doesFormRequestExist(id)) {
+            throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
+        }
+        this.formRequestRepository.deleteById(id);
     }
 }
