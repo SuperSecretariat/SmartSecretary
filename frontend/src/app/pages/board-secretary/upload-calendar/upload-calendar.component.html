@@ -6,10 +6,14 @@
     </div>
   </div>
 
-  <div>
+  <div class="delete">
+      <div style="padding:4px;">
     <input type="text" placeholder="Search files and folders..." [(ngModel)]="searchQuery">
-    <button (click)="reloadDocs()">Reload Calendar Documentation</button>
-  </div>
+    <button (click)="deleteAllCalendarDocumentation()">Delete all calendar documentation</button>
+      </div > <div style="padding:4px;">
+        <input type="text" placeholder="Delete by group..." [(ngModel)]="deleteGroupQuery">
+        <button (click)="deleteByGroup()">Delete by group</button>
+    </div></div>
 </div>
 
 <table class="fileList">
@@ -18,9 +22,12 @@
     <th>Name</th>
     <th>Type</th>
     <th>Size</th>
-    <th>Actions</th>
+    <th>Group Populated</th>
   </tr>
   </thead>
+<!--    <div *ngIf="errorMessage" class="error-message">-->
+<!--        {{ errorMessage }}-->
+<!--    </div>-->
   <tbody>
   <tr *ngFor="let item of filteredItems()">
     <td>
@@ -29,9 +36,7 @@
     </td>
     <td>{{ item.type }}</td>
     <td>{{ item.size || '-' }}</td>
-    <td>
-      <button (click)="deleteItem(item)">Delete</button>
-    </td>
+    <td>{{ item.groupsPopulated || '-' }}</td>
   </tr>
   </tbody>
 </table>

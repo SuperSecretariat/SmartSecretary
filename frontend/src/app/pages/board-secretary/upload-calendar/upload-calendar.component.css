@@ -162,6 +162,11 @@ tbody tr:hover {
   justify-content: center;
   gap: 8px;
 }
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+}
 
 .clickable {
   cursor: pointer;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
 interface Event {
@@ -27,9 +27,21 @@ interface ProcessedEvent extends Event {
   templateUrl: './student-calendar.component.html',
   styleUrls: ['./student-calendar.component.css']
 })
-export class StudentCalendarComponent {
+export class StudentCalendarComponent implements OnInit {
   days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   hours = this.generateHours(8, 19);
+  showExams: boolean = false;
+  annualView: boolean = false;
+
+  ngOnInit() {
+    // Optional: Set a default group if one isn't selected
+    if (!this.selectedGroup || this.selectedGroup === '') {
+      this.selectedGroup = '1A1';  // or any default you want
+      // RAZVAN VILCU WILL HELP ME IMPLEMENT THIS BY CREATING A GROUP FOR STUDENTS
+    }
+
+    this.fetchEvents();
+  }
 
   generateHours(start: number, end: number): string[] {
     const result: string[] = [];
@@ -75,7 +87,7 @@ export class StudentCalendarComponent {
               endTime: end
             };
           });
-          this.processEvents();
+          this.filterEvents();
           console.log('✅ Events loaded:', this.events);
         } else {
           console.error('No events found in the response', response);
@@ -134,4 +146,33 @@ export class StudentCalendarComponent {
         currentHour < event.startHour + event.duration
     );
   }
+
+  toggleEventType() {
+    this.showExams = !this.showExams;
+    this.filterEvents();
+  }
+
+  toggleViewMode() {
+    this.annualView = !this.annualView;
+    // Implement logic for week/annual switching if necessary
+  }
+
+  filterEvents() {
+    const filtered = this.showExams
+      ? this.events.filter(e => e.type === 'Exam')
+      : this.events.filter(e => e.type === 'Course' || e.type === 'Laboratory');
+
+    this.processedEvents = filtered.map(e => this.toProcessedEvent(e));
+  }
+
+
+  toProcessedEvent(event: Event): ProcessedEvent {
+    const [startHourStr, endHourStr] = (event.time || '').split(' - ') ?? ['00:00', '00:00'];
+    const startHour = parseInt(startHourStr.split(':')[0]);
+    const endHour = parseInt(endHourStr.split(':')[0]);
+    const duration = endHour - startHour;
+
+    return { ...event, startHour, duration };
+  }
+
 }

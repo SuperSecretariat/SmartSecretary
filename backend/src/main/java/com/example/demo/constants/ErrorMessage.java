@@ -31,7 +31,10 @@ public class ErrorMessage {
 
     //Calendar error messages
     public static final String WRONG_FORMAT = "Invalid CSV format";
+    public static final String WRONG_HEADER = "Invalid CSV header, expected: 'Group(YNG),Type(Course,Laboratory,Exam),Day(Monday,Tuesday,Wednesday,Thursday,Friday),Time(08:00 - 20:00),Title,Professor'";
     public static final String ERROR_FILE = "Error while working with the file";
     public static final String NO_DATA_GROUP = "No events for this group";
+    public static final String MULTIPLE_GROUPS = "Please upload a calendar for one group at a time";
+
     private ErrorMessage(){}
 }

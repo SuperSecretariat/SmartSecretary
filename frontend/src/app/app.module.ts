@@ -40,6 +40,7 @@ import { TicketChatModalComponent } from './components/ticket-chat-modal/ticket-
 import { TicketCreateModalComponent } from './components/ticket-create-modal/ticket-create-modal.component';
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
+import { StudentYearlyCalendarComponent } from './components/student-yearly-calendar/student-yearly-calendar.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tic
     TicketCreateModalComponent,
     StudentTicketsComponent,
     SecretaryTicketsComponent,
+    StudentYearlyCalendarComponent,
   ],
   imports: [
     BrowserModule,

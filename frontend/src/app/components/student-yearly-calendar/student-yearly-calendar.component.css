@@ -178,3 +178,172 @@ body {
   background-color: #6b5bc1;
 }
 
+.yearly-calendar-container {
+  width: 100%;
+  height: 100vh;
+  padding: 0 80px 920px 80px; /* top right bottom left */
+  background-color: #f0f4f8;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: visible;
+}
+
+
+.academic-year-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
+
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 20px;
+  height: calc(100vh - 150px);
+  max-width: 1400px;
+  margin: 10px auto;
+}
+
+.month-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.month-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e74c3c;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: 8px;
+}
+
+.day-header {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  padding: 4px 0;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  flex: 1;
+}
+
+.calendar-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-height: 24px;
+  border-radius: 2px;
+}
+
+.calendar-day:hover {
+  background-color: #f0f3f7;
+}
+
+.calendar-day.other-month {
+  color: #cdd7e1;
+  font-weight: 400;
+}
+
+.calendar-day.today {
+  background-color: #ff6b6b;
+  color: white;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.calendar-day.free-day {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  font-weight: 600;
+}
+.calendar-day.learning-day{
+  background-color: #cfe2ff;
+  color: #084298;
+  font-weight: 600;
+}
+
+/* Weekend styling - Saturday and Sunday */
+/*.calendar-day:nth-child(6),*/
+/*.calendar-day:nth-child(7),*/
+/*.calendar-day:nth-child(13),*/
+/*.calendar-day:nth-child(14),*/
+/*.calendar-day:nth-child(20),*/
+/*.calendar-day:nth-child(21),*/
+/*.calendar-day:nth-child(27),*/
+/*.calendar-day:nth-child(28),*/
+/*.calendar-day:nth-child(34),*/
+/*.calendar-day:nth-child(35),*/
+/*.calendar-day:nth-child(41),*/
+/*.calendar-day:nth-child(42) {*/
+/*  background-color: #f8f9fa;*/
+/*}*/
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .calendar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
+
+  .yearly-calendar-container {
+    padding: 15px;
+  }
+
+  .academic-year-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .calendar-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(12, 1fr);
+    height: auto;
+  }
+
+  .yearly-calendar-container {
+    height: auto;
+    padding: 10px;
+
+  }
+
+  .month-container {
+    padding: 12px;
+  }
+
+  .month-name {
+    font-size: 1.1rem;
+  }
+}
