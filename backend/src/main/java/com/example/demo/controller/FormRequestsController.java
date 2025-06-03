@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.exceptions.*;
 import com.example.demo.model.enums.FormRequestStatus;
 
@@ -104,6 +105,9 @@ public class FormRequestsController {
         } catch (FormRequestFieldDataException | IOException | InvalidWordToPDFConversion | InterruptedException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
+        } catch(EncryptionException ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.badRequest().build();
         }
 //        catch (Exception e) {
 //            this.logger.error(e.getMessage());
@@ -145,13 +149,16 @@ public class FormRequestsController {
     }
 
     @GetMapping("/{id}/fields")
-    public ResponseEntity<FormRequestFieldsProjection> getFormRequestFieldsById(@PathVariable Long id) {
+    public ResponseEntity<FormRequestFieldsDTO> getFormRequestFieldsById(@PathVariable Long id) {
         try {
-            FormRequestFieldsProjection formRequestFields = formRequestService.getFormRequestFieldsById(id);
+            FormRequestFieldsDTO formRequestFields = formRequestService.getFormRequestFieldsById(id);
             return ResponseEntity.ok(formRequestFields);
         }
         catch (InvalidFormRequestIdException e) {
             this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (DecryptionException ex){
+            logger.error(ex.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }

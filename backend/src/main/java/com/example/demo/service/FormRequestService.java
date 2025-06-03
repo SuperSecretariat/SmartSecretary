@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.controller.AuthController;
+import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.entity.Form;
 import com.example.demo.exceptions.*;
 import com.example.demo.projection.FormFieldsProjection;
@@ -14,6 +16,9 @@ import com.example.demo.dto.FormRequestRequest;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.PdfFileUtil;
 import com.example.demo.util.WordFileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,12 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.demo.util.AESUtil.decrypt;
+import static com.example.demo.util.AESUtil.encrypt;
+
 @Service
 public class FormRequestService {
     private static final String FORM_REQUESTS_DIRECTORY_PATH = "src/main/resources/requests/";
     private final FormRequestRepository formRequestRepository;
     private final FormRepository formRepository;
     private final JwtUtil jwtUtil;
+    private static final Logger loggerFormRequest = LoggerFactory.getLogger(FormRequestService.class);
 
     public FormRequestService(FormRequestRepository repository, FormRepository formRepository, JwtUtil jwtUtil) {
         this.formRequestRepository = repository;
@@ -37,7 +46,7 @@ public class FormRequestService {
     }
 
 
-    public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException, IOException, InvalidWordToPDFConversion, InterruptedException {
+    public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException, IOException, InvalidWordToPDFConversion, InterruptedException, EncryptionException {
         // Get the userRegistrationNumber from the JWT token
         String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
         if (this.formRepository.findNumberOfInputFieldsById(formRequestRequest.getFormId()).getNumberOfInputFields()
@@ -62,12 +71,12 @@ public class FormRequestService {
         throw new FormRequestFieldDataException("The number of fields in the form request does not match the number of fields in the form template.");
     }
 
-    private List<FormRequestField> createFormRequestFields(List<String> fieldsData) {
-        List<FormRequestField> formRequestFields = new ArrayList<>();
-        for (String fieldData : fieldsData) {
-            formRequestFields.add(new FormRequestField(fieldData));
-        }
-        return formRequestFields;
+    private List<FormRequestField> createFormRequestFields(List<String> fieldsData) throws EncryptionException {
+            List<FormRequestField> formRequestFields = new ArrayList<>();
+            for (String fieldData : fieldsData) {
+                formRequestFields.add(new FormRequestField(encrypt(fieldData)));
+            }
+            return formRequestFields;
     }
 
     // Used to get all requests for a specific user
@@ -130,11 +139,16 @@ public class FormRequestService {
         return Files.readAllBytes(Paths.get(imageFilePath));
     }
 
-    public FormRequestFieldsProjection getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException{
-        if (!doesFormRequestExist(id)) {
-            throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
-        }
-        return this.formRequestRepository.findFormRequestFieldsById(id);
+    public FormRequestFieldsDTO getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException, DecryptionException {
+            if (!doesFormRequestExist(id)) {
+                throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
+            }
+            FormRequestFieldsDTO formRequestFieldsDTO = new FormRequestFieldsDTO();
+            List<FormRequestField> formRequestFields = this.formRequestRepository.findFormRequestFieldsById(id).getFields();
+            for (FormRequestField formRequestField : formRequestFields) {
+                formRequestFieldsDTO.addFieldData(decrypt(formRequestField.getData()));
+            }
+            return formRequestFieldsDTO;
     }
 
     private boolean doesFormRequestExist(Long id) {
