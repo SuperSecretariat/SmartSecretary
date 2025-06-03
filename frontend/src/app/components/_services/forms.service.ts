@@ -3,9 +3,11 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environments";
 import { StorageService } from "./storage.service";
+import { of } from "rxjs";
 
 const FORMS_API_CONTROLLER = `${environment.backendUrl}/api/forms`;
 const FORMS_API_REQUESTS = `${environment.backendUrl}/api/form-requests`
+const USER_API = `${environment.backendUrl}/api/user`;
 
 const httpOptions = {
   headers: new HttpHeaders({ "Content-Type": "application/json" }),
@@ -110,4 +112,23 @@ export class FormsService {
             }
         );
     }
+    
+    getUserProfile(): Observable<any> {
+        const user = this.storageService.getUser();
+
+        if (!user || !user.token) {
+            console.warn('Tokenul nu există în storage.');
+            return of(null);
+        }
+
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${user.token}`
+        });
+
+        return this.http.get(`${USER_API}/profile`, {
+            headers: headers,
+            responseType: 'json'
+        });
+    }
+
 }

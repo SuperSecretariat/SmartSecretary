@@ -1,26 +1,46 @@
 <div class="title">Complete your request</div>
+
+<div *ngIf="profileSuggestion" class="profile-warning">
+  {{ profileSuggestion }}
+  <button class="dismiss-btn" (click)="dismissSuggestion()">X</button>
+</div>
+
 <div *ngIf="imageUrl" class="image-container">
   <img [src]="imageUrl" alt="Form Image" />
-    <input *ngFor="let formField of formFields; let i = index" 
-      type="text" 
-      [placeholder]="'Enter value'" 
-      [style.position]="'absolute'"
-      [style.top]="formField.top"
-      [style.left]="formField.left"
-      [style.width]="formField.width"
-      [style.height]="formField.height"
-      [(ngModel)]="formFields[i].value"
-      name="field{{i}}"
-    />
+  <input *ngFor="let formField of formFields; let i = index" 
+    type="text" 
+    [placeholder]="'Enter value'" 
+    [style.position]="'absolute'"
+    [style.top]="formField.top"
+    [style.left]="formField.left"
+    [style.width]="formField.width"
+    [style.height]="formField.height"
+    [(ngModel)]="formFields[i].value"
+    name="field{{i}}"
+    (blur)="fieldTouched[i] = true"
+    [ngClass]="{
+      'valid-field': fieldTouched[i] && isFieldValid(formField, i),
+      'invalid-field': fieldTouched[i] && !isFieldValid(formField, i)
+    }"
+  />
 </div>
-<div *ngIf="warningMessage" class="warning-message">
-  {{ warningMessage }}
-</div>
+
 <div class="submit_button_container">
   <div *ngIf="isLoading" class="loading-spinner">
     <div class="spinner"></div>
     <p>Loading...</p>
   </div>
+
+  <div *ngIf="warningMessage" class="warning-message">
+    {{ warningMessage }}
+  </div>
+
+  <div *ngIf="!warningMessage && validationErrors.length > 0" class="warning-message">
+    <ul style="list-style-type: none; padding: 0; margin: 0;">
+      <li *ngFor="let error of validationErrors">{{ error }}</li>
+    </ul>
+  </div>
+
   <button 
     (click)="saveFormFields()" 
     [disabled]="isLoading"

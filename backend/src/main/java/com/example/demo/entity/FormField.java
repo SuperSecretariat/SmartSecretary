@@ -32,6 +32,8 @@ public class FormField {
     @NotBlank
     private String previousWord;
 
+    private String label;
+
     public FormField() {}
 
     public FormField(String page, String top, String left, String width, String height, String text, String previousWord) {
@@ -42,7 +44,9 @@ public class FormField {
         this.height = height;
         this.text = text;
         this.previousWord = previousWord;
+        this.label = label;
     }
+
 
     @Override
     public String toString() {
@@ -55,7 +59,13 @@ public class FormField {
                 ", height='" + height + '\'' +
                 ", text='" + text + '\'' +
                 ", previousWord='" + previousWord + '\'' +
+                ", label='" + label + '\'' +
                 '}';
+    }
+
+    // Getters
+    public long getId() {
+        return id;
     }
 
     public String getPage() {
@@ -84,5 +94,46 @@ public class FormField {
 
     public String getPreviousWord() {
         return previousWord;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    // Setters
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public void setTop(String top) {
+        this.top = top;
+    }
+
+    public void setLeft(String left) {
+        this.left = left;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setPreviousWord(String previousWord) {
+        this.previousWord = previousWord;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

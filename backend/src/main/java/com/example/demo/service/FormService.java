@@ -12,17 +12,18 @@ import com.example.demo.projection.FormFieldsProjection;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.dto.FormCreationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.stereotype.Service;
-import com.example.demo.util.PdfFileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.util.PdfFileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class FormService {
@@ -34,11 +35,12 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
-    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
+    public Form createForm(FormCreationRequest formCreationRequest)
+            throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
+
         String jsonString = PdfFileUtil.mapPdfInputFieldsToCssPercentages(formCreationRequest.getTitle());
 
         ObjectMapper mapper = new ObjectMapper();
-        // Deserialize the JSON string into a list of FormFieldJsonObject objects
         List<FormFieldJsonObject> formFieldsAsJsonObjects = mapper.readValue(jsonString, new TypeReference<>() {});
 
         // Create and save the new form in the db
@@ -48,29 +50,26 @@ public class FormService {
         form.setNumberOfInputFields(formFieldsAsJsonObjects.size());
 
         List<FormField> formFields = formFieldsAsJsonObjects.stream()
-                .map(formFieldJsonObject -> new FormField(
-                        formFieldJsonObject.getPage(),
-                        formFieldJsonObject.getTop(),
-                        formFieldJsonObject.getLeft(),
-                        formFieldJsonObject.getWidth(),
-                        formFieldJsonObject.getHeight(),
-                        formFieldJsonObject.getText(),
-                        formFieldJsonObject.getPreviousWord()
-                        )
-                )
+                .map(obj -> {
+                    FormField field = new FormField();
+                    field.setPage(obj.getPage());
+                    field.setTop(obj.getTop());
+                    field.setLeft(obj.getLeft());
+                    field.setWidth(obj.getWidth());
+                    field.setHeight(obj.getHeight());
+                    field.setText(obj.getText());
+                    field.setPreviousWord(obj.getPreviousWord());
+
+                    field.setLabel(detectLabel(obj.getPreviousWord()));
+
+                    return field;
+                })
                 .toList();
 
         form.addFields(formFields);
-
         this.formRepository.save(form);
 
         return form;
-        //save files in resources/uploaded.forms directory
-        //compute size of the pdf file in points     ---
-        //compute coordinates of the input fields      | --> the python script does this
-        //convert the coordinates to % for css       ---
-        //store the % into the database
-        //store the file name, number of input fields, ?size of the pdf file in the database
     }
 
     public List<FormResponse> getAllActiveForms() {
@@ -101,7 +100,8 @@ public class FormService {
         return Files.readAllBytes(Paths.get(imageFilePath));
     }
 
-    public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {
+    public FormFieldsProjection getFormFieldsOfFormWithId(Long id)
+            throws InvalidFormIdException, NoFormFieldsFoundException {
         if (!doesFormExist(id)) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
@@ -115,4 +115,40 @@ public class FormService {
     private boolean doesFormExist(Long id) {
         return this.formRepository.existsById(id);
     }
+
+    private String detectLabel(String previousWord) {
+        if (previousWord == null) return "necunoscut";
+
+        String normalized = previousWord.toLowerCase().replaceAll("[\\./]", " ");
+
+        String[] tokens = normalized.trim().split("\\s+");
+
+        for (String token : tokens) {
+            if (token.contains("subsemnat")) return "Nume complet";
+            if (token.contains("promo")) return "Promoție";
+            if (token.contains("specializ")) return "Specializare";
+            if (token.contains("perioad")) return "Perioadă studii";
+            if (token.equals("an") || token.equals("anul") || token.contains("anul")) return "An de studii";
+            if (token.contains("semestr")) return "Semestru";
+            if (token.contains("cnp")) return "CNP";
+            if (token.contains("matricol")) return "Număr matricol";
+            if (token.contains("disciplina")) return "Disciplina";
+            if (token.contains("titular")) return "Titular disciplină";
+            if (token.contains("email")) return "Email";
+            if (token.contains("telefon")) return "Telefon";
+            if (token.contains("data")) return "Dată";
+            if (token.contains("universitar")) return "An universitar";
+            if (token.contains("nr")) return "Nr.";
+            if (token.contains("semn")) return "Dată";
+            if (token.contains("prof") || token.contains("conf") || token.contains("lect") || token.contains("asist") || token.contains("profesor")) {
+                return "Profesor";
+            }
+            if (token.contains("pentru")) return "Scop";
+        }
+
+        return "Generic";
+    }
+
+
+
 }
