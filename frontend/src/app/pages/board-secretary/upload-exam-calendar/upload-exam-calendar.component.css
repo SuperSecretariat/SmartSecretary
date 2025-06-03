@@ -1,0 +1,336 @@
+:host {
+  display: block;
+  max-width: 1200px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  background: #f7fafd;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(30, 58, 138, 0.10);
+  padding: 32px 28px;
+}
+
+/* Main Interaction Area */
+.mainInteraction {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.inputBox {
+  flex: 1;
+  min-width: 300px;
+}
+
+.delete-section {
+  flex: 1;
+  min-width: 400px;
+}
+
+/* Upload Section */
+.upload-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  border: 1px solid #e3f2fd;
+}
+
+.upload-section h3 {
+  margin: 0 0 16px 0;
+  color: #1976d2;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+/* Delete Section */
+.delete-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  border: 1px solid #e3f2fd;
+}
+
+.delete-section h3 {
+  margin: 0 0 16px 0;
+  color: #1976d2;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.delete-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Form Elements */
+input[type="file"] {
+  margin-right: 10px;
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #f8f9fa;
+  font-size: 0.95em;
+}
+
+input[type="text"], input[placeholder] {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.95em;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  min-width: 200px;
+  flex: 1;
+}
+
+input[type="text"]:focus, input[placeholder]:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+button {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+button[disabled], button:disabled {
+  background: #b0b9ca;
+  color: #e6e6e6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+button:not([disabled]):hover {
+  background: #125399;
+  box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+}
+
+.danger-btn {
+  background: #dc3545;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.danger-btn:not([disabled]):hover {
+  background: #c82333;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Messages */
+.message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-message {
+  background: #fff5f5;
+  color: #dc3545;
+  border: 1px solid #f5c6cb;
+}
+
+.success-message {
+  background: #f0fff4;
+  color: #28a745;
+  border: 1px solid #c3e6cb;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+th {
+  background: #e3f2fd;
+  color: #125399;
+  font-weight: 600;
+  font-size: 0.95em;
+  border-bottom: 2px solid #b0b9ca;
+}
+
+tbody tr {
+  transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+  background: #f8f9fa;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.file {
+  color: #3b4252;
+  font-weight: 500;
+}
+
+.no-data {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 24px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  :host {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .mainInteraction {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .inputBox, .delete-section {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .control-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  input[type="text"] {
+    min-width: auto;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  th {
+    display: none;
+  }
+
+  td {
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    padding-left: 50%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #125399;
+  }
+
+  tbody tr {
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 8px;
+  }
+}
+.toggle-container {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+button.toggle-btn {
+  background: linear-gradient(90deg, #1976d2, #42a5f5);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.toggle-btn:hover {
+  background: linear-gradient(90deg, #125399, #1e88e5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+button.toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+.toggle-container {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+button.toggle-btn {
+  background: linear-gradient(90deg, #1976d2, #42a5f5);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.toggle-btn:hover {
+  background: linear-gradient(90deg, #125399, #1e88e5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+button.toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+

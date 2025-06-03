@@ -25,6 +25,11 @@ export class UploadCalendarComponent implements OnInit {
   selectedFile: File | null = null;
   errorMessage: string | null = null;
 
+  showUploadCalendar: boolean = true;
+
+  toggleComponent(): void {
+    this.showUploadCalendar = !this.showUploadCalendar;
+  }
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {

@@ -1,0 +1,78 @@
+<div class="toggle-container">
+  <button class="toggle-btn" (click)="backToCalendar()">← Switch to Upload Calendar</button>
+</div>
+
+<div class="mainInteraction">
+  <div class="inputBox">
+    <div class="upload-section">
+      <h3>Upload Exam Schedule</h3>
+      <input type="file" (change)="onFileSelected($event)" accept=".csv">
+      <button (click)="uploadExamFile()" [disabled]="!selectedFile">Upload Exam Schedule</button>
+    </div>
+  </div>
+
+  <div class="delete-section">
+    <h3>Manage Exam Data</h3>
+
+    <div class="delete-controls">
+      <div class="control-row">
+        <input type="text" placeholder="Search exams..." [(ngModel)]="searchQuery">
+      </div>
+
+      <div class="control-row">
+        <input type="text" placeholder="Delete by group..." [(ngModel)]="deleteGroupQuery">
+        <button (click)="deleteByGroup()" [disabled]="!deleteGroupQuery.trim()">Delete by Group</button>
+      </div>
+
+      <div class="control-row">
+        <input type="text" placeholder="Delete by exam date (e.g., 2025-01-15)..." [(ngModel)]="deleteExamDateQuery">
+        <button (click)="deleteByExamDate()" [disabled]="!deleteExamDateQuery.trim()">Delete by Date</button>
+      </div>
+
+      <div class="control-row">
+        <button class="danger-btn" (click)="deleteAllExamDocumentation()">Delete All Exam Documentation</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMessage" class="message error-message">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="successMessage" class="message success-message">
+  {{ successMessage }}
+</div>
+
+<table class="fileList">
+  <thead>
+  <tr>
+    <th>File Name</th>
+    <th>Type</th>
+    <th>Size</th>
+    <th>Groups Populated</th>
+    <th>Exam Date</th>
+    <th>Exam Type</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of filteredItems()">
+    <td>
+      <span class="file">{{ item.name }}</span>
+    </td>
+    <td>{{ item.type }}</td>
+    <td>{{ item.size || '-' }}</td>
+    <td>
+        <span *ngIf="item.groupsPopulated && item.groupsPopulated.length > 0">
+          {{ item.groupsPopulated.join(', ') }}
+        </span>
+      <span *ngIf="!item.groupsPopulated || item.groupsPopulated.length === 0">-</span>
+    </td>
+    <td>{{ item.examDate || '-' }}</td>
+    <td>{{ item.examType || '-' }}</td>
+  </tr>
+  <tr *ngIf="filteredItems().length === 0">
+    <td colspan="6" class="no-data">No exam files found</td>
+  </tr>
+  </tbody>
+</table>

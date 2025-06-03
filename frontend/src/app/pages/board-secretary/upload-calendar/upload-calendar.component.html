@@ -1,43 +1,68 @@
-<div class="mainInteraction">
-  <div class="inputBox">
-    <div style="color: black">
-      <input type="file" (change)="onFileSelected($event)">
-      <button (click)="uploadFile()" style="margin-top: 10px;">Upload</button>
+<div class="toggle-container">
+  <button class="toggle-btn" (click)="toggleComponent()">
+    {{ showUploadCalendar ? 'Switch to Upload Exam' : 'Switch to Upload Calendar' }}
+  </button>
+</div>
+
+<!-- Upload Calendar View -->
+<div *ngIf="showUploadCalendar">
+  <div class="mainInteraction">
+    <div class="inputBox">
+      <div style="color: black">
+        <input type="file" (change)="onFileSelected($event)">
+        <button (click)="uploadFile()" style="margin-top: 10px;">Upload</button>
+      </div>
+    </div>
+
+    <div class="delete">
+      <div style="padding:4px;">
+        <input
+          type="text"
+          placeholder="Search files and folders..."
+          [(ngModel)]="searchQuery"
+        />
+        <button (click)="deleteAllCalendarDocumentation()">Delete all calendar documentation</button>
+      </div>
+      <div style="padding:4px;">
+        <input
+          type="text"
+          placeholder="Delete by group..."
+          [(ngModel)]="deleteGroupQuery"
+        />
+        <button (click)="deleteByGroup()">Delete by group</button>
+      </div>
     </div>
   </div>
 
-  <div class="delete">
-      <div style="padding:4px;">
-    <input type="text" placeholder="Search files and folders..." [(ngModel)]="searchQuery">
-    <button (click)="deleteAllCalendarDocumentation()">Delete all calendar documentation</button>
-      </div > <div style="padding:4px;">
-        <input type="text" placeholder="Delete by group..." [(ngModel)]="deleteGroupQuery">
-        <button (click)="deleteByGroup()">Delete by group</button>
-    </div></div>
+  <table class="fileList">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Size</th>
+      <th>Group Populated</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of filteredItems()">
+      <td>
+          <span
+            *ngIf="item.type === 'Folder'"
+            class="folder clickable"
+          >{{ item.name }}</span>
+        <span
+          *ngIf="item.type !== 'Folder'"
+          class="file"
+        >{{ item.name }}</span>
+      </td>
+      <td>{{ item.type }}</td>
+      <td>{{ item.size || '-' }}</td>
+      <td>{{ item.groupsPopulated || '-' }}</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 
-<table class="fileList">
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Size</th>
-    <th>Group Populated</th>
-  </tr>
-  </thead>
-<!--    <div *ngIf="errorMessage" class="error-message">-->
-<!--        {{ errorMessage }}-->
-<!--    </div>-->
-  <tbody>
-  <tr *ngFor="let item of filteredItems()">
-    <td>
-      <span *ngIf="item.type === 'Folder'" class="folder clickable">{{ item.name }}</span>
-      <span *ngIf="item.type !== 'Folder'" class="file">{{ item.name }}</span>
-    </td>
-    <td>{{ item.type }}</td>
-    <td>{{ item.size || '-' }}</td>
-    <td>{{ item.groupsPopulated || '-' }}</td>
-  </tr>
-  </tbody>
-</table>
-
+<div *ngIf="!showUploadCalendar">
+  <app-upload-exam></app-upload-exam>
+</div>

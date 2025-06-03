@@ -200,4 +200,31 @@ tbody td button {
     background: #f7fafd;
   }
 }
+.toggle-container {
+  margin-bottom: 16px;
+  text-align: center;
+}
 
+button.toggle-btn {
+  background: linear-gradient(90deg, #1976d2, #42a5f5);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.toggle-btn:hover {
+  background: linear-gradient(90deg, #125399, #1e88e5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+button.toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
