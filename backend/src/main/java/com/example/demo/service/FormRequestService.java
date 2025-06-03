@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.entity.Form;
 import com.example.demo.exceptions.*;
 import com.example.demo.projection.FormFieldsProjection;
@@ -130,11 +131,16 @@ public class FormRequestService {
         return Files.readAllBytes(Paths.get(imageFilePath));
     }
 
-    public FormRequestFieldsProjection getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException{
+    public FormRequestFieldsDTO getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException{
         if (!doesFormRequestExist(id)) {
             throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
         }
-        return this.formRequestRepository.findFormRequestFieldsById(id);
+        FormRequestFieldsDTO formRequestFieldsDTO = new FormRequestFieldsDTO();
+        List<FormRequestField> formRequestFields = this.formRequestRepository.findFormRequestFieldsById(id).getFields();
+        for (FormRequestField formRequestField : formRequestFields) {
+            formRequestFieldsDTO.addFieldData(formRequestField.getData());
+        }
+        return formRequestFieldsDTO;
     }
 
     private boolean doesFormRequestExist(Long id) {
