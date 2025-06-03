@@ -71,7 +71,7 @@ export class ModifyFormComponent {
       this.formsService.getFormRequestFieldsById(id).subscribe(
         (data: any) => {
           //console.log('Form request fields:', data);
-          this.formRequestFields = data.fields;
+          this.formRequestFields = data.fieldsData;
           console.log('Form request fields:', this.formRequestFields);
           // Initialize values for each field
           this.formFields.forEach(field => {

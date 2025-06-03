@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.exceptions.*;
 import com.example.demo.model.enums.FormRequestStatus;
 
@@ -145,9 +146,9 @@ public class FormRequestsController {
     }
 
     @GetMapping("/{id}/fields")
-    public ResponseEntity<FormRequestFieldsProjection> getFormRequestFieldsById(@PathVariable Long id) {
+    public ResponseEntity<FormRequestFieldsDTO> getFormRequestFieldsById(@PathVariable Long id) {
         try {
-            FormRequestFieldsProjection formRequestFields = formRequestService.getFormRequestFieldsById(id);
+            FormRequestFieldsDTO formRequestFields = formRequestService.getFormRequestFieldsById(id);
             return ResponseEntity.ok(formRequestFields);
         }
         catch (InvalidFormRequestIdException e) {
