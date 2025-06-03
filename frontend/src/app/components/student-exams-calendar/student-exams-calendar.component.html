@@ -1,0 +1,25 @@
+<div *ngIf="coursesView; else examView">
+  <app-student-calendar> </app-student-calendar>
+</div>
+
+<ng-template #examView>
+  <div class="container">
+    <div class="controls">
+      <button (click)="toggleViewMode()" [ngClass]="{ active: examView }">
+        {{ examView ? 'Show Courses/Labs' : 'Show Exams' }}
+      </button>
+    </div>
+
+    <div class="calendar-container" *ngFor="let period of examPeriods">
+      <h2 class="calendar-title">{{ period.title }}</h2>
+      <div class="calendar-grid">
+        <div class="calendar-day" *ngFor="let day of getDaysInPeriod(period.start, period.end)">
+          <div class="day-header">{{ getWeekdayName(day) }}</div>
+          <div class="day-number">{{ getDayNumber(day) }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
+

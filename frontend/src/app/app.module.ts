@@ -41,6 +41,7 @@ import { TicketCreateModalComponent } from './components/ticket-create-modal/tic
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { StudentYearlyCalendarComponent } from './components/student-yearly-calendar/student-yearly-calendar.component';
+import { StudentExamsCalendarComponent } from './components/student-exams-calendar/student-exams-calendar.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { StudentYearlyCalendarComponent } from './components/student-yearly-cale
     StudentTicketsComponent,
     SecretaryTicketsComponent,
     StudentYearlyCalendarComponent,
+    StudentExamsCalendarComponent,
   ],
   imports: [
     BrowserModule,

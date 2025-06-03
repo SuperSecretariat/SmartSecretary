@@ -1,6 +1,12 @@
-<div *ngIf="annualView; else weeklyView">
+<div *ngIf="annualView; else checkExams">
   <app-student-yearly-calendar> </app-student-yearly-calendar>
 </div>
+
+<ng-template #checkExams>
+  <div *ngIf="showExams; else weeklyView">
+    <app-student-exams-calendar> </app-student-exams-calendar>
+  </div>
+</ng-template>
 
 <ng-template #weeklyView>
   <div class="container">
