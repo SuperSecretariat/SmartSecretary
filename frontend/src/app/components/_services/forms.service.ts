@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environments";
 import { StorageService } from "./storage.service";
@@ -8,20 +8,23 @@ import { of } from "rxjs";
 const FORMS_API_CONTROLLER = `${environment.backendUrl}/api/forms`;
 const FORMS_API_REQUESTS = `${environment.backendUrl}/api/form-requests`
 const USER_API = `${environment.backendUrl}/api/user`;
+const BASE_DIR = '/src/main/resources/requests';
+const FILES_API = `${environment.backendUrl}/api/files`;
+
 
 const httpOptions = {
-  headers: new HttpHeaders({ "Content-Type": "application/json" }),
+    headers: new HttpHeaders({ "Content-Type": "application/json" }),
 };
 
 @Injectable({
-  providedIn: "root",
+    providedIn: "root",
 })
 export class FormsService {
-    constructor(private readonly http: HttpClient, private readonly storageService: StorageService) {}
+    constructor(private readonly http: HttpClient, private readonly storageService: StorageService) { }
 
     getAllForms(): Observable<any> {
         return this.http.get(
-            FORMS_API_CONTROLLER, 
+            FORMS_API_CONTROLLER,
             {
                 headers: httpOptions.headers,
                 responseType: "json",
@@ -31,7 +34,7 @@ export class FormsService {
 
     getFormFieldsById(id: number): Observable<any> {
         return this.http.get(
-            `${FORMS_API_CONTROLLER}/${id}/fields`, 
+            `${FORMS_API_CONTROLLER}/${id}/fields`,
             {
                 headers: httpOptions.headers,
                 responseType: "json",
@@ -54,8 +57,8 @@ export class FormsService {
             fields
         };
         return this.http.post(
-            `${FORMS_API_REQUESTS}/create`, 
-            payload, 
+            `${FORMS_API_REQUESTS}/create`,
+            payload,
             {
                 headers: this.addAuthorizationHeader(httpOptions.headers),
                 responseType: "json",
@@ -63,9 +66,9 @@ export class FormsService {
         );
     }
 
-    getSubmittedRequests() : Observable<any> {
+    getSubmittedRequests(): Observable<any> {
         return this.http.get(
-            `${FORMS_API_REQUESTS}/submitted`, 
+            `${FORMS_API_REQUESTS}/submitted`,
             {
                 headers: this.addAuthorizationHeader(httpOptions.headers),
                 responseType: "json",
@@ -73,7 +76,7 @@ export class FormsService {
         );
     }
 
-    getAllSubmittedRequests() : Observable<any> {
+    getAllSubmittedRequests(): Observable<any> {
         return this.http.get(
             `${FORMS_API_REQUESTS}/review-requests`,
             {
@@ -83,7 +86,7 @@ export class FormsService {
         );
     }
 
-    addAuthorizationHeader(headers : HttpHeaders) : HttpHeaders {
+    addAuthorizationHeader(headers: HttpHeaders): HttpHeaders {
         const jwtToken = this.storageService.getUser().token;
         return headers.set('Authorization', 'Bearer ' + jwtToken);
     }
@@ -129,6 +132,37 @@ export class FormsService {
             headers: headers,
             responseType: 'json'
         });
+    }
+
+    downloadRequest(subPath: string, name: string): Observable<Blob> {
+        let params = new HttpParams().set('file', name);
+        if (subPath) params = params.set('subPath', subPath);
+        return this.http.get(
+            FILES_API + '/download' + BASE_DIR,
+            {
+                params, responseType: 'blob'
+            },
+        );
+    }
+
+    getFormRequestFieldsById(id: number): Observable<any> {
+        return this.http.get(
+            `${FORMS_API_REQUESTS}/${id}/fields`,
+            {
+                headers: httpOptions.headers,
+                responseType: "json",
+            }
+        );
+    }
+
+    deleteFormRequest(id: number): Observable<any> {
+        return this.http.delete(
+            `${FORMS_API_REQUESTS}/${id}`,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
     }
 
 }

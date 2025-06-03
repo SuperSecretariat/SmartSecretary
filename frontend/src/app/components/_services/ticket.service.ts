@@ -27,7 +27,7 @@ export class TicketService {
     const ticketCreateBody = {
       'subject': ticket['subject'],
       'type': ticket['type'],
-      'firstMessage': message
+      'firstMessage': message['message']
     };
 
     return this.http.post(TICKET_API, ticketCreateBody, { headers });

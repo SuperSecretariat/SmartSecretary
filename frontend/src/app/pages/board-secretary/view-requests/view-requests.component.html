@@ -1,0 +1,56 @@
+<div class="tickets-bg">
+  <div class="tickets-container">
+    <div class="tickets-header">
+      <h2>
+        <span class="material-icons" style="vertical-align: middle; font-size: 2rem; color: #1976d2;">assignment_turned_in</span>
+        Submitted Requests
+      </h2>
+      <div class="tickets-search">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name or status..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="filteredRequests.length > 0" class="tickets-list">
+      <div *ngFor="let request of filteredRequests" class="ticket-card">
+        <div class="ticket-info">
+          <div class="ticket-id">
+            <span class="material-icons">tag</span>
+            <span>ID: {{ request.id }}</span>
+          </div>
+          <div class="ticket-title">
+            <span class="material-icons">description</span>
+            <span>{{ request.formTitle }}</span>
+          </div>
+          <div class="ticket-status" [ngClass]="{
+            'status-pending': request.status === 'Pending',
+            'status-approved': request.status === 'Approved',
+            'status-rejected': request.status === 'Rejected'
+          }">
+            <span class="material-icons">info</span>
+            <span>{{ request.status }}</span>
+          </div>
+        </div>
+        <button 
+          class="btn btn-outline-primary" 
+          (click)="viewForm(request.id)" 
+          [disabled]="request.status === 'IN_REVIEW'">
+          <span class="material-icons" style="font-size: 1.1rem;">visibility</span>
+          View
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="filteredRequests.length === 0" class="no-tickets">
+      <span class="material-icons" style="font-size: 3rem; color: #b0bec5;">inbox</span>
+      <p>No submitted forms found.</p>
+    </div>
+  </div>
+</div>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

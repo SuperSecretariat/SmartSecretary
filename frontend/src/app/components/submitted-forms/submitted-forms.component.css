@@ -66,6 +66,7 @@
 
 .btn.btn-primary.float-end {
   background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  min-width: 175px;
   border: none;
   border-radius: 8px;
   padding: 8px 22px;

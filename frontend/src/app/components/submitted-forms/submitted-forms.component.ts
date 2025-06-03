@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormsService } from '../_services/forms.service';
+import { StorageService } from '../_services/storage.service';
 import { Router } from '@angular/router';
+import { FormFilesService } from '../_services/form-files.service';
 
 @Component({
   selector: 'app-submitted-forms',
@@ -11,12 +13,14 @@ import { Router } from '@angular/router';
   imports: [CommonModule, FormsModule]
 })
 export class SubmittedFormsComponent implements OnInit {
-  submittedRequests: { id: number; formTitle: string; status: string }[] = [];
-  filteredRequests: { id: number; formTitle: string; status: string }[] = [];
+  submittedRequests: { id: number; formTitle: string; status: string; formId: number}[] = [];
+  filteredRequests: { id: number; formTitle: string; status: string; formId: number }[] = [];
   searchTerm: string = '';
 
   constructor(
     private readonly formsService: FormsService,
+    private readonly storageService: StorageService,
+    private readonly fileManager: FormFilesService,
     private readonly router: Router
   ) {}
 
@@ -51,4 +55,19 @@ export class SubmittedFormsComponent implements OnInit {
   viewForm(id: number) {
     this.router.navigate([`student/view-form`, id])
   }
+
+  modifyRequest(id: number, formId: number) {
+    this.router.navigate([`student/modify-form`, id, formId]);
+  }
+
+  donwloadRequest(formTitle: string) {
+        this.formsService.downloadRequest(this.storageService.getRegistrationNumber(), formTitle + '.docx').subscribe(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = formTitle + '.docx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
+      }
 }
