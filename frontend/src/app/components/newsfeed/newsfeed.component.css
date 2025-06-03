@@ -1,80 +1,77 @@
-.request-list {
-    list-style: none;
-    padding: 0.5;
-    margin-top: 2px;
+.feed-container {
+  max-width: 90%;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
 }
-
-.card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
+.feed-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #184e77;
+  letter-spacing: 2px;
 }
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgb(21, 96, 189);
-    color: white;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
-
-.card-header h3 {
-    margin: 0;
+.feed-item {
+  background: #f7fafc;
+  border-left: 5px solid #184e77;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s;
 }
-
-.request-id {
-    flex: 1;
-    text-align: left;
+.feed-item:hover {
+  box-shadow: 0 4px 18px 0 rgba(0,0,0,0.13);
 }
-
-.request-form {
-    flex: 1;
-    text-align: center;
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
-.request-status {
-    flex: 1;
-    text-align: right;
+.feed-title-main {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #184e77;
 }
-
-.request-id,
-.request-form,
-.request-status {
-    margin-right: 20px;
+.feed-date {
+  font-size: 0.95rem;
+  color: #888;
+  font-style: italic;
 }
-
-.no-requests {
-    text-align: center;
-    font-size: 16px;
-    color: #888;
-    margin-top: 20px;
+.feed-body {
+  margin-top: 0.6rem;
+  font-size: 1.05rem;
+  color: #222;
 }
-
-.form-container {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
+.file-section {
+  margin-top: 0.8rem;
 }
-
-.card {
-    margin-bottom: 20px;
-    top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-    max-width: 100%;
+.download-btn {
+  background: #184e77;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s, box-shadow 0.2s;
 }
-
+.download-btn:hover {
+  background: #1e6091;
+  box-shadow: 0 2px 10px 0 rgba(24, 78, 119, 0.13);
+}
+.loader, .empty-msg {
+  text-align: center;
+  color: #888;
+  margin: 2rem 0;
+  font-size: 1.2rem;
+}

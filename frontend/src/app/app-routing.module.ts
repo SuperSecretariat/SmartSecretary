@@ -28,7 +28,8 @@ import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tic
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
 import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
-
+import { AddNewsComponent } from './pages/board-secretary/add-news/add-news.component';
+import { ManageNewsComponent } from './pages/board-secretary/manage-news/manage-news.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -59,7 +60,6 @@ const routes: Routes = [
       { path: 'dashboard', component: BoardAdminComponent },
       { path: 'newsfeed', component: NewsfeedComponent },
       { path: 'dashboard/add', component: BoardAdminAddComponent },
-      // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
       { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent },
       { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent},
       { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent },
@@ -76,7 +76,9 @@ const routes: Routes = [
       { path: 'dashboard/upload-calendar', component: UploadCalendarComponent},
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
       { path: 'dashboard/viewTickets', component: ViewRequestsComponent },
-      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent}
+      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent},
+      { path: 'dashboard/addNews', component: AddNewsComponent },
+      { path: 'dashboard/manageNews', component: ManageNewsComponent },
     ]
   },
 ];

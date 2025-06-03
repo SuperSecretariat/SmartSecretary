@@ -1,15 +1,257 @@
-.list-group-item.active {
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.col-md-12 {
+  width: 100%;
+  max-width: 800px;
+  padding: 0;
+}
+
+.card {
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(60,72,88,0.12);
+  background: #fff;
+  border: none;
+  margin-bottom: 32px;
 }
 
 .card-header {
-  background-color: #f8f9fa;
-  font-size: 1.25rem;
-  font-weight: bold;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e8ee;
+  padding: 1.25rem 1.5rem;
+  border-radius: 18px 18px 0 0;
 }
 
-.card-body h5 {
-  margin-bottom: 15px;
+.card-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #184e77;
+  letter-spacing: 1px;
+}
+
+.card-body {
+  padding: 2rem 1.5rem;
+}
+
+.alert-info {
+  background: #e9f7fd;
+  color: #31708f;
+  border: 1px solid #b5e2fa;
+  border-radius: 6px;
+  padding: .7rem 1.2rem;
+  font-size: 1.05rem;
+}
+
+.alert-success,
+.alert-danger {
+  margin-top: 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #184e77;
+  margin-bottom: .3rem;
+}
+
+.form-group input,
+.form-group select {
+  border-radius: 6px;
+  border: 1px solid #cfd8dc;
+  padding: .6rem .9rem;
+  font-size: 1rem;
+  background: #f7fafc;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  background: #fff;
+  outline: none;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+  background: #fff0f1;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: .95rem;
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+}
+
+.btn {
+  border-radius: 5px;
+  padding: 0.55rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.btn-primary {
+  background: #184e77;
+  border: none;
+  color: #fff;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background: #1e6091;
+}
+
+.btn-secondary {
+  background: #e1e8ee;
+  border: none;
+  color: #2c3e50;
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+  background: #bcd0e6;
+}
+
+.btn-danger {
+  background: #dc3545;
+  border: none;
+  color: #fff;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+  background: #b02a37;
+}
+
+.ms-2 {
+  margin-left: .5rem;
+}
+
+.mt-3 {
+  margin-top: 1.5rem;
+}
+
+.mb-3 {
+  margin-bottom: 1.3rem;
+}
+
+.spinner-border {
+  vertical-align: text-bottom;
+  margin-right: .35rem;
+}
+
+.profile-info {
+  font-size: 1.07rem;
+  color: #2c3e50;
+}
+
+.profile-info strong {
+  color: #184e77;
+}
+
+.d-flex {
+  display: flex !important;
+}
+.justify-content-between {
+  justify-content: space-between !important;
+}
+.justify-content-center {
+  justify-content: center !important;
+}
+.align-items-center {
+  align-items: center !important;
+}
+
+.modal {
+  display: block; /* Always block so Angular can control visibility */
+  background: rgba(0,0,0,0.15);
+  padding: 0 !important;
+}
+
+.modal.fade:not(.show) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-dialog {
+  margin: 7.5rem auto;
+}
+
+.modal-content {
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(60,72,88,0.18);
+  border: none;
+  background: #fff;
+}
+
+.modal-header {
+  padding: 1.1rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e1e8ee;
+  border-radius: 14px 14px 0 0;
+}
+
+.modal-title {
+  font-size: 1.23rem;
+  font-weight: 600;
+  color: #184e77;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  color: #888;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 1.25rem 1.5rem;
+  font-size: 1.05rem;
+  color: #444;
+}
+
+.modal-footer {
+  background: #f8f9fa;
+  border-top: 1px solid #e1e8ee;
+  border-radius: 0 0 14px 14px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-backdrop {
+  background: rgba(24, 78, 119, 0.18);
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+}
+
+@media (max-width: 900px) {
+  .card, .col-md-12 {
+    max-width: 98vw;
+    padding: 0;
+  }
+  .card-body {
+    padding: 1.25rem 0.7rem;
+  }
+  .modal-dialog {
+    margin: 2.5rem auto;
+  }
 }
