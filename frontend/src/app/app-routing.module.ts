@@ -63,7 +63,6 @@ const routes: Routes = [
       { path: 'dashboard', component: BoardAdminComponent, canActivate: [AuthGuard, AdminGuard] },
       { path: 'newsfeed', component: NewsfeedComponent, canActivate: [AuthGuard, AdminGuard] },
       { path: 'dashboard/add', component: BoardAdminAddComponent, canActivate: [AuthGuard, AdminGuard] },
-      // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
       { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent, canActivate: [AuthGuard, AdminGuard] },
       { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent, canActivate: [AuthGuard, AdminGuard]},
       { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent, canActivate: [AuthGuard, AdminGuard] },

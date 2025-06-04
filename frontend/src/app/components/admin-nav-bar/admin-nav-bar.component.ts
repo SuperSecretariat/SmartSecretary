@@ -17,11 +17,9 @@ export class AdminNavBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.navBarItems.push(new NavBarItem('Add', `/admin/dashboard/add`));
-    this.navBarItems.push(new NavBarItem('Create news post', `/admin/dashboard/create-post`));
     this.navBarItems.push(new NavBarItem('Show Auth Key', `/admin/dashboard/showKey`));
-    this.navBarItems.push(new NavBarItem('Change ChatBot documents', ``)); //to be implemented
+    this.navBarItems.push(new NavBarItem('Change ChatBot documents', `/admin/dashboard/llmFiles`));
     this.navBarItems.push(new NavBarItem('Delete User', `/admin/dashboard/delete`));
-    this.navBarItems.push(new NavBarItem('LLM Files', `/admin/dashboard/llmFiles`))
   }
 
   getNavBarItems(): { name: string; route: string }[] {
