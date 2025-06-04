@@ -1,0 +1,48 @@
+<div *ngIf="weeklyView; else annualView">
+  <app-student-calendar></app-student-calendar>
+</div>
+
+<ng-template #annualView>
+  <div class="container">
+    <div class="controls">
+      <button (click)="toggleViewMode()" [ngClass]="{ active: annualView }">
+        {{ annualView ? 'Weekly View' : 'Annual View' }}
+      </button>
+    </div>
+
+    <div class="calendar-legend">
+      <div class="legend-item learning">
+        <span class="legend-color"></span> Learning Period
+      </div>
+      <div class="legend-item session">
+        <span class="legend-color"></span> Exam Session
+      </div>
+      <div class="legend-item free">
+        <span class="legend-color"></span> Holiday / Free Time
+      </div>
+    </div>
+
+    <div class="yearly-calendar-container">
+      <div class="academic-year-title">Academic Calendar 2024/2025</div>
+
+      <div class="calendar-grid">
+        <div class="month-container" *ngFor="let month of months">
+          <div class="month-name">{{ month.name }}</div>
+
+          <div class="day-headers">
+            <div class="day-header" *ngFor="let dayName of dayNames">{{ dayName }}</div>
+          </div>
+
+          <div class="month-grid">
+            <div
+              *ngFor="let day of month.days"
+              [ngClass]="getDayClasses(day)"
+            >
+              {{ day.date }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.model.enums.FormRequestStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public class FormRequest {
     @Positive()
     private long formId;
 
+    @NotBlank
+    private String formTitle;
+
     @Positive
     private String userRegistrationNumber;
 
@@ -27,8 +31,9 @@ public class FormRequest {
 
     public FormRequest() {}
 
-    public FormRequest(long formId, String userRegistrationNumber, FormRequestStatus status, List<FormRequestField> fields) {
+    public FormRequest(long formId, String formTitle, String userRegistrationNumber, FormRequestStatus status, List<FormRequestField> fields) {
         this.formId = formId;
+        this.formTitle = formTitle;
         this.userRegistrationNumber = userRegistrationNumber;
         this.status = status;
         this.fields = fields;
@@ -40,6 +45,10 @@ public class FormRequest {
 
     public long getFormId() {
         return formId;
+    }
+
+    public String getFormTitle() {
+        return formTitle;
     }
 
     public String getUserRegistrationNumber() {

@@ -49,6 +49,10 @@ def __main__():
         sys.exit(1)
     pdf_file_path = sys.argv[1]
     result = get_input_fields_position_and_convert_them_to_percentages(pdf_file_path)
-    print(json.dumps(result))
+
+    output_file_path = "src/main/resources/scripts/script-output.json"
+
+    with open(output_file_path, "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
 
 __main__()

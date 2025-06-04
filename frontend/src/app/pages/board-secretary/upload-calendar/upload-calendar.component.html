@@ -1,38 +1,183 @@
-<div class="mainInteraction">
-  <div class="inputBox">
-    <div style="color: black">
-      <input type="file" (change)="onFileSelected($event)">
-      <button (click)="uploadFile()" style="margin-top: 10px;">Upload</button>
+<div *ngIf="showExams; else checkYearly">
+    <!-- EXAM UPLOADS SECTION -->
+    <div class="controls">
+        <button (click)="toggleExamMode()" [ngClass]="{ active: showExams }">
+            {{ showExams ? 'Upload Courses/Labs' : 'Upload Exams' }}
+        </button>
     </div>
-  </div>
 
-  <div>
-    <input type="text" placeholder="Search files and folders..." [(ngModel)]="searchQuery">
-    <button (click)="reloadDocs()">Reload Calendar Documentation</button>
-  </div>
+    <div class="container">
+        <div class="mainInteraction">
+            <div class="inputBox">
+                <div style="color: black">
+                    <input type="file" (change)="onExamFileSelected($event)">
+                    <button (click)="uploadExamFile()" style="margin-top: 10px;">Upload</button>
+                </div>
+            </div>
+
+            <div class="delete">
+                <div style="padding:4px;">
+                    <input type="text" placeholder="Search files and folders..." [(ngModel)]="examSearchQuery">
+                    <button (click)="deleteAllExamDocumentation()">Delete all exam documentation</button>
+                </div>
+                <div style="padding:4px;">
+                <input type="text" placeholder="Delete by group..." [(ngModel)]="deleteExamGroupQuery">
+                <button (click)="deleteExamByGroup()">Delete by group</button>
+                </div>
+            </div>
+            <div class="notification">
+                <strong>Attention!!</strong> The CSV's header should look like this: <code>Group,Date,Type,Time,Title</code><br>
+                <em>Type</em> is either (<code>Exam</code>/<code>Retake</code>)<br>
+                Also, here's an example for a row: <code>1A1,02.02.2025,Exam,08:00 - 10:00,FirstSubject</code><br>
+                <strong>Note:</strong> A CSV might contain only one group's course or laboratory schedule. You can't load more than one group's data into a single CSV.
+            </div>
+        </div>
+
+        <table class="fileList">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>Group Populated</th>
+            </tr>
+            </thead>
+            <!--    <div *ngIf="errorMessage" class="error-message">-->
+            <!--        {{ errorMessage }}-->
+            <!--    </div>-->
+            <tbody>
+            <tr *ngFor="let item of filteredExamItems()">
+                <td>
+                    <span *ngIf="item.type === 'Folder'" class="folder clickable">{{ item.name }}</span>
+                    <span *ngIf="item.type !== 'Folder'" class="file">{{ item.name }}</span>
+                </td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.size || '-' }}</td>
+                <td>{{ item.groupsPopulated || '-' }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<table class="fileList">
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Size</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let item of filteredItems()">
-    <td>
-      <span *ngIf="item.type === 'Folder'" class="folder clickable">{{ item.name }}</span>
-      <span *ngIf="item.type !== 'Folder'" class="file">{{ item.name }}</span>
-    </td>
-    <td>{{ item.type }}</td>
-    <td>{{ item.size || '-' }}</td>
-    <td>
-      <button (click)="deleteItem(item)">Delete</button>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<ng-template #checkYearly>
+    <div *ngIf="annualView; else uploadEvents">
+        <!-- ACADEMIC YEAR SCHEDULE UPLOADS SECTION -->
+        <div class="controls">
+            <button (click)="toggleYearlyMode()" [ngClass]="{ active: annualView }">
+                {{ annualView ? 'Upload Courses/Labs' : 'Upload Yearly Calendar' }}
+            </button>
+        </div>
 
+        <div class="container">
+            <div class="mainInteraction">
+                <div class="inputBox">
+                    <div style="color: black">
+                        <input type="file" (change)="onYearlyFileSelected($event)">
+                        <button (click)="uploadYearlyFile()" style="margin-top: 10px;">Upload</button>
+                    </div>
+                </div>
+
+                <div class="delete">
+                    <div style="padding:4px;">
+                        <button (click)="deleteAllYearlyDocumentation()">Delete all yearly documentation</button>
+                    </div >
+                </div>
+
+                <div class="notification">
+                    <strong>Attention!!</strong> The CSV's header should look like this: <code>Start,End,Type</code><br>
+                    <em>Type</em> is either (<code>Learning</code>/<code>Free</code>/<code>Session</code>)<br>
+                    Also, here's an example for a row: <code>30.09.2024,22.12.2024,Learning</code><br>
+                    <strong>Note:</strong> For a CSV to work, every <code>Start</code> field should have the previous field's day incremented by 1.
+                </div>
+            </div>
+
+            <table class="fileList">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Size</th>
+                </tr>
+                </thead>
+                <!--    <div *ngIf="errorMessage" class="error-message">-->
+                <!--        {{ errorMessage }}-->
+                <!--    </div>-->
+                <tbody>
+                <tr *ngFor="let item of filteredYearlyItems()">
+                    <td>
+                        <span *ngIf="item.type === 'Folder'" class="folder clickable">{{ item.name }}</span>
+                        <span *ngIf="item.type !== 'Folder'" class="file">{{ item.name }}</span>
+                    </td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.size || '-' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #uploadEvents>
+    <!-- ORIGINAL EVENTS UPLOADS SECTION -->
+    <div class="controls">
+        <button (click)="toggleExamMode()" [ngClass]="{ active: showExams }">
+            {{ showExams ? 'Upload Courses/Labs' : 'Upload Exams' }}
+        </button>
+        <button (click)="toggleYearlyMode()" [ngClass]="{ active: annualView }">
+            {{ annualView ? 'Upload Courses/Labs' : 'Upload Yearly Calendar' }}
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="mainInteraction">
+            <div class="inputBox">
+                <div style="color: black">
+                    <input type="file" (change)="onFileSelected($event)">
+                    <button (click)="uploadFile()" style="margin-top: 10px;">Upload</button>
+                </div>
+            </div>
+
+            <div class="delete">
+                <div style="padding:4px;">
+                    <input type="text" placeholder="Search files and folders..." [(ngModel)]="searchQuery">
+                    <button (click)="deleteAllCalendarDocumentation()">Delete all courses/labs documentation</button>
+                </div > <div style="padding:4px;">
+                <input type="text" placeholder="Delete by group..." [(ngModel)]="deleteGroupQuery">
+                <button (click)="deleteByGroup()">Delete by group</button>
+            </div></div>
+
+            <div class="notification">
+                <strong>Attention!!</strong> The CSV's header should look like this: <code>Group,Type,Day,Time,Title,Professor</code><br>
+                <em>Type</em> is either (<code>Course</code>/<code>Laboratory</code>)<br>
+                Also, here's an example for a row: <code>2A5,Course,Monday,08:00 - 10:00,FirstSubject,FirstName LastName</code><br>
+                <strong>Note:</strong> A CSV might contain only one group's course or laboratory schedule. You can't load more than one group's data into a single CSV.
+            </div>
+        </div>
+
+        <table class="fileList">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>Group Populated</th>
+            </tr>
+            </thead>
+            <!--    <div *ngIf="errorMessage" class="error-message">-->
+            <!--        {{ errorMessage }}-->
+            <!--    </div>-->
+            <tbody>
+            <tr *ngFor="let item of filteredItems()">
+                <td>
+                    <span *ngIf="item.type === 'Folder'" class="folder clickable">{{ item.name }}</span>
+                    <span *ngIf="item.type !== 'Folder'" class="file">{{ item.name }}</span>
+                </td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.size || '-' }}</td>
+                <td>{{ item.groupsPopulated || '-' }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-template>

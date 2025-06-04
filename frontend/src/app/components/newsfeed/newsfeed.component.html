@@ -1,22 +1,24 @@
-<div class="container card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h3>News Feed</h3>
-    <app-search (filtersApplied)="onFiltersApplied($event)"></app-search>
+<div class="feed-container">
+  <h2 class="feed-title">Latest News</h2>
+
+  <div *ngIf="loading" class="loader">Loading news...</div>
+  <div *ngIf="!loading && !newsList.length" class="empty-msg">
+    No news posts found.
   </div>
-
-  <ul class="request-list">
-    <div *ngIf="filteredNews.length > 0" class="submitted-requests">
-      <app-news-item
-        *ngFor="let item of filteredNews"
-        [id]="item.id"
-        [formName]="item.title"
-        [status]="item.status"
-        [message]="getMessage(item.status)">
-      </app-news-item>
+  <div class="feed-list" *ngIf="!loading && newsList.length">
+    <div class="feed-item" *ngFor="let news of newsList">
+      <div class="feed-header">
+        <span class="feed-title-main">{{ news.title }}</span>
+        <span class="feed-date">{{ news.createdAt | date:'medium' }}</span>
+      </div>
+      <div class="feed-body">
+        <p>{{ news.body }}</p>
+        <div *ngIf="news.fileName" class="file-section">
+          <button class="download-btn" (click)="downloadFile(news)">
+            <i class="fa fa-download"></i> Download: {{ news.fileName }}
+          </button>
+        </div>
+      </div>
     </div>
-  </ul>
-
-  <div *ngIf="filteredNews.length === 0" class="no-requests">
-    <p>No news items found.</p>
   </div>
 </div>

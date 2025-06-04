@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsService } from '../_services/forms.service';
-import { FormField } from '../models/form.model';
-import { StorageService } from '../_services/storage.service';
+import { FormField } from '../models/form-field.model';
 import { environment } from '../../../environments/environments';
-import { Router } from '@angular/router';
+import { firstValueFrom, Observable, of, tap } from 'rxjs';
+import { FormPage } from '../models/form-page.model';
 
 @Component({
   selector: 'app-complete-form',
@@ -12,15 +12,16 @@ import { Router } from '@angular/router';
   templateUrl: './modify-form.component.html',
   styleUrl: './modify-form.component.css'
 })
-export class ModifyFormComponent {
+export class ModifyFormComponent implements OnInit {
   selectedFormRequestId: number | null = null;
   selectedFormId: number | null = null;
   formFields: FormField[] = [];
   warningMessage: string = '';
   isLoading: boolean = false;
   formRequestFields: string[] = [];
+  pages: FormPage[] = [];
 
-  constructor(private route: ActivatedRoute, private formsService: FormsService, private router: Router) { }
+  constructor(private readonly route: ActivatedRoute, private readonly formsService: FormsService, private readonly router: Router) { }
   imageUrl = `${environment.backendUrl}/api/forms`;
 
   ngOnInit(): void {
@@ -29,14 +30,14 @@ export class ModifyFormComponent {
       const formId = params.get('formId');
       this.selectedFormRequestId = id ? +id : null;
       this.selectedFormId = formId ? +formId : null;
-      this.fetchFormRequestFields(this.selectedFormRequestId);
-      this.fetchForm(this.selectedFormId);
+      await firstValueFrom(this.fetchFormRequestFields(this.selectedFormRequestId));
+      await firstValueFrom(this.fetchForm(this.selectedFormId));
       this.loadFormRequestFieldsValueIntoFormFields();
-      this.imageUrl = this.imageUrl + '/' + this.selectedFormId + '/image';
+      this.groupFieldsByPage();
     });
   }
 
-  loadFormRequestFieldsValueIntoFormFields(){
+  loadFormRequestFieldsValueIntoFormFields() {
     console.log('Loading form request fields into form fields', this.formRequestFields);
     let i = 0;
     for (const field of this.formFields) {
@@ -49,45 +50,56 @@ export class ModifyFormComponent {
     }
   }
 
-  fetchForm(id: number | null): void {
-    console.log('Fetching form with ID:', id);
+  fetchForm(id: number | null): Observable<any> {
     if (id) {
-      this.formsService.getFormFieldsById(id).subscribe(
-        (data: any) => {
-          // console.log('Form fields:', data);
+      return this.formsService.getFormFieldsById(id).pipe(
+        tap((data: any) => {
           this.formFields = data.fields;
-        },
-        (error) => {
-          console.error('Error fetching form:', error);
-        }
+          console.log('Form fields:', this.formFields);
+        })
       );
     } else {
-      console.error('Invalid form IDsss');
+      console.error('Invalid form ID');
+      return of(null);
     }
   }
 
-  fetchFormRequestFields(id: number | null) {
-    if (id) {
-      this.formsService.getFormRequestFieldsById(id).subscribe(
-        (data: any) => {
-          //console.log('Form request fields:', data);
-          this.formRequestFields = data.fieldsData;
-          console.log('Form request fields:', this.formRequestFields);
-          // Initialize values for each field
-          this.formFields.forEach(field => {
-            field.value = ''; // or any default value you want
-          });
-        },
-        (error) => {
-          console.error('Error fetching form request fields:', error);
-        }
 
+  fetchFormRequestFields(id: number | null): Observable<any> {
+    if (id) {
+      return this.formsService.getFormRequestFieldsById(id).pipe(
+        tap((data: any) => {
+          this.formRequestFields = data.fieldsData;
+          this.formFields.forEach(field => {
+            field.value = '';
+          });
+          console.log('Form request fields:', this.formRequestFields);
+        })
       );
     } else {
       console.error('Invalid form request ID');
+      return of(null); // return empty Observable to keep `await firstValueFrom()` safe
     }
   }
 
+  groupFieldsByPage() {
+    const pagesMap = new Map<number, FormField[]>();
+
+    for (const field of this.formFields) {
+      const page = parseInt(field.page as any);
+      if (!pagesMap.has(page)) {
+        pagesMap.set(page, []);
+      }
+      pagesMap.get(page)!.push(field);
+    }
+
+    this.pages = Array.from(pagesMap.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([pageNumber, fields]) => ({
+        inputFields: fields,
+        imageUrl: `${this.imageUrl}/${this.selectedFormId}/image?page=${pageNumber}`
+      }));
+  }
 
   getFormFields(): FormField[] {
     return this.formFields;
@@ -106,25 +118,22 @@ export class ModifyFormComponent {
       .map(field => field.value);
     //console.log('User inputted values:', values);
     // Now you have an array of just the inputted values
-    this.formsService.submitFormData(this.selectedFormId!, values).subscribe(
-      (response) => {
-        //console.log('Form submitted successfully:', response);
+    this.formsService.submitFormData(this.selectedFormId!, values).subscribe({
+      next: _ => {
         this.isLoading = false;
         this.router.navigate([`/student/submitted-forms`]);
       },
-      (error) => {
+      error: error => {
         console.error('Error submitting form:', error);
         this.isLoading = true;
       }
-    );
-    this.formsService.deleteFormRequest(this.selectedFormRequestId!).subscribe(
-      (response) => {
-        //console.log('Form request deleted successfully:', response);
-      },
-      (error) => {
+    });
+    this.formsService.deleteFormRequestById(this.selectedFormRequestId!).subscribe({
+      next: _ => { },
+      error: error => {
         console.error('Error deleting form request:', error)
       }
-      );
+    });
   }
 
   allFieldsCompleted(): boolean {

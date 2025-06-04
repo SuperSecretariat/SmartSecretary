@@ -1,7 +1,10 @@
 package com.example.demo.response;
 
 import com.example.demo.dto.UserProfileData;
-import com.example.demo.entity.Event;
+import com.example.demo.entity.calendar.Event;
+import com.example.demo.entity.calendar.Exam;
+import com.example.demo.entity.calendar.Year;
+import io.jsonwebtoken.Jwt;
 
 import java.sql.Date;
 import java.util.List;
@@ -22,6 +25,8 @@ public class JwtResponse{
     private String responseMessage;
     private Object data;
     private List<Event> events;
+    private List<Exam> exams;
+    private List<Year> years;
 
     public JwtResponse(String token, Long id, String registrationNumber, List<String> roles){
         this.token = token;
@@ -30,8 +35,26 @@ public class JwtResponse{
         this.roles = roles;
     }
 
-    public JwtResponse(List<Event> events){
-        this.events = events;
+    public JwtResponse() {
+
+    }
+
+    public static JwtResponse fromEvents(List<Event> events) {
+        JwtResponse response = new JwtResponse();
+        response.setEvents(events);
+        return response;
+    }
+
+    public static JwtResponse fromExams(List<Exam> exams) {
+        JwtResponse response = new JwtResponse();
+        response.setExams(exams);
+        return response;
+    }
+
+    public static JwtResponse fromYears(List<Year> years) {
+        JwtResponse response = new JwtResponse();
+        response.setYears(years);
+        return response;
     }
 
     public JwtResponse(String message, Object data){
@@ -141,4 +164,12 @@ public class JwtResponse{
     public List<Event> getEvents(){
         return this.events;
     }
+
+    public void setExams(List<Exam> exams) { this.exams = exams; }
+
+    public List<Exam> getExams() { return exams; }
+
+    public void setYears(List<Year> years) { this.years = years; }
+
+    public List<Year> getYears() { return years; }
 }

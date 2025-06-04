@@ -3,11 +3,14 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environments";
 import { StorageService } from "./storage.service";
+import { of } from "rxjs";
 
 const FORMS_API_CONTROLLER = `${environment.backendUrl}/api/forms`;
 const FORMS_API_REQUESTS = `${environment.backendUrl}/api/form-requests`
+const USER_API = `${environment.backendUrl}/api/user`;
 const BASE_DIR = '/src/main/resources/requests';
 const FILES_API = `${environment.backendUrl}/api/files`;
+
 
 const httpOptions = {
     headers: new HttpHeaders({ "Content-Type": "application/json" }),
@@ -39,12 +42,19 @@ export class FormsService {
         );
     }
 
-    // getFormImage(id: number): Observable<Blob> {
-    //     return this.http.get(`${FORMS_API}/${id}/image`, {
-    //         headers: httpOptions.headers,
-    //         responseType: "blob",
-    //     });
-    // }
+    getFormImages(id: number): Observable<any> {
+        return this.http.get(`${FORMS_API_CONTROLLER}/${id}/image`, {
+            headers: httpOptions.headers,
+            responseType: "json",
+        });
+    }
+
+    getFormRequestImages(id: number): Observable<any> {
+        return this.http.get(`${FORMS_API_REQUESTS}/${id}/image`, {
+            headers: this.addAuthorizationHeader(httpOptions.headers),
+            responseType: "json",
+        });
+    }
 
     submitFormData(formId: number, fields: string[]): Observable<any> {
         const jwtToken = this.storageService.getUser().token;
@@ -112,6 +122,24 @@ export class FormsService {
             }
         );
     }
+    
+    getUserProfile(): Observable<any> {
+        const user = this.storageService.getUser();
+
+        if (!user || !user.token) {
+            console.warn('Tokenul nu există în storage.');
+            return of(null);
+        }
+
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${user.token}`
+        });
+
+        return this.http.get(`${USER_API}/profile`, {
+            headers: headers,
+            responseType: 'json'
+        });
+    }
 
     downloadRequest(subPath: string, name: string): Observable<Blob> {
         let params = new HttpParams().set('file', name);
@@ -134,9 +162,19 @@ export class FormsService {
         );
     }
 
-    deleteFormRequest(id: number): Observable<any> {
+    deleteFormRequestById(id: number): Observable<any> {
         return this.http.delete(
             `${FORMS_API_REQUESTS}/${id}`,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
+    }
+
+    deleteFormByTitle(title: string): Observable<any> {
+        return this.http.delete(
+            `${FORMS_API_CONTROLLER}/${title}`,
             {
                 headers: this.addAuthorizationHeader(httpOptions.headers),
                 responseType: "json",

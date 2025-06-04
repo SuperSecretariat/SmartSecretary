@@ -1,6 +1,7 @@
 /* Stil pentru containerul imaginii */
 .image-container {
   position: relative;
+  max-width: 900px;
   width: 70%;
   height: 180%; /* Înălțimea containerului */
   margin: 0 auto; /* Centrează containerul pe pagină */

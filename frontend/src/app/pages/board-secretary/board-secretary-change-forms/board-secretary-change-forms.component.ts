@@ -19,7 +19,7 @@ export class BoardSecretaryChangeFormsComponent {
   constructor(
     private fileManager: FormFilesService,
     private formsService: FormsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadEntries();
@@ -101,7 +101,18 @@ export class BoardSecretaryChangeFormsComponent {
 
   delete(entry: FileEntry) {
     if (confirm(`Are you sure you want to delete ${entry.name}?`)) {
-      this.fileManager.deleteEntry(this.currentDir, entry.name).subscribe(() => this.loadEntries());
+      this.fileManager.deleteEntry(this.currentDir, entry.name).subscribe(() => {
+        this.loadEntries()
+        console.log(entry.name);
+        this.formsService.deleteFormByTitle(entry.name).subscribe({
+          next: (response) => {
+            console.log('Form deleted:', response);
+          },
+          error: (err) => {
+            this.errorMessage = err.error || "Form deletion failed";
+          }
+        });
+      });
     }
   }
 

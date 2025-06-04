@@ -10,6 +10,7 @@ public class ValidationMessage {
     public static final String EMAIL_SUCCESS = "Email sent successfully";
     public static final String ACCOUNT_DELETED = "Account deleted successfully";
     public static final String CALENDAR_UPLOAD = "Calendar has been uploaded succesfully";
+    public static final String CALENDAR_DELETE = "Calendar has been deleted successfully";
 
     private ValidationMessage(){}
 }

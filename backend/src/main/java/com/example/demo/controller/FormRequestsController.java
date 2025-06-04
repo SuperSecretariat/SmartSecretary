@@ -28,7 +28,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/form-requests")
@@ -129,7 +131,7 @@ public class FormRequestsController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getFormImage(@PathVariable Long id,
+    public ResponseEntity<List<String>> getFormImages(@PathVariable Long id,
                                                @RequestHeader("Authorization") String authorizationHeader) {
         try{
             String token = authorizationHeader.substring(7);
@@ -137,10 +139,9 @@ public class FormRequestsController {
                 return ResponseEntity.status(401).build();
             }
 
-            byte[] imageBytes = formRequestService.getFormRequestImage(id);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG); // or IMAGE_PNG etc.
-            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+            List<byte[]> imagesBytes = formRequestService.getFormRequestImages(id);
+            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).collect(Collectors.toList());
+            return ResponseEntity.ok(imageAsBase64);
         }
         catch (IOException | InvalidFormIdException e){
             this.logger.error(e.getMessage());

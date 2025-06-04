@@ -1,5 +1,6 @@
 .image-container {
   position: relative;
+  max-width: 900px;
   width: 70%;
   height: 180%; 
   margin: 30px auto; 
