@@ -107,6 +107,9 @@ public class FormRequestsController {
         } catch (FormRequestFieldDataException | IOException | InvalidWordToPDFConversion | InterruptedException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
+        } catch(EncryptionException ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.badRequest().build();
         }
 //        catch (Exception e) {
 //            this.logger.error(e.getMessage());
@@ -154,6 +157,9 @@ public class FormRequestsController {
         }
         catch (InvalidFormRequestIdException e) {
             this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (DecryptionException ex){
+            logger.error(ex.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
