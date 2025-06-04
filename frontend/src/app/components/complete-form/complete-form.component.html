@@ -1,8 +1,14 @@
 <div class="title">Complete your request</div>
-<div *ngFor="let page of pages" class="image-container" style="position: relative;">
+
+<div *ngIf="profileSuggestion" class="profile-warning">
+  {{ profileSuggestion }}
+  <button class="dismiss-btn" (click)="dismissSuggestion()">X</button>
+</div>
+
+<div *ngFor="let page of pages; let pageIndex = index" class="image-container" style="position: relative;">
   <img [src]="page.imageUrl" alt="Form Page" />
 
-  <input *ngFor="let field of page.inputFields; let i = index"
+  <input *ngFor="let field of page.inputFields; let fieldIndex = index"
          type="text"
          [placeholder]="'Enter value'"
          [style.position]="'absolute'"
@@ -11,16 +17,35 @@
          [style.width]="field.width"
          [style.height]="field.height"
          [(ngModel)]="field.value"
-         name="field{{i}}" />
+         name="'field' + getGlobalIndex(pageIndex, fieldIndex)" 
+         (blur)="fieldTouched[getGlobalIndex(pageIndex, fieldIndex)] = true"
+    [ngClass]="{
+      'valid-field': fieldTouched[getGlobalIndex(pageIndex, fieldIndex)] && isFieldValid(field, getGlobalIndex(pageIndex, fieldIndex)),
+      'invalid-field': fieldTouched[getGlobalIndex(pageIndex, fieldIndex)] && !isFieldValid(field, getGlobalIndex(pageIndex, fieldIndex))
+    }"
+    />
 </div>
+
 <div *ngIf="warningMessage" class="warning-message">
   {{ warningMessage }}
 </div>
+
 <div class="submit_button_container">
   <div *ngIf="isLoading" class="loading-spinner">
     <div class="spinner"></div>
     <p>Loading...</p>
   </div>
+
+  <div *ngIf="warningMessage" class="warning-message">
+    {{ warningMessage }}
+  </div>
+
+  <div *ngIf="!warningMessage && validationErrors.length > 0" class="warning-message">
+    <ul style="list-style-type: none; padding: 0; margin: 0;">
+      <li *ngFor="let error of validationErrors">{{ error }}</li>
+    </ul>
+  </div>
+
   <button 
     (click)="saveFormFields()" 
     [disabled]="isLoading"
