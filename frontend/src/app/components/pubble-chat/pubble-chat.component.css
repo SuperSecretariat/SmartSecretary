@@ -78,36 +78,81 @@ body {
   border-radius: 12px 12px 12px 0;
 }
 
-.message-sources {
+/* New styles for collapsible sources */
+.sources-toggle {
   margin-top: 8px;
-  padding: 8px 12px;
-  background-color: #f1f3f4;
-  border-left: 3px solid #28a745;
-  border-radius: 4px;
-  font-size: 0.85em;
 }
 
-.sources-header {
+.sources-toggle-button {
   display: flex;
   align-items: center;
-  margin-bottom: 6px;
-  font-weight: 600;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.9em;
   color: #495057;
+  font-weight: 500;
+}
+
+.sources-toggle-button:hover {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.sources-toggle-button:focus {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
 }
 
 .sources-icon {
-  margin-right: 6px;
+  margin-right: 8px;
   font-size: 0.9em;
 }
 
 .sources-title {
-  font-size: 0.9em;
+  flex: 1;
+  text-align: left;
 }
+
+.toggle-arrow {
+  transition: transform 0.2s ease-in-out;
+  font-size: 0.8em;
+  margin-left: 8px;
+}
+
+.toggle-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.message-sources {
+  background-color: #f1f3f4;
+  border-left: 3px solid #28a745;
+  border-radius: 4px;
+  font-size: 0.85em;
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+  margin-top: 8px;
+  padding: 0 12px;
+  max-height: 0;
+  opacity: 0;
+}
+
+.message-sources.expanded {
+  padding: 12px;
+  max-height: 500px;
+  opacity: 1;
+}
+
+/* Remove the slideDown animation as we're using CSS transitions now */
 
 .sources-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .source-item {
@@ -118,10 +163,10 @@ body {
 }
 
 .source-number {
-  margin-right: 6px;
+  margin-right: 8px;
   font-weight: 500;
   color: #28a745;
-  min-width: 16px;
+  min-width: 18px;
 }
 
 .source-name {
@@ -277,16 +322,17 @@ body {
 }
  
 @media (max-width: 768px) {
-  .message-sources {
+  .sources-toggle-button {
     padding: 6px 10px;
     font-size: 0.8em;
   }
   
-  .sources-header {
-    margin-bottom: 4px;
+  .message-sources {
+    padding: 8px 10px;
+    font-size: 0.8em;
   }
   
   .sources-list {
-    gap: 2px;
+    gap: 4px;
   }
 }

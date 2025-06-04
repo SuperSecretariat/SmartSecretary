@@ -6,7 +6,7 @@
 
     <div #chatBox id="chat-box" class="chat-box">
       <div
-        *ngFor="let msg of messages"
+        *ngFor="let msg of messages; let i = index"
         [ngClass]="msg.sender === 'user' ? 'message-user' : 'message-bot'"
         class="message"
       >
@@ -15,19 +15,31 @@
           <span [innerHTML]="formatMessageText(msg.displayed)"></span>
         </div>
         
-        <!-- Sources section for bot messages -->
-        <div *ngIf="msg.sender === 'bot' && msg.sources && msg.sources.length > 0" class="message-sources">
-          <div class="sources-header">
+        <!-- Sources toggle button for bot messages -->
+        <div *ngIf="msg.sender === 'bot' && msg.sources && msg.sources.length > 0" class="sources-toggle">
+          <button 
+            class="sources-toggle-button"
+            (click)="toggleSources(i)"
+            [attr.aria-expanded]="msg.sourcesExpanded"
+          >
             <span class="sources-icon">📚</span>
-            <span class="sources-title">Sources:</span>
-          </div>
-          <div class="sources-list">
-            <div 
-              *ngFor="let source of msg.sources; let i = index" 
-              class="source-item"
-            >
-              <span class="source-number">{{ i + 1 }}.</span>
-              <span class="source-name">{{ getSourceFileName(source) }}</span>
+            <span class="sources-title">Sources ({{ msg.sources.length }})</span>
+            <span class="toggle-arrow" [class.expanded]="msg.sourcesExpanded">▼</span>
+          </button>
+          
+          <!-- Collapsible sources section -->
+          <div 
+            class="message-sources" 
+            [class.expanded]="msg.sourcesExpanded"
+          >
+            <div class="sources-list">
+              <div 
+                *ngFor="let source of msg.sources; let j = index" 
+                class="source-item"
+              >
+                <span class="source-number">{{ j + 1 }}.</span>
+                <span class="source-name">{{ getSourceFileName(source) }}</span>
+              </div>
             </div>
           </div>
         </div>
