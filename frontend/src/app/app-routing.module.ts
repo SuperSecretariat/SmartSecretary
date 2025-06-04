@@ -29,7 +29,6 @@ import { ModifyFormComponent } from './components/modify-form/modify-form.compon
 import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
 import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
 
-
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },

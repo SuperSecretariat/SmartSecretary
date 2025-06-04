@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.FormRequestFieldsDTO;
-import com.example.demo.entity.Form;
 import com.example.demo.exceptions.*;
-import com.example.demo.projection.FormFieldsProjection;
-import com.example.demo.projection.FormRequestFieldsProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequestField;
 import com.example.demo.entity.FormRequest;
@@ -45,6 +42,7 @@ public class FormRequestService {
                 == formRequestRequest.getFieldsData().size()) {
             FormRequest formRequest = new FormRequest(
                     formRequestRequest.getFormId(),
+                    formRepository.findTitleById(formRequestRequest.getFormId()).getTitle(),
                     userRegistrationNumber,
                     FormRequestStatus.PENDING,
                     createFormRequestFields(formRequestRequest.getFieldsData())
@@ -54,7 +52,7 @@ public class FormRequestService {
             formRequestRepository.save(formRequest);
 
 //            create files for the formRequest view
-            String formTitle = this.formRepository.findTitleById(formRequestRequest.getFormId()).getTitle();
+            String formTitle = formRequest.getFormTitle();
             WordFileUtil.fillPlaceholders(formTitle, userRegistrationNumber, formRequestRequest.getFieldsData());
             PdfFileUtil.createPdfAndImageForSubmittedFormRequest(formTitle, userRegistrationNumber);
 
@@ -81,8 +79,7 @@ public class FormRequestService {
 
         List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
         for (FormRequest formRequest : formRequests) {
-            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
-            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus(), formRequest.getFormId()));
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formRequest.getFormTitle(), formRequest.getStatus(), formRequest.getFormId()));
         }
         return formRequestsResponse;
     }
@@ -94,8 +91,7 @@ public class FormRequestService {
 
         List<FormRequestResponse> formRequestsResponse = new ArrayList<>();
         for (FormRequest formRequest : formRequests) {
-            String formTitle = formRepository.findTitleById(formRequest.getFormId()).getTitle();
-            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formTitle, formRequest.getStatus(), formRequest.getFormId()));
+            formRequestsResponse.add(new FormRequestResponse(formRequest.getId(), formRequest.getFormTitle(), formRequest.getStatus(), formRequest.getFormId()));
         }
         return formRequestsResponse;
     }
@@ -120,15 +116,16 @@ public class FormRequestService {
     }
 
     // provides the image of the completed form request with the given id
-    public byte[] getFormRequestImage(Long id) throws IOException, InvalidFormIdException {
+    public List<byte[]> getFormRequestImages(Long id) throws IOException, InvalidFormIdException {
         Optional<FormRequest> formRequest = this.formRequestRepository.findById(id);
         if (formRequest.isEmpty()) {
             throw new InvalidFormIdException("The form request with the given ID does not exist.");
         }
         String registrationNumber = this.formRequestRepository.findRegistrationNumberById(id).getUserRegistrationNumber();
-        String title = formRepository.findTitleById(formRequest.get().getFormId()).getTitle();
-        String imageFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".png";
-        return Files.readAllBytes(Paths.get(imageFilePath));
+        String title = formRequest.get().getFormTitle();
+        //String imageFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".png";
+        String pdfFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".pdf";
+        return PdfFileUtil.getImagesOfPdfFile(pdfFilePath);
     }
 
     public FormRequestFieldsDTO getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException{
@@ -149,7 +146,7 @@ public class FormRequestService {
 
     public void deleteFormRequestById(Long id) throws InvalidFormRequestIdException {
         if (!doesFormRequestExist(id)) {
-            throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
+            throw new InvalidFormRequestIdException("The form request with ID: " + id + "does not exist.");
         }
         this.formRequestRepository.deleteById(id);
     }

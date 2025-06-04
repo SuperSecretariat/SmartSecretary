@@ -1,17 +1,17 @@
 <div class="title">Complete your request</div>
-<div *ngIf="imageUrl" class="image-container">
-  <img [src]="imageUrl" alt="Form Image" />
-    <input *ngFor="let formField of formFields; let i = index" 
-      type="text" 
-      [placeholder]="'Enter value'" 
-      [style.position]="'absolute'"
-      [style.top]="formField.top"
-      [style.left]="formField.left"
-      [style.width]="formField.width"
-      [style.height]="formField.height"
-      [(ngModel)]="formFields[i].value"
-      name="field{{i}}"
-    />
+<div *ngFor="let page of pages" class="image-container" style="position: relative;">
+  <img [src]="page.imageUrl" alt="Form Page" />
+
+  <input *ngFor="let field of page.inputFields; let i = index"
+         type="text"
+         [placeholder]="'Enter value'"
+         [style.position]="'absolute'"
+         [style.top]="field.top"
+         [style.left]="field.left"
+         [style.width]="field.width"
+         [style.height]="field.height"
+         [(ngModel)]="field.value"
+         name="field{{i}}" />
 </div>
 <div *ngIf="warningMessage" class="warning-message">
   {{ warningMessage }}

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FormService {
@@ -34,43 +35,50 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
-    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion {
+    public Form createForm(FormCreationRequest formCreationRequest) throws IOException, InterruptedException, FormCreationException, InvalidWordToPDFConversion, NumberFormatException {
         String jsonString = PdfFileUtil.mapPdfInputFieldsToCssPercentages(formCreationRequest.getTitle());
 
         ObjectMapper mapper = new ObjectMapper();
         // Deserialize the JSON string into a list of FormFieldJsonObject objects
         List<FormFieldJsonObject> formFieldsAsJsonObjects = mapper.readValue(jsonString, new TypeReference<>() {});
 
-        // Create and save the new form in the db
-        Form form = new Form();
+        Form form;
+        if (doesFormExistByTitle(formCreationRequest.getTitle())) {
+            form = this.formRepository.findByTitle(formCreationRequest.getTitle());
+        }
+        else {
+            form = new Form();
+        }
+
         form.setActive(formCreationRequest.getIsActive());
         form.setTitle(formCreationRequest.getTitle());
         form.setNumberOfInputFields(formFieldsAsJsonObjects.size());
 
         List<FormField> formFields = formFieldsAsJsonObjects.stream()
                 .map(formFieldJsonObject -> new FormField(
-                        formFieldJsonObject.getPage(),
-                        formFieldJsonObject.getTop(),
-                        formFieldJsonObject.getLeft(),
-                        formFieldJsonObject.getWidth(),
-                        formFieldJsonObject.getHeight(),
-                        formFieldJsonObject.getText(),
-                        formFieldJsonObject.getPreviousWord()
+                                formFieldJsonObject.getPage(),
+                                formFieldJsonObject.getTop(),
+                                formFieldJsonObject.getLeft(),
+                                formFieldJsonObject.getWidth(),
+                                formFieldJsonObject.getHeight(),
+                                formFieldJsonObject.getText(),
+                                formFieldJsonObject.getPreviousWord()
                         )
                 )
                 .toList();
-
+        if (!formFields.isEmpty()) {
+            form.setNumberOfPages(Integer.parseInt(formFields.get(formFields.size() - 1).getPage()));
+        }
         form.addFields(formFields);
 
         this.formRepository.save(form);
 
         return form;
-        //save files in resources/uploaded.forms directory
         //compute size of the pdf file in points     ---
         //compute coordinates of the input fields      | --> the python script does this
         //convert the coordinates to % for css       ---
         //store the % into the database
-        //store the file name, number of input fields, ?size of the pdf file in the database
+        //store the file name, number of input fields of the pdf file in the database
     }
 
     public List<FormResponse> getAllActiveForms() {
@@ -90,19 +98,21 @@ public class FormService {
         return new FormResponse(form.get().getId(), form.get().getTitle(), form.get().getNumberOfInputFields());
     }
 
-    public byte[] getFormImage(Long id) throws IOException, InvalidFormIdException {
+    public List<byte[]> getFormImages(Long id) throws IOException, InvalidFormIdException {
         Optional<Form> form = this.formRepository.findById(id);
         if (form.isEmpty()) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         String title = form.get().getTitle();
         this.logger.info("Getting form image for form with title: {}", title);
-        String imageFilePath = FORMS_DIRECTORY_PATH + title + '/' + title + ".png";
-        return Files.readAllBytes(Paths.get(imageFilePath));
+        //String imageFilePath = FORMS_DIRECTORY_PATH + title + '/' + title + ".png";
+        //return Files.readAllBytes(Paths.get(imageFilePath));
+        String pdfFilePath = FORMS_DIRECTORY_PATH + title + '/' + title + ".pdf";
+        return PdfFileUtil.getImagesOfPdfFile(pdfFilePath);
     }
 
     public FormFieldsProjection getFormFieldsOfFormWithId(Long id) throws InvalidFormIdException, NoFormFieldsFoundException {
-        if (!doesFormExist(id)) {
+        if (!doesFormExistById(id)) {
             throw new InvalidFormIdException("The form with the given ID does not exist.");
         }
         FormFieldsProjection formFieldsProjection = this.formRepository.findFieldsById(id);
@@ -112,7 +122,21 @@ public class FormService {
         return formFieldsProjection;
     }
 
-    private boolean doesFormExist(Long id) {
+    @Transactional
+    public void deleteFormByTitle(String title) throws InvalidFormIdException {
+        if (!doesFormExistByTitle(title)) {
+            throw new InvalidFormIdException("The form with title: " + title + "does not exist.");
+        }
+        this.formRepository.deleteByTitle(title);
+    }
+
+    private boolean doesFormExistById(Long id) {
         return this.formRepository.existsById(id);
     }
+
+    private boolean doesFormExistByTitle(String title) {
+        return this.formRepository.existsByTitle(title);
+    }
+
+
 }

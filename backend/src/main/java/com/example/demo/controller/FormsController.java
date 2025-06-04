@@ -21,7 +21,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/forms")
@@ -73,23 +75,33 @@ public class FormsController {
                     .toUri();
             return ResponseEntity.created(location).build();
         }
-        catch (IOException | InterruptedException | FormCreationException | InvalidWordToPDFConversion e) {
+        catch (IOException | InterruptedException | FormCreationException | InvalidWordToPDFConversion | NumberFormatException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
         }
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getFormImage(@PathVariable Long id) {
+    public ResponseEntity<List<String>> getFormImage(@PathVariable Long id) {
         try{
-            byte[] imageBytes = formService.getFormImage(id);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG); // or IMAGE_PNG etc.
-            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+            List<byte[]> imagesBytes = formService.getFormImages(id);
+            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).collect(Collectors.toList());
+            return ResponseEntity.ok(imageAsBase64);
         }
         catch (IOException | InvalidFormIdException e){
             this.logger.error(e.getMessage());
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    @DeleteMapping("/{title}")
+    public ResponseEntity<String> deleteFormByTitle(@PathVariable String title) {
+        try{
+            formService.deleteFormByTitle(title);
+            return ResponseEntity.noContent().build();
+        } catch (InvalidFormIdException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 }

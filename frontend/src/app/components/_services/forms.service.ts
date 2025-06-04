@@ -39,12 +39,19 @@ export class FormsService {
         );
     }
 
-    // getFormImage(id: number): Observable<Blob> {
-    //     return this.http.get(`${FORMS_API}/${id}/image`, {
-    //         headers: httpOptions.headers,
-    //         responseType: "blob",
-    //     });
-    // }
+    getFormImages(id: number): Observable<any> {
+        return this.http.get(`${FORMS_API_CONTROLLER}/${id}/image`, {
+            headers: httpOptions.headers,
+            responseType: "json",
+        });
+    }
+
+    getFormRequestImages(id: number): Observable<any> {
+        return this.http.get(`${FORMS_API_REQUESTS}/${id}/image`, {
+            headers: this.addAuthorizationHeader(httpOptions.headers),
+            responseType: "json",
+        });
+    }
 
     submitFormData(formId: number, fields: string[]): Observable<any> {
         const jwtToken = this.storageService.getUser().token;
@@ -134,9 +141,19 @@ export class FormsService {
         );
     }
 
-    deleteFormRequest(id: number): Observable<any> {
+    deleteFormRequestById(id: number): Observable<any> {
         return this.http.delete(
             `${FORMS_API_REQUESTS}/${id}`,
+            {
+                headers: this.addAuthorizationHeader(httpOptions.headers),
+                responseType: "json",
+            }
+        );
+    }
+
+    deleteFormByTitle(title: string): Observable<any> {
+        return this.http.delete(
+            `${FORMS_API_CONTROLLER}/${title}`,
             {
                 headers: this.addAuthorizationHeader(httpOptions.headers),
                 responseType: "json",

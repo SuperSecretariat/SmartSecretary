@@ -1,5 +1,5 @@
-<div *ngIf="imageUrl" class="image-container">
-  <img [src]="imageUrl" alt="Form" />
+<div *ngFor="let imageUrl of this.formRequestImagesUrl" class="image-container" style="position: relative;">
+  <img [src]="imageUrl" alt="Form Page" />
 </div>
 
 <div *ngIf="statusMessage" class="status-message">{{ statusMessage }}</div>
