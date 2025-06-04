@@ -14,6 +14,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.TokenBlacklistService;
 import com.example.demo.service.UserDetailsImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import com.example.demo.service.ValidationService;
 import com.example.demo.util.AESUtil;
 import com.example.demo.util.JwtUtil;
@@ -38,8 +39,8 @@ import java.util.Set;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +57,7 @@ class AuthControllerTest {
     @Mock private TokenBlacklistService tokenBlacklistService;
     @Mock private UserRepository userRepository;
     @Mock private RoleRepository roleRepository;
+    @Mock private com.example.demo.service.UserDetailsServiceImpl userDetailsService;
 
     @InjectMocks private AuthController authController;
 
@@ -91,6 +93,7 @@ class AuthControllerTest {
         user.setPassword("enc1");
         when(validationService.findUserByIdentifier("U1")).thenReturn(user);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
+        when(userDetailsService.loadUserByUsername("U1")).thenReturn(UserDetailsImpl.build(user));
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"registrationNumber\":\"U1\",\"password\":\"bad\"}"))
@@ -107,6 +110,7 @@ class AuthControllerTest {
         user.setRoles(Set.of(new Role(ERole.ROLE_STUDENT)));
         when(validationService.findUserByIdentifier("U2")).thenReturn(user);
         when(passwordEncoder.matches("pw","enc2")).thenReturn(true);
+        when(userDetailsService.loadUserByUsername("U2")).thenReturn(UserDetailsImpl.build(user));
         when(jwtUtil.generateJwtToken(any())).thenReturn("tok2");
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
