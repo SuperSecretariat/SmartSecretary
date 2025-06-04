@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="header-bar">
+    <button class="add-btn" (click)="toggleAddForm()">
+      {{ showAddForm && !selectedNews ? 'Cancel' : 'Add News Post' }}
+    </button>
+    <div class="search-filter">
+      <input
+        type="text"
+        placeholder="Search by title..."
+        [(ngModel)]="searchTitle"
+        (input)="onSearch()"
+        class="search-input"
+      />
+      <div class="filter-group">
+        <label>
+          <input
+            type="radio"
+            name="hiddenFilter"
+            value="all"
+            [(ngModel)]="hiddenFilter"
+            (change)="onFilterChange('all')"
+          /> All
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="hiddenFilter"
+            value="visible"
+            [(ngModel)]="hiddenFilter"
+            (change)="onFilterChange('visible')"
+          /> Visible
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="hiddenFilter"
+            value="hidden"
+            [(ngModel)]="hiddenFilter"
+            (change)="onFilterChange('hidden')"
+          /> Hidden
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showAddForm && !selectedNews">
+    <app-add-news
+      [newsToEdit]="selectedNews"
+      (success)="onAddEditSuccess()"
+    ></app-add-news>
+  </div>
+
+  <div class="news-list">
+    <div
+      class="item"
+      *ngFor="let news of newsList"
+    >
+      <div class="news-item">
+        <span class="status-dot" [ngClass]="news.hidden ? 'dot-red' : 'dot-green'"></span>
+        <span class="news-title">{{ news.title }}</span>
+        <div class="news-actions">
+          <button class="hide-btn" (click)="onHideNews(news)">
+            {{ news.hidden ? 'Unhide' : 'Hide' }}
+          </button>
+          <button class="edit-btn" (click)="onEditNews(news)">Edit</button>
+          <button class="delete-btn" (click)="onDeleteNews(news)">Delete</button>
+        </div>
+      </div>
+      <div *ngIf="showEditForm && selectedNews == news">
+        <app-add-news
+          [newsToEdit]="selectedNews"
+          (success)="onAddEditSuccess()"
+        ></app-add-news>
+      </div>
+    </div>
+    <div *ngIf="!newsList.length" class="no-news-msg">
+      No news posts found.
+    </div>
+  </div>
+</div>

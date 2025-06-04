@@ -31,6 +31,8 @@ import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tic
 import { ModifyFormComponent } from './components/modify-form/modify-form.component';
 import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
 import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
+import { AddNewsComponent } from './pages/board-secretary/add-news/add-news.component';
+import { ManageNewsComponent } from './pages/board-secretary/manage-news/manage-news.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -78,7 +80,9 @@ const routes: Routes = [
       { path: 'dashboard/upload-calendar', component: UploadCalendarComponent, canActivate: [AuthGuard, SecretaryGuard]},
       { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent, canActivate: [AuthGuard, SecretaryGuard] },
       { path: 'dashboard/viewTickets', component: ViewRequestsComponent, canActivate: [AuthGuard, SecretaryGuard] },
-      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent, canActivate: [AuthGuard, SecretaryGuard]}
+      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent, canActivate: [AuthGuard, SecretaryGuard]},
+      { path: 'dashboard/addNews', component: AddNewsComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'dashboard/manageNews', component: ManageNewsComponent, canActivate: [AuthGuard, SecretaryGuard] },
     ]
   },
 ];

@@ -1,0 +1,64 @@
+<div class="container">
+  <form (ngSubmit)="onSubmit()" #newsForm="ngForm" autocomplete="off">
+    <span>{{ newsToEdit ? 'Edit News Post' : 'Add News Post' }}</span>
+    <div>
+      <label>Title:</label>
+      <input
+        type="text"
+        name="title"
+        [(ngModel)]="news.title"
+        required
+        [readonly]="isSubmitting"
+      />
+    </div>
+
+    <div>
+      <label>Body:</label>
+      <textarea
+        name="body"
+        [(ngModel)]="news.body"
+        required
+        [readonly]="isSubmitting"
+        style="resize: none"
+      ></textarea>
+    </div>
+
+    <div class="displayFlex">
+      <label>Attach file:</label>
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        [disabled]="isSubmitting"
+      />
+      <div class= "text" *ngIf="news.fileName && !file">
+        Current file: <strong>{{ news.fileName }}</strong>
+      </div>
+      <div class = "text" *ngIf="file">
+        New file selected: <strong>{{ file.name }}</strong>
+      </div>
+    </div>
+
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="news.hidden"
+          name="hidden"
+          [disabled]="isSubmitting"
+        />
+        Hidden
+      </label>
+    </div>
+
+    <button type="submit" [disabled]="isSubmitting || !newsForm.form.valid">
+      {{ newsToEdit ? 'Update News' : 'Add News' }}
+    </button>
+
+    <div *ngIf="successMessage" style="color: green; margin-top: 10px;">
+      {{successMessage}}
+    </div>
+    <div *ngIf="errorMessage" style="color: red; margin-top: 10px;">
+      {{errorMessage}}
+    </div>
+  </form>
+</div>
