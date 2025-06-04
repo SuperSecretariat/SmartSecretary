@@ -1,4 +1,4 @@
-:host {
+.container {
   display: block;
   max-width: 1100px;
   margin: 40px auto;
@@ -162,6 +162,11 @@ tbody tr:hover {
   justify-content: center;
   gap: 8px;
 }
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+}
 
 .clickable {
   cursor: pointer;
@@ -196,3 +201,41 @@ tbody td button {
   }
 }
 
+
+.controls {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 10px;
+}
+
+.controls button {
+  background-color: #3a78c3;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+  background-color: #285a9f;
+}
+
+.controls button.active {
+  background-color: #6b5bc1;
+}
+
+.notification {
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-weight: 500;
+  line-height: 1.5;
+  background: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+}

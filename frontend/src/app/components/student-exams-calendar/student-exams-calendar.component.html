@@ -1,0 +1,57 @@
+<div *ngIf="coursesView; else examView">
+  <app-student-calendar> </app-student-calendar>
+</div>
+
+<ng-template #examView>
+  <div class="container">
+    <div class="controls">
+      <!-- Group Selection Dropdown -->
+      <div class="group-selector">
+        <label for="groupSelect">Select Group:</label>
+        <select id="groupSelect" [(ngModel)]="selectedGroup" (change)="onGroupChange()" class="group-dropdown">
+          <option *ngFor="let group of groups" [value]="group">{{ group }}</option>
+        </select>
+      </div>
+
+      <button (click)="toggleViewMode()" [ngClass]="{ active: !coursesView }">
+        {{ coursesView ? 'Show Exams' : 'Show Courses/Labs' }}
+      </button>
+    </div>
+
+    <div class="calendar-container" *ngFor="let period of examPeriods">
+      <h2 class="calendar-title">{{ period.title }}</h2>
+      <div class="calendar-grid" (mouseleave)="hideTooltip()">
+        <div
+          class="calendar-day"
+          *ngFor="let day of getDaysInPeriod(period.start, period.end)"
+          [ngClass]="{ 'has-exam': getExamsForDate(day).length > 0 }"
+          (mouseenter)="onDayMouseEnter($event, day)"
+        >
+          <div class="day-header">{{ getWeekdayName(day) }}</div>
+          <div class="day-number">{{ getDayNumber(day) }}</div>
+
+          <!-- Exam indicator -->
+          <div class="exam-indicator" *ngIf="getExamsForDate(day).length > 0">
+            <div class="exam-count">{{ getExamsForDate(day).length }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tooltip for exam details -->
+    <div
+      class="exam-tooltip"
+      [style.display]="tooltipVisible ? 'block' : 'none'"
+      [style.left.px]="tooltipX"
+      [style.top.px]="tooltipY"
+    >
+      <div *ngFor="let exam of tooltipExams" class="exam-detail">
+        <div class="exam-date">{{ formatExamDate(exam.examDate) }}</div>
+        <div class="exam-time">{{ exam.startTime }} - {{ exam.endTime }}</div>
+        <div class="exam-group">Group: {{ exam.group }}</div>
+        <div class="exam-title">{{ exam.title }}</div>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
