@@ -5,4 +5,6 @@ export interface FormField {
   width: string;
   height: string;
   value: string;
+  label: string;
+  previousWord: string;
 }
