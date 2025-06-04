@@ -1,0 +1,93 @@
+.image-container {
+  position: relative;
+  max-width: 900px;
+  width: 70%;
+  height: 180%; 
+  margin: 30px auto; 
+  border: 1px solid #ccc; 
+  background-color: #f9f9f9; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  overflow-y: auto;
+  overflow-x: hidden; 
+}
+
+.image-container img {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  border: 1px solid #ddd; 
+  border-radius: 4px;
+}
+
+.review-actions {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  margin-top: 32px;
+  margin-bottom: 64px;
+}
+
+.modern-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+  outline: none;
+}
+
+.modern-btn.approve {
+  background: linear-gradient(90deg, #43a047 60%, #66bb6a 100%);
+  color: #fff;
+}
+
+.modern-btn.approve:disabled {
+  background: #b0bec5;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.modern-btn.approve:hover:not(:disabled),
+.modern-btn.approve:focus-visible:not(:disabled) {
+  background: linear-gradient(90deg, #388e3c 60%, #43a047 100%);
+  box-shadow: 0 4px 16px rgba(67, 160, 71, 0.18);
+}
+
+.modern-btn.modify {
+  background: linear-gradient(90deg, #ffb300 60%, #ffe082 100%);
+  color: #333;
+}
+
+.modern-btn.modify:disabled {
+  background: #ffe082;
+  color: #b0bec5;
+  cursor: not-allowed;
+}
+
+.modern-btn.modify:hover:not(:disabled),
+.modern-btn.modify:focus-visible:not(:disabled) {
+  background: linear-gradient(90deg, #ffa000 60%, #ffd54f 100%);
+  color: #222;
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.18);
+}
+
+.status-message {
+  text-align: center;
+  margin-top: 18px;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.material-icons {
+  font-size: 1.4rem;
+  vertical-align: middle;
+}

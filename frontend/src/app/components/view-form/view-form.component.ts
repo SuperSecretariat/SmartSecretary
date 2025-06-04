@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../../environments/environments';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser';
 import { StorageService } from '../_services/storage.service';
+import { FormsService } from '../_services/forms.service';
 
 @Component({
   selector: 'app-view-form',
@@ -13,42 +13,37 @@ import { StorageService } from '../_services/storage.service';
 })
 export class ViewFormComponent implements OnInit {
   selectedFormId: number | null = null;
-  imageUrl: SafeUrl | null = null;
+  formRequestImagesUrl: string[] = [];
 
   constructor(
-    private storageService: StorageService,
-    private http: HttpClient,
-    private sanitizer: DomSanitizer,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private readonly storageService: StorageService,
+    private readonly formsService: FormsService,
+    private readonly http: HttpClient,
+    private readonly sanitizer: DomSanitizer,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
         this.selectedFormId = +idParam;
-        this.loadFormImage();
+        this.loadFormImages(this.selectedFormId);
       }
     });
   }
 
-  loadFormImage(): void {
-    const token = this.storageService.getUser()?.token;
-    if (!token || !this.selectedFormId) return;
-
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    const imageUrl = `${environment.backendUrl}/api/form-requests/${this.selectedFormId}/image`;
-
-    this.http.get(imageUrl, { headers, responseType: 'blob' }).subscribe({
-      next: (blob: Blob) => {
-        const objectURL = URL.createObjectURL(blob);
-        this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-      },
-      error: err => {
-        console.error('Failed to load image', err);
-      }
-    });
+  loadFormImages(id: number | null): void {
+    if (id){
+      this.formsService.getFormRequestImages(id).subscribe({
+        next: (data: string[]) => {
+          this.formRequestImagesUrl = data.map(base64 => 'data:image/png;base64,' + base64);
+        },
+        error: error => {
+          console.log("Error fetching formRequest images: " + error);
+        }
+      })
+    }
   }
 }

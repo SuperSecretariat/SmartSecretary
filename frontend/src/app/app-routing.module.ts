@@ -8,6 +8,9 @@ import { SubmittedFormsComponent } from './components/submitted-forms/submitted-
 import { AccountComponent } from './components/account/account.component';
 import { NewsfeedComponent } from './components/newsfeed/newsfeed.component';
 import { AuthGuard } from './components/_helpers/auth.guard';
+import { AdminGuard } from './components/_helpers/admin.guard';
+import { StudentGuard } from './components/_helpers/student.guard';
+import { SecretaryGuard } from './components/_helpers/secretary.guard';
 import { BoardAdminComponent } from './pages/board-admin/board-admin.component';
 import { BoardAdminAddComponent } from './pages/board-admin/board-admin-add/board-admin-add.component';
 import { BoardAdminShowAuthKeyComponent } from './pages/board-admin/board-admin-show-auth-key/board-admin-show-auth-key.component';
@@ -25,7 +28,11 @@ import { UploadCalendarComponent} from './pages/board-secretary/upload-calendar/
 import { BoardSecretaryChangeFormsComponent } from './pages/board-secretary/board-secretary-change-forms/board-secretary-change-forms.component';
 import { StudentTicketsComponent } from './pages/board-student/student-tickets/student-tickets.component';
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
-
+import { ModifyFormComponent } from './components/modify-form/modify-form.component';
+import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
+import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
+import { AddNewsComponent } from './pages/board-secretary/add-news/add-news.component';
+import { ManageNewsComponent } from './pages/board-secretary/manage-news/manage-news.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -37,42 +44,45 @@ const routes: Routes = [
   {
     path: 'student',
     children: [
-      { path: 'create-form', component: CreateFormComponent },
-      { path: 'submitted-forms', component: SubmittedFormsComponent },
-      { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
-      { path: 'newsfeed', component: NewsfeedComponent },
-      { path: 'tickets', component: StudentTicketsComponent },
-      { path: 'complete-form/:id', component: CompleteFormComponent },
-      { path: 'pubble', component: PubbleChatComponent },
+      { path: 'create-form', component: CreateFormComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'submitted-forms', component: SubmittedFormsComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'account', component: AccountComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'newsfeed', component: NewsfeedComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'tickets', component: StudentTicketsComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'complete-form/:id', component: CompleteFormComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'pubble', component: PubbleChatComponent, canActivate: [AuthGuard, StudentGuard] },
       { path: 'view-form/:id', component: ViewFormComponent},
-      { path: 'calendar', component: StudentCalendarComponent },
+      { path: 'modify-form/:id/:formId', component: ModifyFormComponent, canActivate: [AuthGuard, StudentGuard] },
+      { path: 'calendar', component: StudentCalendarComponent, canActivate: [AuthGuard, StudentGuard] },
     ]
   },
   {
     path: 'admin',
     children: [
-      { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
-      { path: 'dashboard', component: BoardAdminComponent },
-      { path: 'newsfeed', component: NewsfeedComponent },
-      { path: 'dashboard/add', component: BoardAdminAddComponent },
+      { path: 'account', component: AccountComponent, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'dashboard', component: BoardAdminComponent, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'newsfeed', component: NewsfeedComponent, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'dashboard/add', component: BoardAdminAddComponent, canActivate: [AuthGuard, AdminGuard] },
       // { path: 'dashboard/createPost', component: BoardAdminCreatePost },
-      { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent },
-      { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent},
-      { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent },
+      { path: 'dashboard/showKey', component: BoardAdminShowAuthKeyComponent, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'dashboard/llmFiles', component: BoardAdminLlmFilesComponent, canActivate: [AuthGuard, AdminGuard]},
+      { path: 'dashboard/delete', component: BoardAdminDeleteUserComponent, canActivate: [AuthGuard, AdminGuard] },
     ]
   },
   {
     path: 'secretary',
     children: [
-      { path: 'dashboard', component: BoardSecretaryComponent },
-      { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
-      { path: 'newsfeed', component: NewsfeedComponent },
-      { path: 'tickets', component: SecretaryTicketsComponent },
-      { path: 'dashboard/add', component: BoardSecretaryAddComponent },
-      { path: 'dashboard/upload-calendar', component: UploadCalendarComponent},
-      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
-      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent },
-
+      { path: 'dashboard', component: BoardSecretaryComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'account', component: AccountComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'newsfeed', component: NewsfeedComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'tickets', component: SecretaryTicketsComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'dashboard/add', component: BoardSecretaryAddComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'dashboard/upload-calendar', component: UploadCalendarComponent, canActivate: [AuthGuard, SecretaryGuard]},
+      { path: 'dashboard/changeForms', component: BoardSecretaryChangeFormsComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'dashboard/viewTickets', component: ViewRequestsComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'dashboard/view-form/:id', component: ReviewRequestComponent, canActivate: [AuthGuard, SecretaryGuard]},
+      { path: 'dashboard/addNews', component: AddNewsComponent, canActivate: [AuthGuard, SecretaryGuard] },
+      { path: 'dashboard/manageNews', component: ManageNewsComponent, canActivate: [AuthGuard, SecretaryGuard] },
     ]
   },
 ];

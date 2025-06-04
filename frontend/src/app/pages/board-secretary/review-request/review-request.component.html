@@ -1,0 +1,16 @@
+<div *ngFor="let imageUrl of this.formRequestImagesUrl" class="image-container" style="position: relative;">
+  <img [src]="imageUrl" alt="Form Page" />
+</div>
+
+<div *ngIf="statusMessage" class="status-message">{{ statusMessage }}</div>
+<div class="review-actions">
+  <button class="modern-btn approve" (click)="updateStatus('APPROVED')" [disabled]="isLoading">
+    <span class="material-icons">check_circle</span>
+    <span>Approve</span>
+  </button>
+  <button class="modern-btn modify" (click)="updateStatus('MODIFICATIONS_REQUIRED')" [disabled]="isLoading">
+    <span class="material-icons">edit_note</span>
+    <span>Modifications Required</span>
+  </button>
+</div>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

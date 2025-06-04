@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
 
@@ -12,7 +12,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class StorageService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   clean(): void {
     window.sessionStorage.clear();
@@ -32,7 +32,7 @@ export class StorageService {
     return {};
   }
 
-   public getRegistrationNumber(): string{
+  public getRegistrationNumber(): string {
     return this.getUser().registrationNumber.toString();
   }
 
@@ -42,6 +42,30 @@ export class StorageService {
       return true;
     }
 
+    return false;
+  }
+
+  public isAdmin(): boolean {
+    const user = this.getUser();
+    if (user && Array.isArray(user.roles)) {
+      return user.roles.includes('ROLE_ADMIN');
+    }
+    return false;
+  }
+
+  public isSecretary(): boolean {
+    const user = this.getUser();
+    if (user && Array.isArray(user.roles)) {
+      return user.roles.includes('ROLE_SECRETARY');
+    }
+    return false;
+  }
+
+  public isStudent(): boolean {
+    const user = this.getUser();
+    if (user && Array.isArray(user.roles)) {
+      return user.roles.includes('ROLE_STUDENT');
+    }
     return false;
   }
 
@@ -75,13 +99,13 @@ export class StorageService {
   deleteAccount(): Observable<any> {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    return this.http.post(this.DELETE_API, { },
+    return this.http.post(this.DELETE_API, {},
       {
         headers: headers,
         responseType: 'text'
       });
   }
-  
+
   private readonly SHOWAUTHKEY_API = `${environment.backendUrl}/api/user/authkey`;
   showAuthKey(email: string): Observable<any> {
     const token = this.getUser().token;
@@ -100,11 +124,11 @@ export class StorageService {
     const token = this.getUser().token;
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(
-      `${this.DELETEUSER_API}?identifier=${encodeURIComponent(registrationNumber)}`, 
+      `${this.DELETEUSER_API}?identifier=${encodeURIComponent(registrationNumber)}`,
       {},
       {
         headers: headers,
         responseType: 'text'
       });
-    }
+  }
 }

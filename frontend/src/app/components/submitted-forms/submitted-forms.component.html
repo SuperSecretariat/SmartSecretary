@@ -18,7 +18,18 @@
             <span class="request-form"><strong>Nume:</strong> {{ request.formTitle }}</span>
             <span class="request-status"><strong>Status:</strong> {{ request.status }}</span>
             <button class="btn btn-primary float-end"
-              (click)="viewForm(request.id)">
+              (click)="donwloadRequest(request.formTitle)"
+              *ngIf="request.status == 'APPROVED'">
+              Download request
+            </button>
+            <button class="btn btn-primary float-end"
+              (click)="modifyRequest(request.id, request.formId)"
+              *ngIf="request.status == 'MODIFICATIONS_REQUIRED'">
+              Modify request
+            </button>
+            <button class="btn btn-primary float-end"
+              (click)="viewForm(request.id)"
+              *ngIf="request.status == 'PENDING'">
               View request
             </button>
           </div>

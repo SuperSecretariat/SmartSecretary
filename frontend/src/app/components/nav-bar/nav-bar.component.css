@@ -59,30 +59,27 @@ a:hover {
 
 @media (max-width: 768px) {
     nav {
-        padding: 10px; 
+        padding: 10px;
     }
-
     ul li {
-        width: 80%; 
-        padding: 10px; 
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
     }
-
     a {
-        font-size: 0.6rem;
+        font-size: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     nav {
-        padding: 5px; 
+        padding: 4px;
     }
-
     ul li {
-        margin: 5px 0; 
-        padding: 5px; 
+        padding: 8px;
+        margin: 4px 0;
     }
-
     a {
-        font-size: 0.5rem; 
+        font-size: 0.95rem;
     }
 }

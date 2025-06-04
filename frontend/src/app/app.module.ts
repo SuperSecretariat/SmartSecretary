@@ -42,6 +42,11 @@ import { StudentTicketsComponent } from './pages/board-student/student-tickets/s
 import { SecretaryTicketsComponent } from './pages/board-secretary/secretary-tickets/secretary-tickets.component';
 import { StudentYearlyCalendarComponent } from './components/student-yearly-calendar/student-yearly-calendar.component';
 import { StudentExamsCalendarComponent } from './components/student-exams-calendar/student-exams-calendar.component';
+import { ModifyFormComponent } from './components/modify-form/modify-form.component';
+import { ViewRequestsComponent } from './pages/board-secretary/view-requests/view-requests.component';
+import { ReviewRequestComponent } from './pages/board-secretary/review-request/review-request.component';
+import { ManageNewsComponent } from './pages/board-secretary/manage-news/manage-news.component';
+import { AddNewsComponent } from './pages/board-secretary/add-news/add-news.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +79,11 @@ import { StudentExamsCalendarComponent } from './components/student-exams-calend
     SecretaryTicketsComponent,
     StudentYearlyCalendarComponent,
     StudentExamsCalendarComponent,
+    ModifyFormComponent,
+    ViewRequestsComponent,
+    ReviewRequestComponent,
+    ManageNewsComponent,
+    AddNewsComponent,
   ],
   imports: [
     BrowserModule,

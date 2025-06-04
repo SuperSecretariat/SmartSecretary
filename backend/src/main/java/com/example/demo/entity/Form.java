@@ -13,6 +13,9 @@ public class Form {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @PositiveOrZero
+    private int numberOfPages;
+
     @NotBlank
     private String title;
 
@@ -32,6 +35,10 @@ public class Form {
         this.title = title;
     }
 
+    public void setNumberOfPages(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
+    }
+
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -48,6 +55,10 @@ public class Form {
         return title;
     }
 
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -57,6 +68,7 @@ public class Form {
     }
 
     public void addFields(List<FormField> fields) {
+        this.fields.clear();
         this.fields.addAll(fields);
     }
 

@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.exceptions.*;
 import com.example.demo.model.enums.FormRequestStatus;
 
 import com.example.demo.constants.ErrorMessage;
 
+import com.example.demo.projection.FormFieldsProjection;
+import com.example.demo.projection.FormRequestFieldsProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequest;
 import com.example.demo.dto.FormRequestRequest;
@@ -25,7 +28,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/form-requests")
@@ -102,6 +107,9 @@ public class FormRequestsController {
         } catch (FormRequestFieldDataException | IOException | InvalidWordToPDFConversion | InterruptedException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
+        } catch(EncryptionException ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.badRequest().build();
         }
 //        catch (Exception e) {
 //            this.logger.error(e.getMessage());
@@ -123,7 +131,7 @@ public class FormRequestsController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getFormImage(@PathVariable Long id,
+    public ResponseEntity<List<String>> getFormImages(@PathVariable Long id,
                                                @RequestHeader("Authorization") String authorizationHeader) {
         try{
             String token = authorizationHeader.substring(7);
@@ -131,14 +139,39 @@ public class FormRequestsController {
                 return ResponseEntity.status(401).build();
             }
 
-            byte[] imageBytes = formRequestService.getFormRequestImage(id);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG); // or IMAGE_PNG etc.
-            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+            List<byte[]> imagesBytes = formRequestService.getFormRequestImages(id);
+            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).collect(Collectors.toList());
+            return ResponseEntity.ok(imageAsBase64);
         }
         catch (IOException | InvalidFormIdException e){
             this.logger.error(e.getMessage());
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/{id}/fields")
+    public ResponseEntity<FormRequestFieldsDTO> getFormRequestFieldsById(@PathVariable Long id) {
+        try {
+            FormRequestFieldsDTO formRequestFields = formRequestService.getFormRequestFieldsById(id);
+            return ResponseEntity.ok(formRequestFields);
+        }
+        catch (InvalidFormRequestIdException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (DecryptionException ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFormRequestById(@PathVariable Long id) {
+        try{
+            formRequestService.deleteFormRequestById(id);
+            return ResponseEntity.noContent().build();
+        } catch (InvalidFormRequestIdException e) {
+            this.logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 

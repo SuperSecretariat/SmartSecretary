@@ -57,24 +57,7 @@ export class NavBarComponent implements OnInit {
         new NavBarItem('Pubble AI', `/${rolePrefix}/pubble`),
         new NavBarItem('Calendar', `/${rolePrefix}/calendar`),
         new NavBarItem('Tickets', `/${rolePrefix}/tickets`),
-        new NavBarItem('Pubble AI', `/${rolePrefix}/pubble`),
       ];
-
-    if (this.isLoggedIn) {
-      const user = this.storageService.getUser();
-      const roles: string[] = user.roles;
-
-      for (const role of roles) {
-        if (role.startsWith('ROLE_')) {
-          const roleName = role.replace('ROLE_', '').toLowerCase();
-          const capitalized = roleName.charAt(0).toUpperCase() + roleName.slice(1);
-          this.navBarItems.push(
-            new NavBarItem(`${capitalized} Announcements`, `/${roleName}/announcements`)
-          );
-        }
-      }
-    }
-
 
   }
 

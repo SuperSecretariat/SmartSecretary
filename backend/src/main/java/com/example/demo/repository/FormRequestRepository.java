@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.FormRequest;
 import com.example.demo.model.enums.FormRequestStatus;
+import com.example.demo.projection.FormIdProjection;
 import com.example.demo.projection.FormRequestFieldsProjection;
 import com.example.demo.projection.RegistrationNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ public interface FormRequestRepository extends JpaRepository<FormRequest, Long> 
     FormRequestFieldsProjection findFormRequestFieldsById(Long id);
     Optional<FormRequest> findById(long id);
     RegistrationNumberProjection findRegistrationNumberById(Long id);
+    FormIdProjection findFormIdById(Long id);
 }

@@ -1,0 +1,30 @@
+<div class="title">Complete your request</div>
+<div *ngFor="let page of pages" class="image-container" style="position: relative;">
+  <img [src]="page.imageUrl" alt="Form Page" />
+
+  <input *ngFor="let field of page.inputFields; let i = index"
+         type="text"
+         [placeholder]="'Enter value'"
+         [style.position]="'absolute'"
+         [style.top]="field.top"
+         [style.left]="field.left"
+         [style.width]="field.width"
+         [style.height]="field.height"
+         [(ngModel)]="field.value"
+         name="field{{i}}" />
+</div>
+<div *ngIf="warningMessage" class="warning-message">
+  {{ warningMessage }}
+</div>
+<div class="submit_button_container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+  <button 
+    (click)="saveFormFields()" 
+    [disabled]="isLoading"
+    style="position:relative; margin-top: 20px;">
+    <span>Submit Request</span>
+  </button>
+</div>

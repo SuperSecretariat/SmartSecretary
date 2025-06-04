@@ -11,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long> {
+    boolean existsByTitle(String title);
+    void deleteByTitle(String title);
+    Form findByTitle(String title);
     List<Form> findByActive(boolean active);
     FormFieldsProjection findFieldsById(Long id);
     FormNumberOfInputFieldsProjection findNumberOfInputFieldsById(Long id);
