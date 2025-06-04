@@ -101,23 +101,6 @@ export class StudentCalendarComponent implements OnInit {
     });
   }
 
-  processEvents() {
-    this.processedEvents = this.events.map(event => {
-      const startParts = event.startTime?.split(':') ?? [];
-      const endParts = event.endTime?.split(':') ?? [];
-
-      const startHour = parseInt(startParts[0]);
-      const endHour = parseInt(endParts[0]);
-      const duration = endHour - startHour;
-
-      return {
-        ...event,
-        duration,
-        startHour
-      };
-    });
-  }
-
   onGroupChange() {
     // Clear existing events immediately when group changes
     this.events = [];

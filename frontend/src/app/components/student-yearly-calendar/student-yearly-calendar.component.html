@@ -1,5 +1,5 @@
 <div *ngIf="weeklyView; else annualView">
-  <app-student-calendar> </app-student-calendar>
+  <app-student-calendar></app-student-calendar>
 </div>
 
 <ng-template #annualView>
@@ -8,6 +8,18 @@
       <button (click)="toggleViewMode()" [ngClass]="{ active: annualView }">
         {{ annualView ? 'Weekly View' : 'Annual View' }}
       </button>
+    </div>
+
+    <div class="calendar-legend">
+      <div class="legend-item learning">
+        <span class="legend-color"></span> Learning Period
+      </div>
+      <div class="legend-item session">
+        <span class="legend-color"></span> Exam Session
+      </div>
+      <div class="legend-item free">
+        <span class="legend-color"></span> Holiday / Free Time
+      </div>
     </div>
 
     <div class="yearly-calendar-container">
@@ -34,4 +46,3 @@
     </div>
   </div>
 </ng-template>
-

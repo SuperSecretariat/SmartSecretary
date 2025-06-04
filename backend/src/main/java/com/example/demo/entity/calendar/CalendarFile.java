@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.entity.calendar;
 
 import jakarta.persistence.*;
 
@@ -22,16 +22,20 @@ public class CalendarFile {
     @Column(name = "groups", nullable = false)
     private String groups;
 
+    @Column(name = "category", nullable = false)
+    private String category;
+
     // Default constructor (required by JPA)
     public CalendarFile() {
     }
 
     // Constructor with parameters
-    public CalendarFile(String name, String type, Float size, String groups) {
+    public CalendarFile(String name, String type, Float size, String groups, String category) {
         this.name = name;
         this.type = type;
         this.size = size;
         this.groups = groups;
+        this.category = category;
     }
 
     // Getters and Setters (REQUIRED by JPA/Hibernate)
@@ -73,6 +77,13 @@ public class CalendarFile {
 
     public void setGroups(String groups) {
         this.groups = groups;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
