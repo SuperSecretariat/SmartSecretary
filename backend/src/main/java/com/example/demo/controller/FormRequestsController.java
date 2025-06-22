@@ -3,34 +3,23 @@ package com.example.demo.controller;
 import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.exceptions.*;
 import com.example.demo.model.enums.FormRequestStatus;
-
-import com.example.demo.constants.ErrorMessage;
-
-import com.example.demo.projection.FormFieldsProjection;
-import com.example.demo.projection.FormRequestFieldsProjection;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.entity.FormRequest;
-import com.example.demo.dto.FormRequestRequest;
-import com.example.demo.response.JwtResponse;
+import com.example.demo.dto.FormRequestDTO;
 import com.example.demo.service.FormRequestService;
 import com.example.demo.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/form-requests")
@@ -89,8 +78,8 @@ public class FormRequestsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createFormRequest(@Valid @RequestBody FormRequestRequest formRequestRequest,
-                                               @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<Void> createFormRequest(@Valid @RequestBody FormRequestDTO formRequestRequest,
+                                               @RequestHeader("Authorization") String authorizationHeader) throws InterruptedException{
         try {
             String token = authorizationHeader.substring(7);
             if (!jwtUtil.validateJwtToken(token)) {
@@ -104,17 +93,10 @@ public class FormRequestsController {
                     .toUri();
 
             return ResponseEntity.created(location).build();
-        } catch (FormRequestFieldDataException | IOException | InvalidWordToPDFConversion | InterruptedException e) {
+        } catch (EncryptionException | FormRequestFieldDataException | IOException | InvalidWordToPDFConversion e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
-        } catch(EncryptionException ex){
-            logger.error(ex.getMessage());
-            return ResponseEntity.badRequest().build();
         }
-//        catch (Exception e) {
-//            this.logger.error(e.getMessage());
-//            return ResponseEntity.internalServerError().build();
-//        }
     }
 
     @PatchMapping("/{id}/status")
@@ -140,7 +122,7 @@ public class FormRequestsController {
             }
 
             List<byte[]> imagesBytes = formRequestService.getFormRequestImages(id);
-            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).collect(Collectors.toList());
+            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).toList();
             return ResponseEntity.ok(imageAsBase64);
         }
         catch (IOException | InvalidFormIdException e){
@@ -155,11 +137,8 @@ public class FormRequestsController {
             FormRequestFieldsDTO formRequestFields = formRequestService.getFormRequestFieldsById(id);
             return ResponseEntity.ok(formRequestFields);
         }
-        catch (InvalidFormRequestIdException e) {
+        catch (InvalidFormRequestIdException | DecryptionException e) {
             this.logger.error(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        } catch (DecryptionException ex){
-            logger.error(ex.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public class FormRequestRequest {
+public class FormRequestDTO {
 
     @NotBlank(message = ErrorMessage.MISSING_JWT_TOKEN)
     String jwtToken;
@@ -14,7 +14,7 @@ public class FormRequestRequest {
 
     List<String> fieldsData;
 
-    public FormRequestRequest(String jwtToken, long formId, List<String> fields) {
+    public FormRequestDTO(String jwtToken, long formId, List<String> fields) {
         this.jwtToken = jwtToken;
         this.formId = formId;
         this.fieldsData = fields;

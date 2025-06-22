@@ -23,7 +23,12 @@ def get_input_fields_position_and_convert_them_to_percentages(pdf_file_path):
                 width_offset = -0.45
             else:
                 trimmed_word = word[4]
-            if re.fullmatch(r"_+", trimmed_word):
+
+            # The first if matches the ___... pattern even if the spacing is not good, like: an___,
+            if re.search(r"_{2,}", trimmed_word):
+
+            # The second if matches the ___... pattern only if the spacing is perfect, like: an ___,
+            #if re.fullmatch(r"_+", trimmed_word):
                 # rect is the rectangle that contains the word
                 rect_x0 = word[0]
                 rect_y0 = word[1]

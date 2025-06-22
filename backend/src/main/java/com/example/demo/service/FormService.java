@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -108,8 +106,6 @@ public class FormService {
         }
         String title = form.get().getTitle();
         this.logger.info("Getting form image for form with title: {}", title);
-        //String imageFilePath = FORMS_DIRECTORY_PATH + title + '/' + title + ".png";
-        //return Files.readAllBytes(Paths.get(imageFilePath));
         String pdfFilePath = FORMS_DIRECTORY_PATH + title + '/' + title + ".pdf";
         return PdfFileUtil.getImagesOfPdfFile(pdfFilePath);
     }

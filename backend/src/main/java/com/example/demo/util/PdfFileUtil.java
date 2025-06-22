@@ -27,7 +27,6 @@ public class PdfFileUtil {
         WordFileUtil.convertDocxToPDF(docxFilePath, pdfOutputDirectoryPath);
 
         String pdfFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".pdf";
-//        PdfFileUtil.downloadImagesOfPdfFile(pdfFilePath);
 
         String pythonScriptPath = SCRIPTS_DIRECTORY_PATH + "convert_points_to_percentages-v3.py";
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, pdfFilePath);
@@ -66,20 +65,9 @@ public class PdfFileUtil {
         }
     }
 
-//    public static void downloadImagesOfPdfFile(String pdfFilePath) throws IOException {
-//        List<byte[]> imageBytes = getImagesOfPdfFile(pdfFilePath);
-//        String imageFilePath = pdfFilePath.substring(0, pdfFilePath.length() - 3) + "png";
-//        try(FileOutputStream fos = new FileOutputStream(imageFilePath)) {
-//            fos.write(imageBytes);
-//        }
-//    }
-
     public static void createPdfAndImageForSubmittedFormRequest(String formTitle, String userRegistrationNumber) throws IOException, InterruptedException, InvalidWordToPDFConversion {
         String pdfOutputDirectoryPath = FORM_REQUESTS_DIRECTORY_PATH + userRegistrationNumber;
         String docxFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".docx";
         WordFileUtil.convertDocxToPDF(docxFilePath, pdfOutputDirectoryPath);
-
-//        String pdfFilePath = pdfOutputDirectoryPath + '/' + formTitle + ".pdf";
-//        PdfFileUtil.downloadImagesOfPdfFile(pdfFilePath);
     }
 }

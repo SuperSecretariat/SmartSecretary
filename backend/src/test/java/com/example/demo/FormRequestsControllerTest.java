@@ -5,7 +5,7 @@ import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.response.FormRequestResponse;
 import com.example.demo.model.enums.FormRequestStatus;
 import com.example.demo.entity.FormRequest;
-import com.example.demo.dto.FormRequestRequest;
+import com.example.demo.dto.FormRequestDTO;
 import com.example.demo.service.FormRequestService;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.exceptions.*;
@@ -146,12 +146,12 @@ public class FormRequestsControllerTest {
       String header = "Bearer " + token;
 
       // Construct DTO with required fields
-      FormRequestRequest requestDto = new FormRequestRequest(token, 100L, Arrays.asList("field1", "field2"));
+      FormRequestDTO requestDto = new FormRequestDTO(token, 100L, Arrays.asList("field1", "field2"));
       FormRequest created = new FormRequest();
       created.setId(1L);
 
       when(jwtUtil.validateJwtToken(token)).thenReturn(true);
-      when(formRequestService.createFormRequest(any(FormRequestRequest.class))).thenReturn(created);
+      when(formRequestService.createFormRequest(any(FormRequestDTO.class))).thenReturn(created);
 
       String jsonContent = "{"
               + "\"jwtToken\": \"validToken\","
@@ -173,7 +173,7 @@ public class FormRequestsControllerTest {
       String header = "Bearer " + token;
 
       when(jwtUtil.validateJwtToken(token)).thenReturn(true);
-      doThrow(new FormRequestFieldDataException("Invalid data")).when(formRequestService).createFormRequest(any(FormRequestRequest.class));
+      doThrow(new FormRequestFieldDataException("Invalid data")).when(formRequestService).createFormRequest(any(FormRequestDTO.class));
 
       String jsonContent = "{"
               + "\"jwtToken\": \"validToken\","

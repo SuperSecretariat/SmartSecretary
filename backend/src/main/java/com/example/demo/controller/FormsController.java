@@ -12,18 +12,13 @@ import com.example.demo.service.FormService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/forms")
@@ -66,7 +61,7 @@ public class FormsController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createForm(@Valid @RequestBody FormCreationRequest formCreationRequest) {
+    public ResponseEntity<String> createForm(@Valid @RequestBody FormCreationRequest formCreationRequest) throws InterruptedException {
         try{
             Form form = formService.createForm(formCreationRequest);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -75,7 +70,7 @@ public class FormsController {
                     .toUri();
             return ResponseEntity.created(location).build();
         }
-        catch (IOException | InterruptedException | FormCreationException | InvalidWordToPDFConversion | NumberFormatException e) {
+        catch (IOException | FormCreationException | InvalidWordToPDFConversion | NumberFormatException e) {
             this.logger.error(e.getMessage());
             return ResponseEntity.status(503).body("Unable to create form. Please try again later.");
         }
@@ -85,7 +80,7 @@ public class FormsController {
     public ResponseEntity<List<String>> getFormImage(@PathVariable Long id) {
         try{
             List<byte[]> imagesBytes = formService.getFormImages(id);
-            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).collect(Collectors.toList());
+            List<String> imageAsBase64 = imagesBytes.stream().map(Base64.getEncoder()::encodeToString).toList();
             return ResponseEntity.ok(imageAsBase64);
         }
         catch (IOException | InvalidFormIdException e){
