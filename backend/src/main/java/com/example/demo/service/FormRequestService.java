@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.controller.AuthController;
 import com.example.demo.dto.FormRequestFieldsDTO;
 import com.example.demo.exceptions.*;
 import com.example.demo.response.FormRequestResponse;
@@ -9,18 +8,13 @@ import com.example.demo.entity.FormRequest;
 import com.example.demo.model.enums.FormRequestStatus;
 import com.example.demo.repository.FormRepository;
 import com.example.demo.repository.FormRequestRepository;
-import com.example.demo.dto.FormRequestRequest;
+import com.example.demo.dto.FormRequestDTO;
 import com.example.demo.util.JwtUtil;
 import com.example.demo.util.PdfFileUtil;
 import com.example.demo.util.WordFileUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +28,6 @@ public class FormRequestService {
     private final FormRequestRepository formRequestRepository;
     private final FormRepository formRepository;
     private final JwtUtil jwtUtil;
-    private static final Logger loggerFormRequest = LoggerFactory.getLogger(FormRequestService.class);
 
     public FormRequestService(FormRequestRepository repository, FormRepository formRepository, JwtUtil jwtUtil) {
         this.formRequestRepository = repository;
@@ -43,7 +36,7 @@ public class FormRequestService {
     }
 
 
-    public FormRequest createFormRequest(FormRequestRequest formRequestRequest) throws FormRequestFieldDataException, IOException, InvalidWordToPDFConversion, InterruptedException, EncryptionException {
+    public FormRequest createFormRequest(FormRequestDTO formRequestRequest) throws FormRequestFieldDataException, IOException, InvalidWordToPDFConversion, InterruptedException, EncryptionException {
         // Get the userRegistrationNumber from the JWT token
         String userRegistrationNumber = jwtUtil.getRegistrationNumberFromJwtToken(formRequestRequest.getJwtToken());
         if (this.formRepository.findNumberOfInputFieldsById(formRequestRequest.getFormId()).getNumberOfInputFields()
@@ -131,13 +124,12 @@ public class FormRequestService {
         }
         String registrationNumber = this.formRequestRepository.findRegistrationNumberById(id).getUserRegistrationNumber();
         String title = formRequest.get().getFormTitle();
-        //String imageFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".png";
         String pdfFilePath = FORM_REQUESTS_DIRECTORY_PATH + registrationNumber + '/' + title + ".pdf";
         return PdfFileUtil.getImagesOfPdfFile(pdfFilePath);
     }
 
     public FormRequestFieldsDTO getFormRequestFieldsById(Long id) throws InvalidFormRequestIdException, DecryptionException {
-            if (!doesFormRequestExist(id)) {
+            if (doesFormRequestNotExist(id)) {
                 throw new InvalidFormRequestIdException("The form with the given ID does not exist.");
             }
             FormRequestFieldsDTO formRequestFieldsDTO = new FormRequestFieldsDTO();
@@ -148,12 +140,12 @@ public class FormRequestService {
             return formRequestFieldsDTO;
     }
 
-    private boolean doesFormRequestExist(Long id) {
-        return this.formRequestRepository.existsById(id);
+    private boolean doesFormRequestNotExist(Long id) {
+        return !this.formRequestRepository.existsById(id);
     }
 
     public void deleteFormRequestById(Long id) throws InvalidFormRequestIdException {
-        if (!doesFormRequestExist(id)) {
+        if (doesFormRequestNotExist(id)) {
             throw new InvalidFormRequestIdException("The form request with ID: " + id + "does not exist.");
         }
         this.formRequestRepository.deleteById(id);

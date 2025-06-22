@@ -44,7 +44,6 @@ public class FormField {
         this.height = height;
         this.text = text;
         this.previousWord = previousWord;
-        this.label = label;
     }
 
 

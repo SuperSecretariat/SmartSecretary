@@ -14,7 +14,7 @@ export class SecretaryNavBarComponent {
   ngOnInit(): void {
     this.navBarItems.push(new NavBarItem('Add Student', `/secretary/dashboard/add`));
     this.navBarItems.push(new NavBarItem('Upload Calendar', `/secretary/dashboard/upload-calendar`));
-    this.navBarItems.push(new NavBarItem('View Student Tickets', `/secretary/dashboard/viewTickets`));
+    this.navBarItems.push(new NavBarItem('View Student Requests', `/secretary/dashboard/viewTickets`));
     this.navBarItems.push(new NavBarItem('Tickets', `/secretary/tickets`));
     this.navBarItems.push(new NavBarItem('Add Document', `/secretary/dashboard/changeForms`));
     this.navBarItems.push(new NavBarItem('Manage News', `/secretary/dashboard/manageNews`));

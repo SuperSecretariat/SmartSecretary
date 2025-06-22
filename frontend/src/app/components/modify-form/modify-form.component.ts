@@ -20,6 +20,7 @@ export class ModifyFormComponent implements OnInit {
   isLoading: boolean = false;
   formRequestFields: string[] = [];
   pages: FormPage[] = [];
+  formImagesUrl: string[] = [];
 
   constructor(private readonly route: ActivatedRoute, private readonly formsService: FormsService, private readonly router: Router) { }
   imageUrl = `${environment.backendUrl}/api/forms`;
@@ -30,6 +31,7 @@ export class ModifyFormComponent implements OnInit {
       const formId = params.get('formId');
       this.selectedFormRequestId = id ? +id : null;
       this.selectedFormId = formId ? +formId : null;
+      await firstValueFrom(this.fetchFormImages(this.selectedFormId))
       await firstValueFrom(this.fetchFormRequestFields(this.selectedFormRequestId));
       await firstValueFrom(this.fetchForm(this.selectedFormId));
       this.loadFormRequestFieldsValueIntoFormFields();
@@ -64,6 +66,18 @@ export class ModifyFormComponent implements OnInit {
     }
   }
 
+  fetchFormImages(id: number | null): Observable<any> {
+    if (id) {
+      return this.formsService.getFormImages(id).pipe(
+        tap((data: string[]) => {
+          this.formImagesUrl = data.map(base64 => 'data:image/png;base64,' + base64);
+        })
+      );   
+    } else {
+      console.log('Invalid form ID');
+      return of(null);
+    }  
+  }
 
   fetchFormRequestFields(id: number | null): Observable<any> {
     if (id) {
@@ -95,9 +109,9 @@ export class ModifyFormComponent implements OnInit {
 
     this.pages = Array.from(pagesMap.entries())
       .sort(([a], [b]) => a - b)
-      .map(([pageNumber, fields]) => ({
+      .map(([_, fields], index) => ({
         inputFields: fields,
-        imageUrl: `${this.imageUrl}/${this.selectedFormId}/image?page=${pageNumber}`
+        imageUrl: this.formImagesUrl[index]
       }));
   }
 
