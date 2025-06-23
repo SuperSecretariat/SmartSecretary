@@ -10,27 +10,8 @@
         [ngClass]="msg.sender === 'user' ? 'message-user' : 'message-bot'"
         class="message"
       >
-        <div class="message-content">
-          <strong>{{ msg.sender === 'user' ? 'You:' : 'Pubble:' }}</strong>
-          <span [innerHTML]="formatMessageText(msg.displayed)"></span>
-        </div>
-        
-        <!-- Sources section for bot messages -->
-        <div *ngIf="msg.sender === 'bot' && msg.sources && msg.sources.length > 0" class="message-sources">
-          <div class="sources-header">
-            <span class="sources-icon">📚</span>
-            <span class="sources-title">Sources:</span>
-          </div>
-          <div class="sources-list">
-            <div 
-              *ngFor="let source of msg.sources; let i = index" 
-              class="source-item"
-            >
-              <span class="source-number">{{ i + 1 }}.</span>
-              <span class="source-name">{{ getSourceFileName(source) }}</span>
-            </div>
-          </div>
-        </div>
+        <strong>{{ msg.sender === 'user' ? 'You:' : 'Pubble:' }}</strong>
+        {{ msg.displayed }}
       </div>
     </div>
 

@@ -84,8 +84,8 @@ def augment_prompt(input_data: PromptInput):
 
         return {
             "augmented_prompt": final_prompt.strip(),
-            "chunks": sources,
-            "sources": context_chunks
+            "chunks": context_chunks,
+            "sources": sources
         }
 
     except Exception as e:
