@@ -18,7 +18,12 @@ export class PubbleChatComponent implements AfterViewInit {
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
 
-  messages: Array<{ sender: 'user' | 'bot'; text: string; displayed: string }> = [];
+  messages: Array<{ 
+    sender: 'user' | 'bot'; 
+    text: string; 
+    displayed: string;
+    sources?: string[];
+  }> = [];
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -36,6 +41,7 @@ export class PubbleChatComponent implements AfterViewInit {
     this.isLoading = true;
 
     let responseText = '';
+    let sources: string[] = [];
     try {
       const resp = await fetch(`${environment.backendUrl}/api/pubble/chat`, {
         method: 'POST',
@@ -44,19 +50,32 @@ export class PubbleChatComponent implements AfterViewInit {
       });
       const data = await resp.json();
       responseText = data.answer;
+      sources = data.sources || [];
     } catch {
       responseText = 'Error when communicating with server';
     } finally {
       this.isLoading = false;
     }
 
-    const botMsg = { sender: 'bot' as const, text: responseText, displayed: '' };
+    const botMsg = { 
+      sender: 'bot' as const, 
+      text: responseText, 
+      displayed: '',
+      sources: sources
+    };
     this.messages.push(botMsg);
 
     const words = responseText.split(' ');
     let idx = 0;
     const interval = setInterval(() => {
-      botMsg.displayed += (idx === 0 ? '' : ' ') + words[idx];
+      const currentWord = words[idx];
+      botMsg.displayed += (idx === 0 ? '' : ' ') + currentWord;
+      
+      // Add line break after sentences ending with a period
+      if (currentWord && currentWord.endsWith('.')) {
+        botMsg.displayed += '\n';
+      }
+      
       this.scrollToBottom();
       idx++;
       if (idx >= words.length) {
@@ -168,5 +187,22 @@ export class PubbleChatComponent implements AfterViewInit {
       const box = this.chatBox.nativeElement;
       box.scrollTop = box.scrollHeight;
     });
+  }
+
+  // Helper method to get a readable filename from source path
+  getSourceFileName(source: string): string {
+    if (!source || source === 'Necunoscut') {
+      return 'Unknown source';
+    }
+    // Extract filename from path
+    const parts = source.split(/[/\\]/);
+    return parts[parts.length - 1] || source;
+  }
+
+  // Helper method to format message text with line breaks
+  formatMessageText(text: string): string {
+    if (!text) return '';
+    // Convert newlines to HTML line breaks
+    return text.replace(/\n/g, '<br>');
   }
 }
